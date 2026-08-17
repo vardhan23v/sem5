@@ -10,9 +10,9 @@ var SUBJECTS = [
         fullName: "Computer Networks & Communication",
         color: "#f97316",
         files: [
-            { name: "CNC Unit 1.pdf", path: "CNC UNIT 1.pdf", size: "27.0 MB" },
-            { name: "CNC Unit 2.pdf", path: "CNC UNIT 2.pdf", size: "23.1 MB" },
-            { name: "CNC Lab Manual.pdf", path: "CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" }
+            { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
+            { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
+            { name: "CNC Lab Manual.pdf", path: "CNC/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" }
         ]
     },
     {
@@ -20,9 +20,9 @@ var SUBJECTS = [
         fullName: "Operating Systems",
         color: "#3b82f6",
         files: [
-            { name: "OS Unit 1.pdf", path: "OS UNIT 1.pdf", size: "10.5 MB" },
-            { name: "OS Unit 2.pdf", path: "OS UNIT 2.pdf", size: "16.8 MB" },
-            { name: "OS Unit 3.pdf", path: "OS UNIT 3.pdf", size: "8.8 MB" }
+            { name: "OS Unit 1.pdf", path: "OS/OS UNIT 1.pdf", size: "10.5 MB" },
+            { name: "OS Unit 2.pdf", path: "OS/OS UNIT 2.pdf", size: "16.8 MB" },
+            { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB" }
         ]
     },
     {
@@ -30,8 +30,8 @@ var SUBJECTS = [
         fullName: "Theory of Computation",
         color: "#a855f7",
         files: [
-            { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB" },
-            { name: "TOC Unit 1 — Automata (HTML)", path: "unit1-theory-of-computation.html", size: "33 KB" }
+            { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC/TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB" },
+            { name: "TOC Unit 1 — Automata (HTML)", path: "TOC/unit1-theory-of-computation.html", size: "33 KB" }
         ]
     },
     {
@@ -39,7 +39,7 @@ var SUBJECTS = [
         fullName: "Introduction to Data Science",
         color: "#10b981",
         files: [
-            { name: "Data Science — Master Notes", path: "data-science-master-notes.html", size: "57 KB" }
+            { name: "Data Science — Master Notes", path: "Data Science/data-science-master-notes.html", size: "57 KB" }
         ]
     },
     {
@@ -47,7 +47,7 @@ var SUBJECTS = [
         fullName: "Data Analysis using Excel",
         color: "#06b6d4",
         files: [
-            { name: "Data Analysis — Detailed Notes", path: "unit1-detailed-notes.html", size: "52 KB" }
+            { name: "Data Analysis — Detailed Notes", path: "Data Analysis/unit1-detailed-notes.html", size: "52 KB" }
         ]
     },
     {
@@ -55,7 +55,7 @@ var SUBJECTS = [
         fullName: "Computer Network & Communication",
         color: "#ef4444",
         files: [
-            { name: "Computer Networks — Unit 1", path: "unit1-computer-networks_1.html", size: "56 KB" }
+            { name: "Computer Networks — Unit 1", path: "Networks/unit1-computer-networks_1.html", size: "56 KB" }
         ]
     }
 ];
