@@ -127,9 +127,10 @@ function countPdfs() {
 // ===== Build Sidebar =====
 function buildSidebar() {
     var html = '';
-    SUBJECTS.forEach(function(subject) {
+    SUBJECTS.forEach(function(subject, idx) {
         var totalFiles = subject.files.length;
-        html += '<div class="subject-group" data-subject="' + subject.name + '">';
+        var expandedClass = idx === 0 ? ' expanded' : '';
+        html += '<div class="subject-group' + expandedClass + '" data-subject="' + subject.name + '">';
         html += '  <div class="subject-header" onclick="toggleSubject(this)">';
         html += '    <span class="subject-dot" style="color: ' + subject.color + '; background: ' + subject.color + '"></span>';
         html += '    <span class="subject-name">' + subject.name + '</span>';
