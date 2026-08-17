@@ -3,7 +3,7 @@ title: Files read: data-science-master-notes.html, unit1-compu
 slug: files-read-data-science-master-notes-html-unit1-compu
 tags: 
 scope: project
-updated_at: 2026-08-17T07:28:28.033Z
+updated_at: 2026-08-17T07:48:18.775Z
 source: live
 hook: Files read: data-science-master-notes.html, unit1-computer-networks_1.html, unit1-detailed
 ---
@@ -68,3 +68,15 @@ hook: Files read: data-science-master-notes.html, unit1-computer-networks_1.html
 - Assigned unique accent colors per subject
 - Deployed site successfully to GitHub Pages
 - Site returns HTTP 200 and is live at https://vardhan23v.github.io/sem5/
+- Sidebar is hardcoded in HTML for reliability and matches original NoteVault structure
+- PDF viewer uses canvas-based PDF.js with full controls (navigation, zoom, page counter, download, fullscreen)
+- Subject organization includes expandable groups, file count badges, color-coded indicators, and chevron icons
+- Note HTML pages maintain inline styles when displayed in iframe
+- Views counter badge added to sidebar footer
+- Layout matches original: sidebar with logo/search/stats, scrollable subject list, footer; main area with topbar and viewer
+- Welcome screen features animated icon and quick-access buttons
+- Search filters subjects and auto-expands matching groups
+- Share button copies site URL to clipboard
+- Mobile responsiveness implemented with hamburger menu and overlay sidebar
+- CSS updated to align with original design, preserving visual fidelity
+- Site deployed successfully with 200 OK response
