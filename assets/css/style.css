@@ -1,0 +1,315 @@
+/* ============================================================
+   NoteVault — Shared Stylesheet
+   Light/dark themes, sticky top-nav, card grid, mobile responsive
+   ============================================================ */
+
+/* ----- CSS Custom Properties (Light Theme default) ----- */
+:root {
+  --nv-bg:        #FAFAF5;
+  --nv-surface:   #FFFFFF;
+  --nv-ink:       #1B2430;
+  --nv-ink-soft:  #4A5568;
+  --nv-accent:    #1D6F42;
+  --nv-accent-soft:#E7F2EB;
+  --nv-line:      #D9DCD2;
+  --nv-shadow:    0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --nv-radius:    8px;
+  --nv-font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --nv-font-mono: 'Consolas', 'Menlo', 'JetBrains Mono', monospace;
+  --nv-font-serif: Georgia, 'Times New Roman', serif;
+  --nv-nav-height: 56px;
+}
+
+/* ----- Dark Theme ----- */
+[data-theme="dark"] {
+  --nv-bg:        #12181F;
+  --nv-surface:   #1C2530;
+  --nv-ink:       #E2E8F0;
+  --nv-ink-soft:  #94A3B8;
+  --nv-accent:    #4ADE80;
+  --nv-accent-soft:#0F2D1A;
+  --nv-line:      #2D3748;
+  --nv-shadow:    0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ----- Reset & Base ----- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--nv-font-serif);
+  background: var(--nv-bg);
+  color: var(--nv-ink);
+  line-height: 1.68;
+  font-size: 16.5px;
+  padding-top: var(--nv-nav-height);  /* room for sticky nav */
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ============================================================
+   TOP NAVIGATION BAR (injected by nav.js)
+   ============================================================ */
+#nv-topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--nv-nav-height);
+  background: var(--nv-surface);
+  border-bottom: 1px solid var(--nv-line);
+  box-shadow: var(--nv-shadow);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-family: var(--nv-font-sans);
+  font-size: 14px;
+  gap: 6px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+#nv-topnav .nv-brand {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--nv-accent);
+  text-decoration: none;
+  margin-right: 8px;
+  white-space: nowrap;
+  letter-spacing: -.01em;
+}
+
+#nv-topnav .nv-brand:hover {
+  opacity: 0.8;
+}
+
+#nv-topnav .nv-sep {
+  width: 1px;
+  height: 22px;
+  background: var(--nv-line);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+#nv-topnav .nv-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  flex: 1;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#nv-topnav .nv-links::-webkit-scrollbar {
+  display: none;
+}
+
+#nv-topnav .nv-links a {
+  display: inline-block;
+  padding: 5px 12px;
+  color: var(--nv-ink-soft);
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 13px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+#nv-topnav .nv-links a:hover {
+  background: var(--nv-accent-soft);
+  color: var(--nv-ink);
+}
+
+#nv-topnav .nv-links a.nv-active {
+  background: var(--nv-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Theme toggle button */
+#nv-topnav .nv-theme-btn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--nv-line);
+  border-radius: 50%;
+  background: var(--nv-surface);
+  color: var(--nv-ink);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  margin-left: auto;
+}
+
+#nv-topnav .nv-theme-btn:hover {
+  background: var(--nv-accent-soft);
+  border-color: var(--nv-accent);
+}
+
+/* ============================================================
+   CARD GRID (for dashboard / index pages)
+   ============================================================ */
+.nv-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nv-card {
+  background: var(--nv-surface);
+  border: 1px solid var(--nv-line);
+  border-radius: var(--nv-radius);
+  padding: 24px;
+  box-shadow: var(--nv-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+  color: var(--nv-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nv-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  border-color: var(--nv-accent);
+}
+
+.nv-card .nv-card-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.nv-card .nv-card-title {
+  font-family: var(--nv-font-sans);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--nv-ink);
+}
+
+.nv-card .nv-card-sub {
+  font-family: var(--nv-font-sans);
+  font-size: 13px;
+  color: var(--nv-ink-soft);
+  line-height: 1.5;
+}
+
+.nv-card .nv-card-tag {
+  display: inline-block;
+  font-family: var(--nv-font-mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--nv-accent);
+  background: var(--nv-accent-soft);
+  padding: 3px 10px;
+  border-radius: 99px;
+  align-self: flex-start;
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.nv-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nv-text-center { text-align: center; }
+.nv-mt-1 { margin-top: 8px; }
+.nv-mt-2 { margin-top: 16px; }
+.nv-mt-3 { margin-top: 24px; }
+.nv-mt-4 { margin-top: 32px; }
+.nv-mb-1 { margin-bottom: 8px; }
+.nv-mb-2 { margin-bottom: 16px; }
+.nv-mb-3 { margin-bottom: 24px; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  :root {
+    --nv-nav-height: 48px;
+  }
+
+  body {
+    font-size: 15.5px;
+  }
+
+  #nv-topnav {
+    padding: 0 12px;
+    font-size: 12.5px;
+  }
+
+  #nv-topnav .nv-brand {
+    font-size: 14px;
+  }
+
+  #nv-topnav .nv-links a {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  #nv-topnav .nv-sep {
+    margin: 0 4px;
+  }
+
+  #nv-topnav .nv-theme-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .nv-card-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 20px 16px;
+  }
+
+  .nv-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  #nv-topnav .nv-brand {
+    font-size: 13px;
+    margin-right: 4px;
+  }
+
+  #nv-topnav .nv-links a {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .nv-card {
+    transition: none;
+  }
+
+  body {
+    transition: none;
+  }
+}

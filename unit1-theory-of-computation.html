@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit I — Theory of Computation (CS3103-1): Automata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F6FB; --ink:#241B3A; --muted:#5F5878; --line:#DDD9E8; --grid:#EEECF5;
+  --vio:#5B2AB5; --vio-soft:#EDE7FA; --amber:#B45309; --amber-soft:#FBEEDD;
+  --green:#166B54; --green-soft:#E4F2EC;
+  --mono:'IBM Plex Mono',monospace; --disp:'Fraunces',serif; --body:'Source Sans 3',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;font-size:16.5px;
+  background-image:radial-gradient(var(--grid) 1.2px,transparent 1.2px);background-size:26px 26px}
+.layout{display:grid;grid-template-columns:255px 1fr;max-width:1200px;margin:0 auto}
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 18px;border-right:1px solid var(--line);background:rgba(247,246,251,.93);backdrop-filter:blur(4px)}
+nav .brand{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+nav h1{font-family:var(--disp);font-size:1.1rem;line-height:1.3;margin-bottom:18px}
+nav a{display:block;padding:5px 10px;margin:1px 0;font-size:.86rem;color:var(--ink);text-decoration:none;border-left:2px solid transparent;border-radius:0 6px 6px 0}
+nav a:hover{background:var(--vio-soft)}
+nav a.active{border-left-color:var(--vio);background:var(--vio-soft);font-weight:600}
+nav .grp{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:16px 0 4px}
+main{padding:40px 48px 100px;min-width:0}
+header.hero{margin-bottom:44px;border-bottom:2px solid var(--ink);padding-bottom:26px}
+.hero .kicker{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--vio)}
+.hero h1{font-family:var(--disp);font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;margin:8px 0 10px}
+.hero p{max-width:62ch;color:var(--muted)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hero .meta span{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);background:#fff;padding:3px 10px;border-radius:99px}
+section{margin-bottom:56px}
+h2{font-family:var(--disp);font-size:1.55rem;margin-bottom:4px;scroll-margin-top:24px}
+h2 .no{font-family:var(--mono);font-size:.8rem;color:var(--vio);display:block;letter-spacing:.12em}
+h3{font-family:var(--disp);font-size:1.12rem;margin:26px 0 8px;scroll-margin-top:24px}
+h4{font-size:1rem;margin:16px 0 6px}
+p{margin-bottom:10px;max-width:78ch}
+ul,ol{margin:0 0 12px 22px;max-width:78ch}
+li{margin-bottom:4px}
+a{color:var(--vio)}
+.lede{color:var(--muted);margin-bottom:16px}
+code{font-family:var(--mono);font-size:.86em;background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+pre{font-family:var(--mono);font-size:.9rem;background:#fff;border:1px solid var(--line);padding:12px 14px;border-radius:8px;overflow-x:auto;margin:10px 0}
+.box{border:1px solid var(--line);background:#fff;border-radius:10px;padding:16px 18px;margin:14px 0}
+.box .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;display:inline-block;margin-bottom:6px;padding:2px 8px;border-radius:4px}
+.def{border-left:4px solid var(--vio)} .def .tag{background:var(--vio-soft);color:var(--vio)}
+.formula{border-left:4px solid var(--amber)} .formula .tag{background:var(--amber-soft);color:var(--amber)}
+.formula .f{font-family:var(--mono);font-size:.98rem;background:var(--amber-soft);padding:8px 12px;border-radius:6px;display:inline-block;margin:4px 0}
+.ex{border-left:4px solid var(--green)} .ex .tag{background:var(--green-soft);color:var(--green)}
+.exam{border-left:4px solid var(--ink)} .exam .tag{background:#ECEAF3;color:var(--ink)}
+table{border-collapse:collapse;width:100%;margin:14px 0;background:#fff;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:var(--vio-soft);font-family:var(--disp);font-size:.9rem}
+tr:nth-child(even) td{background:#FCFBFE}
+.scroll{overflow-x:auto}
+td.c,th.c{text-align:center;font-family:var(--mono);font-size:.88rem}
+figure.fsm{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:14px 0}
+figure.fsm svg{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
+figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:8px;text-align:center}
+.check{background:#fff;border:1px dashed var(--vio);border-radius:10px;padding:16px 18px;margin:18px 0}
+.check .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--vio)}
+.check ol{margin-top:8px}
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  nav .links{display:flex;flex-wrap:wrap;gap:4px}
+  nav a{border-left:none;border:1px solid var(--line);border-radius:99px;font-size:.78rem}
+  nav .grp{display:none}
+  main{padding:28px 18px 80px}
+}
+@media (prefers-reduced-motion:no-preference){
+  section{animation:fade .5s ease both}
+  @keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+}
+</style>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/nav.js" defer></script>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <div class="brand">CS3103-1 · Unit I · 15 hrs</div>
+  <h1>Theory of Computation — Automata</h1>
+  <div class="links">
+  <div class="grp">Foundations</div>
+  <a href="#s1">1 · Why Automata Theory</a>
+  <a href="#s2">2 · Central Concepts</a>
+  <div class="grp">Finite Automata</div>
+  <a href="#s3">3 · DFA</a>
+  <a href="#s4">4 · NFA</a>
+  <a href="#s5">5 · NFA → DFA (Subset)</a>
+  <a href="#s6">6 · Text Search</a>
+  <a href="#s7">7 · ε-NFA</a>
+  <div class="grp">Regular Expressions</div>
+  <a href="#s8">8 · Regular Expressions</a>
+  <a href="#s9">9 · FA ⇄ RE</a>
+  <a href="#s10">10 · Applications of RE</a>
+  <div class="grp">Non-Regularity</div>
+  <a href="#s11">11 · Pumping Lemma</a>
+  <a href="#s12">12 · Worked Proofs</a>
+  <a href="#s13">✔ Exam Checklist</a>
+  </div>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="kicker">Unit I — Automata · Finite Automata · Regular Expressions · Non-Regular Languages</div>
+  <h1>Machines with no memory but their state.</h1>
+  <p>This unit builds one idea in four costumes: a set of strings (a <em>language</em>) can be described by a machine (DFA/NFA/ε-NFA) or by an algebra (regular expression) — and all four descriptions have exactly the same power. Then the pumping lemma shows where that power ends.</p>
+  <div class="meta"><span>Textbook: Hopcroft–Motwani–Ullman (T1)</span><span>Ch 1 (1.1, 1.5) · Ch 2 (2.1–2.5) · Ch 3 (3.1, 3.2.2, 3.2.3, 3.3) · Ch 4 (4.1)</span></div>
+</header>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="no">§ 01</span>Why Study Automata Theory?</h2>
+  <p class="lede">Automata theory is the study of abstract computing devices ("machines") and the problems they can solve. It matters for two reasons: it has direct applications, and it defines the exact limits of computation.</p>
+  <ul>
+    <li><strong>Finite automata model real systems</strong>: software for designing/verifying digital circuits, <strong>lexical analyzers</strong> in compilers, text scanners searching large bodies of text (grep, web search), and protocol/embedded-system verification — any system that is naturally in one of a finite number of states (e.g., an on/off switch, a network protocol handshake).</li>
+    <li><strong>Grammars</strong> (Unit II) model the structure of programming and natural languages; parsers are built from them.</li>
+    <li><strong>Limits of computation</strong>: the theory distinguishes what is <em>decidable</em> vs <em>undecidable</em> (Turing machines, Unit III) and <em>tractable</em> vs <em>intractable</em>. Knowing a problem is unsolvable or infeasible tells you to change the problem, not fight it.</li>
+    <li><strong>A hierarchy of machine power</strong>: finite automata ⊂ pushdown automata ⊂ Turing machines — each unit of this course climbs one rung.</li>
+  </ul>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="no">§ 02</span>Central Concepts of Automata Theory</h2>
+  <div class="box def"><span class="tag">Definitions — memorise verbatim</span>
+  <ul style="margin-bottom:0">
+    <li><strong>Alphabet (Σ)</strong>: a finite, non-empty set of symbols. E.g., Σ = {0,1} (binary), Σ = {a,…,z}.</li>
+    <li><strong>String (word)</strong>: a finite sequence of symbols from Σ. The <strong>empty string ε</strong> has zero symbols. |w| = length of w (|ε| = 0).</li>
+    <li><strong>Powers of an alphabet</strong>: Σ<sup>k</sup> = all strings of length k over Σ; Σ<sup>0</sup> = {ε}; <strong>Σ* = Σ⁰ ∪ Σ¹ ∪ Σ² ∪ …</strong> (all strings); Σ⁺ = Σ* − {ε}.</li>
+    <li><strong>Concatenation</strong>: xy = symbols of x followed by symbols of y; εw = wε = w.</li>
+    <li><strong>Language L</strong>: any subset of Σ* — a set of strings. Can be finite, infinite, ∅ (empty language) or {ε} (note: ∅ ≠ {ε}).</li>
+    <li><strong>Problem ↔ language</strong>: deciding membership "is w ∈ L?" is the formal version of a yes/no computational problem.</li>
+  </ul></div>
+  <p>Example languages over {0,1}: the set of strings with an equal number of 0s and 1s; the set of binary representations of primes; Σ* itself.</p>
+  <div class="box exam"><span class="tag">Exam pointer</span>Two chronic slips: (1) ε is a <em>string</em>, ∅ is a <em>language</em>, {ε} is a language containing one string; (2) Σ* is always infinite (for non-empty Σ), but every <em>string</em> in it is finite.</div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="no">§ 03</span>Deterministic Finite Automata (DFA)</h2>
+  <div class="box def"><span class="tag">Formal definition</span>
+  A DFA is a 5-tuple <strong>A = (Q, Σ, δ, q₀, F)</strong>:
+  <ul style="margin-bottom:0">
+    <li><strong>Q</strong> — finite set of states</li>
+    <li><strong>Σ</strong> — input alphabet</li>
+    <li><strong>δ : Q × Σ → Q</strong> — transition function: <em>exactly one</em> next state for every (state, symbol)</li>
+    <li><strong>q₀ ∈ Q</strong> — start state</li>
+    <li><strong>F ⊆ Q</strong> — set of accepting (final) states</li>
+  </ul></div>
+  <h3>Extended transition function &amp; language</h3>
+  <div class="box formula"><span class="tag">Definitions</span>
+    <div class="f">δ̂(q, ε) = q&nbsp;&nbsp;&nbsp;&nbsp;δ̂(q, wa) = δ( δ̂(q, w), a )</div><br>
+    <div class="f">L(A) = { w | δ̂(q₀, w) ∈ F }</div>
+    <p style="margin-top:8px">δ̂ processes a whole string; A accepts w iff processing w from q₀ lands in an accepting state. A language accepted by some DFA is called a <strong>regular language</strong>.</p></div>
+  <h3>Worked example — strings ending in 01</h3>
+  <p>L = {w ∈ {0,1}* | w ends in 01}. Design by <em>state = what I remember</em>: q₀ "no useful suffix", q₁ "just saw a 0 (possible start of 01)", q₂ "just saw 01" (accept).</p>
+  <figure class="fsm" id="fsm-dfa"></figure>
+  <div class="scroll"><table>
+    <tr><th>δ</th><th class="c">0</th><th class="c">1</th></tr>
+    <tr><td>→ q₀</td><td class="c">q₁</td><td class="c">q₀</td></tr>
+    <tr><td>q₁</td><td class="c">q₁</td><td class="c">q₂</td></tr>
+    <tr><td>* q₂</td><td class="c">q₁</td><td class="c">q₀</td></tr>
+  </table></div>
+  <p>Trace of <code>1101</code>: q₀ →1→ q₀ →1→ q₀ →0→ q₁ →1→ q₂ ∈ F → <strong>accepted</strong>.</p>
+  <div class="box exam"><span class="tag">Design recipe (works for most exam DFAs)</span>Decide what finite information suffices to answer "accept?" at the end — that information <em>is</em> your state set. Common families to practise: strings containing a substring; ending/beginning with a pattern; number of a's mod k; even/odd counts (product construction for two conditions).</div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="no">§ 04</span>Nondeterministic Finite Automata (NFA)</h2>
+  <div class="box def"><span class="tag">Formal definition</span>
+  An NFA is a 5-tuple (Q, Σ, δ, q₀, F) where <strong>δ : Q × Σ → 2<sup>Q</sup></strong> — a (state, symbol) pair maps to a <em>set</em> of states (possibly empty). The machine may be in several states at once; it accepts w if <strong>any</strong> sequence of choices ends in an accepting state.</div>
+  <ul>
+    <li>Think of it as "guess and verify" or as running all threads in parallel; a dead branch (δ = ∅) simply dies.</li>
+    <li>δ̂(q, wa) = ⋃<sub>p ∈ δ̂(q,w)</sub> δ(p, a);&nbsp; L(A) = { w | δ̂(q₀, w) ∩ F ≠ ∅ }.</li>
+    <li>NFAs are easier to <em>design</em> but no more <em>powerful</em> than DFAs (§05).</li>
+  </ul>
+  <h3>Same language, NFA style — strings ending in 01</h3>
+  <p>Stay in q₀ on anything; nondeterministically guess "the final 01 starts now":</p>
+  <figure class="fsm" id="fsm-nfa"></figure>
+  <div class="scroll"><table>
+    <tr><th>δ</th><th class="c">0</th><th class="c">1</th></tr>
+    <tr><td>→ q₀</td><td class="c">{q₀, q₁}</td><td class="c">{q₀}</td></tr>
+    <tr><td>q₁</td><td class="c">∅</td><td class="c">{q₂}</td></tr>
+    <tr><td>* q₂</td><td class="c">∅</td><td class="c">∅</td></tr>
+  </table></div>
+  <p>Three states instead of a "smart" DFA — the classic illustration that nondeterminism buys <em>convenience</em>, and sometimes exponentially fewer states (e.g., "k-th symbol from the end is 1" needs n+1 NFA states but 2ⁿ DFA states).</p>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="no">§ 05</span>NFA → DFA: The Subset Construction</h2>
+  <div class="box def"><span class="tag">Theorem (equivalence)</span>For every NFA N there is a DFA D with <strong>L(D) = L(N)</strong>. Hence NFAs accept exactly the regular languages.</div>
+  <h3>Construction</h3>
+  <ul>
+    <li>DFA states = subsets of the NFA's states (only the <em>reachable</em> subsets are needed in practice — "lazy evaluation").</li>
+    <li>Start state = {q₀}. &nbsp;δ<sub>D</sub>(S, a) = ⋃<sub>p∈S</sub> δ<sub>N</sub>(p, a). &nbsp;Accepting: any S containing an NFA accepting state.</li>
+    <li>Worst case 2ⁿ states; usually far fewer.</li>
+  </ul>
+  <div class="box ex"><span class="tag">Worked example — convert the §04 NFA</span>
+  <div class="scroll"><table>
+    <tr><th>DFA state</th><th class="c">0</th><th class="c">1</th></tr>
+    <tr><td>→ {q₀}</td><td class="c">{q₀,q₁}</td><td class="c">{q₀}</td></tr>
+    <tr><td>{q₀,q₁}</td><td class="c">{q₀,q₁}</td><td class="c">{q₀,q₂}</td></tr>
+    <tr><td>* {q₀,q₂}</td><td class="c">{q₀,q₁}</td><td class="c">{q₀}</td></tr>
+  </table></div>
+  <p>Rename {q₀}→A, {q₀,q₁}→B, {q₀,q₂}→C — and you get exactly the DFA of §03. Only 3 of the 2³ = 8 subsets were reachable.</p></div>
+  <div class="box exam"><span class="tag">Exam pointer</span>Show the table being built breadth-first from {q₀}; stop when no new subsets appear. Mark accepting subsets. Proof idea (if asked): induction on |w| that δ̂<sub>D</sub>({q₀}, w) = δ̂<sub>N</sub>(q₀, w).</div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="no">§ 06</span>An Application: Text Search</h2>
+  <p class="lede">Finding occurrences of keywords in large text is a pure automata problem — the reason grep-style tools are fast.</p>
+  <ul>
+    <li>To search for a set of keywords, build an NFA: a start state q₀ with a self-loop on <strong>every symbol of Σ</strong> (skip any prefix), plus one linear chain of states per keyword spelling it out; the chain's last state accepts.</li>
+    <li>Example — keywords <code>web</code> and <code>ebay</code>: q₀ loops on Σ; chain q₀→(w)→q₁→(e)→q₂→(b)→q₃*, and chain q₀→(e)→q₄→(b)→q₅→(a)→q₆→(y)→q₇*.</li>
+    <li>Convert to a DFA with the subset construction. A useful fact: for keyword NFAs of this shape, the DFA has <strong>the same number of states as the NFA</strong> — no blow-up — so scanning is one table lookup per input character (O(1) per character, no backtracking).</li>
+    <li>This is how lexical analyzers and simple search engines process text in a single left-to-right pass.</li>
+  </ul>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="no">§ 07</span>Finite Automata with ε-Transitions (ε-NFA)</h2>
+  <div class="box def"><span class="tag">Definition</span>An ε-NFA is (Q, Σ, δ, q₀, F) with <strong>δ : Q × (Σ ∪ {ε}) → 2<sup>Q</sup></strong> — the machine may jump between states <em>without consuming input</em>. Convenient for building automata compositionally (it's the machine form regular expressions compile to, §09).</div>
+  <h3>ε-closure</h3>
+  <div class="box formula"><span class="tag">Definition</span>
+    <div class="f">ECLOSE(q) = all states reachable from q using ε-transitions only (including q itself)</div></div>
+  <h3>Worked example — decimal-number sketch / a*b*c*</h3>
+  <p>L = a*b*c*: states q₀ →ε→ q₁ →ε→ q₂ with self-loops a on q₀, b on q₁, c on q₂; q₂ accepts.</p>
+  <figure class="fsm" id="fsm-enfa"></figure>
+  <ul>
+    <li>ECLOSE(q₀) = {q₀, q₁, q₂} — so ε alone is accepted (correct: ε ∈ a*b*c*).</li>
+    <li>To process symbol a from a state set S: take ε-closure, follow a-transitions, take ε-closure again. The <strong>modified subset construction</strong> with ε-closures converts any ε-NFA to a DFA — start state ECLOSE(q₀) — so ε-NFAs also accept exactly the regular languages.</li>
+  </ul>
+  <div class="box exam"><span class="tag">Exam pointer</span>When converting ε-NFA → DFA, the two places students lose marks: forgetting the closure <em>after</em> the symbol move, and forgetting that the start state is the closure of q₀, not {q₀}.</div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2><span class="no">§ 08</span>Regular Expressions</h2>
+  <p class="lede">An algebraic notation for the same languages the automata accept — "declarative" (describe the strings) rather than "operational" (describe the machine).</p>
+  <div class="box def"><span class="tag">Inductive definition</span>
+  <strong>Basis</strong>: ε and ∅ are REs (L(ε)={ε}, L(∅)=∅); each symbol a ∈ Σ is an RE (L(a)={a}).<br>
+  <strong>Induction</strong>: if E, F are REs, so are
+  <ul style="margin-bottom:0">
+    <li><strong>E + F</strong> (union): L(E+F) = L(E) ∪ L(F)</li>
+    <li><strong>EF</strong> (concatenation): L(EF) = L(E)L(F)</li>
+    <li><strong>E*</strong> (Kleene closure): L(E*) = ⋃<sub>i≥0</sub> L(E)<sup>i</sup> — zero or more copies</li>
+    <li><strong>(E)</strong> — grouping</li>
+  </ul>
+  <p style="margin-top:6px"><strong>Precedence</strong>: * highest, then concatenation, then + &nbsp;(so 01* + 1 means (0(1*)) + 1).</p></div>
+  <h3>Vocabulary examples (drill these)</h3>
+  <div class="scroll"><table>
+    <tr><th>Language over {0,1}</th><th>Regular expression</th></tr>
+    <tr><td>Strings ending in 01</td><td class="c">(0+1)*01</td></tr>
+    <tr><td>Strings containing 01</td><td class="c">(0+1)*01(0+1)*</td></tr>
+    <tr><td>Alternating 0s and 1s</td><td class="c">(01)* + (10)* + 0(10)* + 1(01)* &nbsp;=&nbsp; (ε+1)(01)*(ε+0)</td></tr>
+    <tr><td>Even number of 0s</td><td class="c">(1*01*0)*1*</td></tr>
+    <tr><td>Length exactly 2</td><td class="c">(0+1)(0+1)</td></tr>
+    <tr><td>Every 0 immediately followed by 1</td><td class="c">(1+01)*</td></tr>
+  </table></div>
+  <h3>Algebraic laws</h3>
+  <div class="scroll"><table>
+    <tr><th>Law</th><th>Identity</th></tr>
+    <tr><td>Union: commutative, associative</td><td class="c">E+F = F+E, (E+F)+G = E+(F+G)</td></tr>
+    <tr><td>Concatenation: associative, NOT commutative</td><td class="c">(EF)G = E(FG); EF ≠ FE in general</td></tr>
+    <tr><td>Identities &amp; annihilator</td><td class="c">∅+E = E; εE = Eε = E; ∅E = E∅ = ∅</td></tr>
+    <tr><td>Distributive</td><td class="c">E(F+G) = EF+EG; (F+G)E = FE+GE</td></tr>
+    <tr><td>Idempotent</td><td class="c">E+E = E</td></tr>
+    <tr><td>Closure laws</td><td class="c">(E*)* = E*; ∅* = ε; ε* = ε; E⁺ = EE* ; E? = ε+E</td></tr>
+  </table></div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2><span class="no">§ 09</span>Finite Automata and Regular Expressions Are Equivalent</h2>
+  <div class="box def"><span class="tag">Kleene's theorem (the unit's spine)</span>A language is accepted by a DFA ⇔ by an NFA ⇔ by an ε-NFA ⇔ it is denoted by a regular expression. All four define the class of <strong>regular languages</strong>.</div>
+  <h3>RE → ε-NFA (Thompson-style construction)</h3>
+  <p>Build by structural induction; each sub-expression becomes a gadget with one start and one accepting state:</p>
+  <ul>
+    <li><strong>Basis</strong>: for a — two states joined by an a-edge; for ε — an ε-edge; for ∅ — no path.</li>
+    <li><strong>E + F</strong>: new start with ε-edges into E's and F's starts; their accepting states ε-jump to a new accepting state.</li>
+    <li><strong>EF</strong>: ε-edge from E's accepting state to F's start.</li>
+    <li><strong>E*</strong>: new start/accept; ε-edges allowing skip (zero copies) and loop-back (repeat).</li>
+  </ul>
+  <figure class="fsm" id="fsm-star"><figcaption>Gadget for E* — ε edges allow skipping E entirely or repeating it.</figcaption></figure>
+  <h3>DFA → RE</h3>
+  <ul>
+    <li><strong>State elimination</strong> (the exam-practical method): remove states one at a time, replacing paths through the removed state s by expressions — an edge p→q gains <code>R<sub>ps</sub> (R<sub>ss</sub>)* R<sub>sq</sub></code>. When only start and one accepting state remain, read the RE off the surviving edges. Repeat per accepting state and union the results.</li>
+    <li><strong>Inductive (R⁽ᵏ⁾) method</strong>: R<sub>ij</sub><sup>(k)</sup> = paths from i to j through intermediate states ≤ k, built by R<sub>ij</sub><sup>(k)</sup> = R<sub>ij</sub><sup>(k−1)</sup> + R<sub>ik</sub><sup>(k−1)</sup>(R<sub>kk</sub><sup>(k−1)</sup>)*R<sub>kj</sub><sup>(k−1)</sup> — correct but bulky; know that it exists.</li>
+  </ul>
+  <div class="box ex"><span class="tag">Mini example</span>One-state DFA: start = accept = q, loops on 0 and 1 → RE = (0+1)*. Two-state "ends in 1": eliminate nothing — accept-state analysis gives (0+1)*1 directly. Practise eliminating the middle state of the §03 DFA to recover (0+1)*01.</div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2><span class="no">§ 10</span>Applications of Regular Expressions</h2>
+  <ul>
+    <li><strong>Lexical analysis</strong>: tokens of a programming language (identifiers, numbers, keywords) are specified as REs; tools like <code>lex</code>/<code>flex</code> compile them into a DFA that scans source code. E.g., identifier: <code>letter (letter + digit)*</code>.</li>
+    <li><strong>Text search / UNIX tools</strong>: <code>grep</code>, editors, and validators. UNIX RE notation adds conveniences that are only shorthand — no extra power: character classes <code>[a-z]</code>, dot <code>.</code> (any char), <code>+</code> (one or more), <code>?</code> (zero or one), anchors.</li>
+    <li><strong>Pattern description in real data</strong>: e.g., US phone numbers, dates, protocol tokens — each a small RE compiled to an automaton.</li>
+    <li>The pipeline in all cases: <strong>RE → ε-NFA → DFA → (optionally minimized) table-driven scanner</strong>.</li>
+  </ul>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2><span class="no">§ 11</span>Proving Languages Not Regular — The Pumping Lemma</h2>
+  <p class="lede">A DFA has finitely many states, so on any long enough string it must repeat a state — and the loop between the repeats can be "pumped". Languages that can't tolerate pumping aren't regular.</p>
+  <div class="box formula"><span class="tag">Pumping lemma for regular languages</span>
+  <p>If L is regular, then <strong>∃ a constant n</strong> (≥ number of DFA states) such that <strong>every</strong> w ∈ L with |w| ≥ n can be split as <strong>w = xyz</strong> with:</p>
+  <ol style="margin-bottom:6px">
+    <li>y ≠ ε</li>
+    <li>|xy| ≤ n</li>
+    <li>for all k ≥ 0: <strong>x yᵏ z ∈ L</strong> (including k = 0, "pumping down")</li>
+  </ol></div>
+  <h3>How to use it — the adversary game</h3>
+  <ol>
+    <li>Assume L is regular; the lemma hands you an unknown constant n.</li>
+    <li><strong>You choose</strong> one clever string w ∈ L with |w| ≥ n (make it depend on n).</li>
+    <li>The adversary splits w = xyz obeying (1) and (2) — your argument must work for <em>every</em> legal split, so use |xy| ≤ n to pin down where y lives.</li>
+    <li><strong>You choose</strong> one k (usually 0 or 2) such that xyᵏz ∉ L. Contradiction ⇒ L not regular.</li>
+  </ol>
+  <div class="box exam"><span class="tag">Exam pointer</span>The lemma proves only <em>non</em>-regularity; satisfying it does not prove a language regular. And you don't get to pick the split — quantifier order (∃n, ∀w, ∃split, ∀k… from the lemma's side) is the most-tested conceptual point.</div>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+  <h2><span class="no">§ 12</span>Worked Non-Regularity Proofs</h2>
+  <div class="box ex"><span class="tag">Proof 1 — L = { 0ⁿ1ⁿ | n ≥ 0 } (the canonical one)</span>
+  <p>Suppose L regular with pumping constant n. Choose w = 0ⁿ1ⁿ ∈ L, |w| ≥ n. Any split w = xyz with |xy| ≤ n puts <strong>y inside the 0-block</strong>: y = 0<sup>m</sup>, m ≥ 1. Pump down (k = 0): xz = 0<sup>n−m</sup>1ⁿ has fewer 0s than 1s ⇒ xz ∉ L. Contradiction. ∎</p></div>
+  <div class="box ex"><span class="tag">Proof 2 — L = { w | w has equal numbers of 0s and 1s }</span>
+  <p>Same choice w = 0ⁿ1ⁿ works: y = 0<sup>m</sup> (m ≥ 1) by |xy| ≤ n; xz has n−m zeros vs n ones — unbalanced ⇒ not in L. ∎ (Moral: reuse a hard "witness" string across related languages.)</p></div>
+  <div class="box ex"><span class="tag">Proof 3 — L = { ww | w ∈ {0,1}* }</span>
+  <p>Choose s = 0ⁿ1 0ⁿ1 ∈ L. Split forces y = 0<sup>m</sup> within the first 0-block (m ≥ 1). Pump to k = 2: 0<sup>n+m</sup>1 0ⁿ1. For this to be uu, both halves must be equal, but the string has odd asymmetry — its two 1s would need to end each half, giving halves 0<sup>n+m</sup>1 and 0ⁿ1, unequal since m ≥ 1 ⇒ not in L. ∎</p></div>
+  <div class="box ex"><span class="tag">Proof 4 — L = { 0<sup>i</sup>1<sup>j</sup> | i &gt; j }</span>
+  <p>Choose w = 0<sup>n+1</sup>1ⁿ. y = 0<sup>m</sup>, m ≥ 1. Pump <em>down</em>: xz = 0<sup>n+1−m</sup>1ⁿ, and n+1−m ≤ n ⇒ condition i &gt; j fails ⇒ not in L. ∎ (Shows why k = 0 is in the lemma: pumping <em>up</em> would only add 0s and stay in L.)</p></div>
+  <p>Other standard non-regular languages to recognise on sight: {0<sup>i²</sup>}, {0<sup>p</sup> : p prime}, palindromes, balanced parentheses — all "require unbounded counting/matching", which finite states cannot do.</p>
+</section>
+
+<!-- 13 -->
+<section id="s13">
+  <h2><span class="no">§ 13</span>Mastery Checklist</h2>
+  <div class="check"><span class="tag">Can you, from memory…</span>
+  <ol>
+    <li>Give 3 application areas of automata theory and the machine-power hierarchy.</li>
+    <li>Define alphabet, string, ε, Σ*, Σ⁺, language; distinguish ∅ vs {ε}.</li>
+    <li>Write the 5-tuple definitions of DFA, NFA, ε-NFA and the three δ signatures side by side.</li>
+    <li>Define δ̂ recursively and L(A) for DFA and NFA.</li>
+    <li>Design a DFA for: ends in 01, contains 011, even 0s and odd 1s, length ≡ 2 (mod 3) — with transition table and diagram.</li>
+    <li>Run the subset construction (lazy, breadth-first) on a given NFA and know the 2ⁿ worst case.</li>
+    <li>Explain the keyword-search NFA shape and why the resulting scanner is O(1) per character.</li>
+    <li>Compute ε-closures and convert an ε-NFA to a DFA (closure–move–closure).</li>
+    <li>State the inductive definition of REs, operator precedence, and 8+ algebraic laws.</li>
+    <li>Write REs for the six drill languages in §08 (and verify by testing short strings).</li>
+    <li>Convert RE → ε-NFA by gadgets, and a small DFA → RE by state elimination.</li>
+    <li>Name 3 RE applications and the RE→NFA→DFA pipeline.</li>
+    <li>State the pumping lemma with all quantifiers in the right order, and explain what you choose vs what the adversary chooses.</li>
+    <li>Reproduce the four proofs in §12 without looking.</li>
+  </ol></div>
+  <p>Typical exam weighting for this unit: one machine-design question, one conversion (NFA→DFA or ε-NFA→DFA or RE↔FA), one pumping-lemma proof, and short definitions. The conversions and Proof 1 are near-guaranteed — over-practise those.</p>
+</section>
+</main>
+</div>
+
+<script>
+/* ---- tiny FSM renderer ---- */
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e}
+  function draw(figId,W,H,states,edges,startId){
+    const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'});
+    const defs=el('defs',{});const m=el('marker',{id:figId+'-ah',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'});
+    m.appendChild(el('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:'#241B3A'}));defs.appendChild(m);svg.appendChild(defs);
+    const S={};states.forEach(s=>S[s.id]=s);
+    const R=24;
+    function edgePoint(a,b,r){const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);return[a.x+dx/d*r,a.y+dy/d*r]}
+    edges.forEach(e=>{
+      const a=S[e.from],b=S[e.to];
+      if(e.from===e.to){ // self loop above
+        const p=el('path',{d:`M ${a.x-12} ${a.y-R+3} C ${a.x-30} ${a.y-R-38}, ${a.x+30} ${a.y-R-38}, ${a.x+12} ${a.y-R+3}`,fill:'none',stroke:'#241B3A','stroke-width':'1.8','marker-end':`url(#${figId}-ah)`});
+        svg.appendChild(p);
+        svg.appendChild(text(a.x,a.y-R-36,e.label));
+        return;
+      }
+      const bend=e.bend||0;
+      const [x1,y1]=edgePoint(a,b,R),[x2,y2]=edgePoint(b,a,R);
+      const mx=(x1+x2)/2,my=(y1+y2)/2;
+      const nx=-(y2-y1),ny=(x2-x1),nl=Math.hypot(nx,ny)||1;
+      const cx=mx+nx/nl*bend,cy=my+ny/nl*bend;
+      const p=el('path',{d:`M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`,fill:'none',stroke:'#241B3A','stroke-width':'1.8','marker-end':`url(#${figId}-ah)`});
+      svg.appendChild(p);
+      const lx=mx+nx/nl*(bend===0?-14:bend+ (bend>0?14:-14));
+      const ly=my+ny/nl*(bend===0?-14:bend+ (bend>0?14:-14));
+      svg.appendChild(text(lx,ly+4,e.label));
+    });
+    function text(x,y,t){const e=el('text',{x:x,y:y,'text-anchor':'middle','font-family':'IBM Plex Mono,monospace','font-size':'14',fill:'#5B2AB5'});e.textContent=t;return e}
+    states.forEach(s=>{
+      svg.appendChild(el('circle',{cx:s.x,cy:s.y,r:R,fill:'#fff',stroke:'#241B3A','stroke-width':'2'}));
+      if(s.accept)svg.appendChild(el('circle',{cx:s.x,cy:s.y,r:R-5,fill:'none',stroke:'#241B3A','stroke-width':'1.6'}));
+      const t=el('text',{x:s.x,y:s.y+5,'text-anchor':'middle','font-family':'Fraunces,serif','font-size':'15',fill:'#241B3A'});t.textContent=s.label;svg.appendChild(t);
+    });
+    const st=S[startId];
+    svg.appendChild(el('path',{d:`M ${st.x-R-34} ${st.y} L ${st.x-R-4} ${st.y}`,stroke:'#241B3A','stroke-width':'1.8','marker-end':`url(#${figId}-ah)`}));
+    document.getElementById(figId).prepend(svg);
+  }
+  // DFA: ends in 01
+  draw('fsm-dfa',560,190,
+    [{id:'q0',label:'q₀',x:100,y:110},{id:'q1',label:'q₁',x:280,y:110},{id:'q2',label:'q₂',x:460,y:110,accept:true}],
+    [{from:'q0',to:'q0',label:'1'},{from:'q0',to:'q1',label:'0',bend:0},
+     {from:'q1',to:'q1',label:'0'},{from:'q1',to:'q2',label:'1',bend:0},
+     {from:'q2',to:'q1',label:'0',bend:44},{from:'q2',to:'q0',label:'1',bend:70}],
+    'q0');
+  // NFA: ends in 01
+  draw('fsm-nfa',560,170,
+    [{id:'q0',label:'q₀',x:100,y:100},{id:'q1',label:'q₁',x:280,y:100},{id:'q2',label:'q₂',x:460,y:100,accept:true}],
+    [{from:'q0',to:'q0',label:'0,1'},{from:'q0',to:'q1',label:'0',bend:0},{from:'q1',to:'q2',label:'1',bend:0}],
+    'q0');
+  // eNFA: a* b* c*
+  draw('fsm-enfa',560,170,
+    [{id:'q0',label:'q₀',x:100,y:100},{id:'q1',label:'q₁',x:280,y:100},{id:'q2',label:'q₂',x:460,y:100,accept:true}],
+    [{from:'q0',to:'q0',label:'a'},{from:'q1',to:'q1',label:'b'},{from:'q2',to:'q2',label:'c'},
+     {from:'q0',to:'q1',label:'ε',bend:0},{from:'q1',to:'q2',label:'ε',bend:0}],
+    'q0');
+  // star gadget
+  draw('fsm-star',560,200,
+    [{id:'s',label:'s',x:80,y:100},{id:'e1',label:'E',x:280,y:100},{id:'f',label:'f',x:480,y:100,accept:true}],
+    [{from:'s',to:'e1',label:'ε',bend:0},{from:'e1',to:'f',label:'ε',bend:0},
+     {from:'s',to:'f',label:'ε (skip)',bend:78},{from:'f',to:'s',label:'ε (repeat)',bend:78}],
+    's');
+})();
+/* ---- active nav ---- */
+(function(){
+  const links=[...document.querySelectorAll('nav a')];
+  const map={};links.forEach(l=>map[l.getAttribute('href').slice(1)]=l);
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const l=map[e.target.id];if(l)l.classList.add('active');}})},{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
+})();
+</script>
+<script>
+(function(){
+  var files = [{file:"unit1-theory-of-computation.html",title:"Theory of Computation"},{file:"data-science-master-notes.html",title:"Data Science"},{file:"unit1-detailed-notes.html",title:"Detailed Notes"},{file:"unit1-computer-networks_1.html",title:"Computer Networks"}];
+  injectNav("unit1-theory-of-computation.html", files);
+})();
+</script>
+</body>
+</html>

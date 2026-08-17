@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit I — Introduction to Data Analysis using Excel · Detailed Notes</title>
+<style>
+  :root{
+    --paper:#FAFAF5;
+    --ink:#1B2430;
+    --ink-soft:#4A5568;
+    --green:#1D6F42;
+    --green-soft:#E7F2EB;
+    --amber:#B7791F;
+    --amber-soft:#FCF3E3;
+    --line:#D9DCD2;
+    --cell:#FFFFFF;
+    --code-bg:#12181F;
+    --code-fg:#D7E3F0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:Georgia,'Times New Roman',serif;background:var(--paper);color:var(--ink);line-height:1.68;font-size:16.5px}
+  .mono,code,pre,.cellref{font-family:'Consolas','Menlo',monospace}
+
+  .wrap{display:grid;grid-template-columns:255px 1fr;max-width:1240px;margin:0 auto}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:28px 18px 40px;border-right:1px solid var(--line);font-family:'Segoe UI',system-ui,sans-serif;font-size:13.5px;background:var(--paper)}
+  nav h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:18px 0 6px}
+  nav a{display:block;color:var(--ink);text-decoration:none;padding:4px 8px;border-radius:5px;border-left:3px solid transparent}
+  nav a:hover{background:#EFF1E9}
+  nav a.active{border-left-color:var(--green);background:var(--green-soft);font-weight:600}
+  main{padding:0 46px 120px;min-width:0}
+
+  header.hero{padding:52px 0 32px;border-bottom:2px solid var(--ink)}
+  .hero .kicker{font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+  .hero h1{font-size:clamp(28px,4vw,42px);line-height:1.12;margin:10px 0 14px}
+  .hero h1 em{font-style:italic;color:var(--green)}
+  .hero p{max-width:660px;color:var(--ink-soft)}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;font-family:'Segoe UI',system-ui,sans-serif;font-size:12.5px}
+  .meta span{border:1px solid var(--line);background:var(--cell);padding:4px 12px;border-radius:20px}
+
+  section{padding-top:48px}
+  h2.sec{font-size:27px;margin-bottom:4px}
+  h2.sec .cellref{font-size:12px;color:#fff;background:var(--green);padding:3px 9px;border-radius:3px;margin-right:12px;vertical-align:4px}
+  .secsub{font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink-soft);font-size:13.5px;margin-bottom:22px}
+  h3{font-size:20px;margin:34px 0 10px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  h4{font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;margin:20px 0 8px}
+  p{margin:0 0 12px;max-width:78ch}
+  ul,ol{margin:0 0 14px 24px;max-width:76ch}
+  li{margin-bottom:6px}
+  em.term{font-style:normal;font-weight:700;color:var(--green)}
+
+  table{border-collapse:collapse;margin:14px 0 22px;width:100%;font-family:'Segoe UI',system-ui,sans-serif;font-size:13.6px;background:var(--cell)}
+  th,td{border:1px solid var(--line);padding:7px 11px;text-align:left;vertical-align:top}
+  th{background:#EFF1E9;font-weight:700;font-size:12.5px}
+  td code{background:#F0F2EC;padding:1px 6px;border-radius:3px;font-size:12.6px}
+  tr:nth-child(even) td{background:#FCFCF9}
+  table.sheet th{background:#1D6F42;color:#fff;text-align:center;font-family:'Consolas',monospace}
+  table.sheet td:first-child{background:#EFF1E9;font-weight:700;text-align:center;font-family:'Consolas',monospace;width:42px}
+
+  pre{background:var(--code-bg);color:var(--code-fg);padding:15px 18px;border-radius:8px;overflow-x:auto;font-size:13.3px;line-height:1.55;margin:12px 0 20px}
+  pre .c{color:#6B7A8D}
+  pre .g{color:#7CC98F}
+  pre .y{color:#F0C674}
+  p code,li code{background:#EDEFE8;padding:1px 6px;border-radius:3px;font-size:13.4px}
+
+  .box{border:1px solid var(--line);border-left-width:4px;background:var(--cell);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0 22px;max-width:80ch}
+  .box .bt{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+  .box.exam{border-left-color:var(--amber);background:var(--amber-soft)}
+  .box.exam .bt{color:var(--amber)}
+  .box.key{border-left-color:var(--green);background:var(--green-soft)}
+  .box.key .bt{color:var(--green)}
+  .box.steps{border-left-color:#556}
+  .box.steps .bt{color:#556}
+
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;margin:14px 0 20px}
+  .flow .st{background:var(--green);color:#fff;padding:8px 14px;border-radius:6px;font-weight:600}
+  .flow .ar{color:var(--green);font-weight:700}
+
+  details{border:1px solid var(--line);border-radius:8px;background:var(--cell);margin:0 0 12px;max-width:80ch}
+  details summary{cursor:pointer;padding:11px 16px;font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;font-size:14.5px;list-style:none}
+  details summary::before{content:"▸ ";color:var(--green)}
+  details[open] summary::before{content:"▾ "}
+  details .a{padding:0 18px 14px;border-top:1px dashed var(--line);padding-top:10px;font-size:15px}
+
+  footer{margin-top:70px;padding-top:20px;border-top:2px solid var(--ink);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;color:var(--ink-soft)}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr}nav{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}main{padding:0 20px 90px}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/nav.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav id="toc">
+  <h2>Unit I · Deep Dive</h2>
+  <a href="#s1">1 · What is Data Analysis?</a>
+  <a href="#s2">2 · Types of Data Analysis</a>
+  <a href="#s3">3 · Excel as an Analysis Tool</a>
+  <a href="#s4">4 · The Analysis Process</a>
+  <a href="#s5">5 · Data Cleaning — Text Functions</a>
+  <a href="#s6">6 · Text Fns with Dates &amp; Times</a>
+  <a href="#s7">7 · Conditional Formatting</a>
+  <a href="#s8">8 · Sorting</a>
+  <a href="#s9">9 · Filtering</a>
+  <a href="#s10">10 · Subtotals with Ranges</a>
+  <h2>Practice</h2>
+  <a href="#worked">Worked Example</a>
+  <a href="#pyq">Expected Exam Questions</a>
+  <a href="#quiz">Self-Test</a>
+</nav>
+
+<main>
+
+<header class="hero">
+  <div class="kicker">CS1231-1 · Unit I · 15 Hours · Detailed Notes</div>
+  <h1>Introduction to <em>Data Analysis</em> using Excel</h1>
+  <p>Everything in Unit I, at full depth: definitions with examples, every function with syntax + sample worksheet + expected output, step-by-step procedures for the ribbon features, one end-to-end worked example, and the questions this unit typically produces.</p>
+  <div class="meta"><span>10 sections</span><span>60+ functions &amp; features</span><span>Worked example</span><span>25 self-test Qs</span></div>
+</header>
+
+<!-- ══════════ 1 ══════════ -->
+<section id="s1">
+  <h2 class="sec"><span class="cellref">§1</span>What is Data Analysis?</h2>
+  <div class="secsub">Definition · why it matters · data vs information</div>
+  <p><em class="term">Data Analysis</em> is a process of inspecting, cleaning, transforming and modelling data with the goal of discovering useful information, informing conclusions, and supporting decision-making.</p>
+  <p>Break the definition into its four verbs — each maps to a stage you'll study in §4:</p>
+  <ul>
+    <li><strong>Inspecting</strong> — examining data to understand its structure, quality and completeness.</li>
+    <li><strong>Cleaning</strong> — removing errors, duplicates, inconsistencies and irrelevant records.</li>
+    <li><strong>Transforming</strong> — converting data into a suitable format (splitting columns, changing case, converting text-dates into real dates).</li>
+    <li><strong>Modelling</strong> — applying formulas, statistics or charts to extract meaning.</li>
+  </ul>
+  <h4>Data vs Information vs Insight</h4>
+  <table>
+    <tr><th></th><th>Meaning</th><th>Example</th></tr>
+    <tr><td><strong>Data</strong></td><td>Raw, unorganised facts</td><td>78, 45, 92, 66 (marks of students)</td></tr>
+    <tr><td><strong>Information</strong></td><td>Processed, organised data with context</td><td>"Class average = 70.25"</td></tr>
+    <tr><td><strong>Insight</strong></td><td>Actionable conclusion</td><td>"Section B needs remedial classes in Unit 3 topics"</td></tr>
+  </table>
+  <div class="box key"><div class="bt">Why Excel first?</div>Before Python/R at scale, Excel teaches every analysis concept — storage (grid), computation (formulas), summarisation (PivotTables), presentation (charts) — with zero programming. Roughly 750 million people use it; it remains the world's most common analysis tool.</div>
+</section>
+
+<!-- ══════════ 2 ══════════ -->
+<section id="s2">
+  <h2 class="sec"><span class="cellref">§2</span>Types of Data Analysis</h2>
+  <div class="secsub">Data Mining · Business Intelligence · Statistical Analysis · Predictive Analytics · Text Analytics — each = definition + techniques + example + tools</div>
+
+  <h3>2.1 Data Mining</h3>
+  <p><em class="term">Data Mining</em> is the process of discovering hidden patterns, unknown correlations, anomalies and useful knowledge from <strong>large datasets</strong>, using methods at the intersection of artificial intelligence, machine learning, statistics and database systems. It is sometimes called <strong>KDD — Knowledge Discovery in Databases</strong>.</p>
+  <ul>
+    <li><strong>Common techniques:</strong> classification (assign a category), clustering (group similar records), association-rule mining (X is bought with Y), anomaly/outlier detection, regression.</li>
+    <li><strong>Example:</strong> market-basket analysis — a retail chain mines billions of transactions and finds "customers who buy diapers frequently buy baby wipes", so the two are shelved together.</li>
+    <li><strong>Other applications:</strong> credit-card fraud detection (anomalies), customer segmentation for marketing (clustering), loan-default prediction (classification).</li>
+  </ul>
+
+  <h3>2.2 Business Intelligence (BI)</h3>
+  <p><em class="term">Business Intelligence</em> is the set of strategies and technologies that transform raw data into <strong>meaningful and useful information for business analysis</strong> — dashboards, scorecards, reports — so managers can make tactical and strategic decisions.</p>
+  <ul>
+    <li><strong>Focus:</strong> mostly <em>descriptive</em> — "what happened / what is happening", presented visually.</li>
+    <li><strong>Typical components:</strong> data warehouse → ETL (extract-transform-load) → OLAP cubes → dashboards/reports.</li>
+    <li><strong>Example:</strong> a management dashboard showing this month's revenue by region, top 10 products, and inventory turnover, refreshed daily.</li>
+    <li><strong>Tools:</strong> Power BI, Tableau, Qlik — and Excel itself via PowerPivot/Power View (Unit II).</li>
+  </ul>
+
+  <h3>2.3 Statistical Analysis</h3>
+  <p><em class="term">Statistical Analysis</em> is the collection, exploration, interpretation and presentation of data using the science of statistics, to uncover patterns and trends and to quantify uncertainty.</p>
+  <table>
+    <tr><th>Branch</th><th>Goal</th><th>Techniques</th><th>Example</th></tr>
+    <tr><td><strong>Descriptive statistics</strong></td><td>Summarise the data you HAVE</td><td>Mean, median, mode, range, variance, standard deviation, frequency tables</td><td>"Average marks = 70.2, SD = 8.5"</td></tr>
+    <tr><td><strong>Inferential statistics</strong></td><td>Conclude about a POPULATION from a sample</td><td>Hypothesis testing, confidence intervals, regression, ANOVA</td><td>Predicting an election result from a 10,000-voter exit poll</td></tr>
+  </table>
+  <p>Excel support: functions such as <code>AVERAGE, MEDIAN, MODE.SNGL, STDEV.S, VAR.S, CORREL</code>, plus the <strong>Analysis ToolPak</strong> add-in (descriptive statistics, histogram, regression, t-tests).</p>
+
+  <h3>2.4 Predictive Analytics</h3>
+  <p><em class="term">Predictive Analytics</em> uses <strong>historical data + statistical algorithms + machine learning</strong> to estimate the likelihood of future outcomes. It answers "what is likely to happen?"</p>
+  <ul>
+    <li><strong>Techniques:</strong> regression models, time-series forecasting, decision trees, neural networks.</li>
+    <li><strong>Examples:</strong> forecasting next quarter's sales from 5 years of history; predicting which customers will churn; predicting machine failure from sensor data (predictive maintenance); credit scoring.</li>
+    <li><strong>Excel support:</strong> <code>TREND(), FORECAST.LINEAR(), FORECAST.ETS()</code>, trendlines on charts, Forecast Sheet (Data → Forecast).</li>
+  </ul>
+
+  <h3>2.5 Text Analytics</h3>
+  <p><em class="term">Text Analytics</em> (text mining) is the process of deriving high-quality, <strong>structured</strong> information from <strong>unstructured text</strong>, using linguistic, statistical and machine-learning techniques.</p>
+  <ul>
+    <li><strong>Steps:</strong> collect text → clean/tokenise → extract features → analyse patterns → interpret.</li>
+    <li><strong>Techniques:</strong> sentiment analysis, keyword/entity extraction, topic modelling, document categorisation.</li>
+    <li><strong>Example:</strong> classifying 50,000 product reviews as positive/negative/neutral to find the most complained-about feature.</li>
+  </ul>
+
+  <div class="box exam"><div class="bt">10-mark pattern</div>"Explain the types of data analysis with examples." Write one paragraph per type in this fixed order — definition → technique → real-world example — and finish with the descriptive→diagnostic→predictive→prescriptive ladder for extra credit.</div>
+
+  <h3>2.6 Data Analysis with Excel — three levels</h3>
+  <p>The syllabus names three tiers of Excel usage; think of them as the ladder you climb through Units I–II:</p>
+  <table>
+    <tr><th>Level</th><th>Features</th><th>Unit</th></tr>
+    <tr><td><strong>Basic data analysis</strong></td><td>Formulas &amp; functions, sorting, filtering, conditional formatting, subtotals, basic charts</td><td>Unit I</td></tr>
+    <tr><td><strong>Data analysis</strong></td><td>Lookup functions, PivotTables, data validation, What-If tools, financial functions, consolidation</td><td>Unit II (first half)</td></tr>
+    <tr><td><strong>Advanced data analysis</strong></td><td>Data Model, PowerPivot + DAX, Power View reports, KPIs, importing external data, Power Query</td><td>Unit II (second half)</td></tr>
+  </table>
+</section>
+
+<!-- ══════════ 3 ══════════ -->
+<section id="s3">
+  <h2 class="sec"><span class="cellref">§3</span>Excel as an Analysis Tool — the essentials</h2>
+  <div class="secsub">Workbook anatomy · references · formula rules you must not get wrong</div>
+  <ul>
+    <li><strong>Workbook</strong> = the file (.xlsx); <strong>worksheet</strong> = one grid tab; <strong>cell</strong> = intersection of a column (A, B, C…) and row (1, 2, 3…), addressed like <code>B7</code>; <strong>range</strong> = rectangular block like <code>A1:C10</code>.</li>
+    <li>Every formula begins with <code>=</code>. Operators: <code>+ - * / ^</code> and <code>&amp;</code> (text join); comparisons <code>= &lt;&gt; &lt; &gt; &lt;= &gt;=</code> return TRUE/FALSE.</li>
+    <li><strong>Relative reference</strong> <code>A1</code> — adjusts when copied. <strong>Absolute</strong> <code>$A$1</code> — frozen (press F4). <strong>Mixed</strong> <code>$A1</code> / <code>A$1</code> — one axis frozen. This distinction drives conditional-formatting formulas in §7.</li>
+    <li><strong>Fill handle</strong> — drag the small square at a cell's corner to copy a formula/pattern down a column instantly.</li>
+  </ul>
+  <div class="box key"><div class="bt">Useful shortcuts for this unit</div>Ctrl+Shift+L toggle filters · Ctrl+T create Table · Ctrl+Q Quick Analysis · Ctrl+E Flash Fill · F4 cycle reference types · Ctrl+; insert today's date.</div>
+</section>
+
+<!-- ══════════ 4 ══════════ -->
+<section id="s4">
+  <h2 class="sec"><span class="cellref">§4</span>The Data Analysis Process — six stages in depth</h2>
+  <div class="secsub">Requirements → Collection → Processing → Cleaning → Analysis → Communication</div>
+
+  <div class="flow">
+    <span class="st">1 Requirements</span><span class="ar">→</span>
+    <span class="st">2 Collection</span><span class="ar">→</span>
+    <span class="st">3 Processing</span><span class="ar">→</span>
+    <span class="st">4 Cleaning</span><span class="ar">→</span>
+    <span class="st">5 Analysis</span><span class="ar">→</span>
+    <span class="st">6 Communication</span>
+  </div>
+  <p style="font-family:'Segoe UI',sans-serif;font-size:13px;color:var(--ink-soft)">⟲ Analysis often loops back to Collection/Cleaning when more or better data is needed — the process is iterative, not strictly linear.</p>
+
+  <h3>Stage 1 — Data Requirements Specification</h3>
+  <p>Decide <strong>what data is necessary</strong>, driven by the questions the analysis must answer. Specify: the <strong>population</strong> under study, the <strong>variables</strong> to measure (e.g., age, income, marks), their <strong>units</strong>, and the required accuracy/time period. Getting this wrong wastes every later stage.</p>
+  <p><em>Example:</em> to analyse student performance you specify — population: all 3rd-semester CSE students; variables: USN, subject, CIE marks, SEE marks, attendance %; period: current academic year.</p>
+
+  <h3>Stage 2 — Data Collection</h3>
+  <p>Gather the specified data from identified <strong>sources</strong>. Data must be accurate, relevant and trustworthy.</p>
+  <ul>
+    <li><strong>Primary sources</strong> — collected first-hand: surveys, questionnaires, interviews, experiments, sensors.</li>
+    <li><strong>Secondary sources</strong> — already existing: organisational databases, government records, websites, published reports.</li>
+  </ul>
+
+  <h3>Stage 3 — Data Processing</h3>
+  <p>Organise raw collected data into an analysable structure — typically <strong>rows (records) × columns (fields)</strong> in a worksheet or database table. Includes data entry, digitising paper forms, merging files, and arranging one record per row with one variable per column.</p>
+
+  <h3>Stage 4 — Data Cleaning</h3>
+  <p>Detect and correct (or remove) <strong>incomplete, duplicate, inconsistent or erroneous</strong> records so results aren't misleading. Typical operations:</p>
+  <ul>
+    <li>Remove duplicate rows (Data → Remove Duplicates).</li>
+    <li>Fix inconsistent text — extra spaces, mixed case, glued values (→ text functions, §5).</li>
+    <li>Handle missing values — delete, fill, or flag.</li>
+    <li>Correct wrong types — text-numbers to numbers (<code>VALUE</code>), text-dates to dates (<code>DATEVALUE</code>).</li>
+    <li>Check ranges — no marks &gt; 100, no negative ages.</li>
+  </ul>
+  <div class="box key"><div class="bt">The 80/20 truth</div>Analysts commonly report spending the majority of project time on cleaning and preparing data — which is why this unit devotes so much attention to text and date functions.</div>
+
+  <h3>Stage 5 — Data Analysis</h3>
+  <p>Apply techniques to understand, interpret, and derive conclusions: formulas and statistics (averages, correlations), visual exploration (charts, conditional formatting), summarisation (subtotals, later PivotTables). Findings may reveal that <strong>more data or more cleaning is needed → iterate</strong>.</p>
+
+  <h3>Stage 6 — Communication</h3>
+  <p>Report results to decision-makers <strong>in the format they need</strong>: tables, charts, dashboards, written summaries. Good communication uses visualization — colour coding, data bars, well-chosen charts — so the message is clear at a glance to a non-technical audience.</p>
+</section>
+
+<!-- ══════════ 5 ══════════ -->
+<section id="s5">
+  <h2 class="sec"><span class="cellref">§5</span>Data Cleaning with Text Functions</h2>
+  <div class="secsub">Case · trimming · extraction · searching · replacing · joining · converting — every function with a live-style example</div>
+
+  <p>Sample dirty data used in the examples below:</p>
+  <table class="sheet">
+    <tr><th></th><th>A</th></tr>
+    <tr><td>1</td><td>"  priya SHARMA  "</td></tr>
+    <tr><td>2</td><td>"CS1231-Data Science"</td></tr>
+    <tr><td>3</td><td>"Ravi Kumar"</td></tr>
+    <tr><td>4</td><td>"₹1,250"</td></tr>
+  </table>
+
+  <h3>5.1 Case conversion</h3>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Example</th><th>Result</th></tr>
+    <tr><td>UPPER</td><td><code>=UPPER(text)</code></td><td><code>=UPPER("excel")</code></td><td>EXCEL</td></tr>
+    <tr><td>LOWER</td><td><code>=LOWER(text)</code></td><td><code>=LOWER("EXCEL")</code></td><td>excel</td></tr>
+    <tr><td>PROPER</td><td><code>=PROPER(text)</code></td><td><code>=PROPER("priya sharma")</code></td><td>Priya Sharma</td></tr>
+  </table>
+
+  <h3>5.2 Removing unwanted characters</h3>
+  <table>
+    <tr><th>Function</th><th>What it removes</th><th>Example</th></tr>
+    <tr><td>TRIM</td><td>ALL leading &amp; trailing spaces + extra spaces between words (keeps single spaces)</td><td><code>=TRIM(A1)</code> → "priya SHARMA"</td></tr>
+    <tr><td>CLEAN</td><td>Non-printable characters (ASCII 0–31: line feeds, tabs from web/database imports)</td><td><code>=CLEAN(A1)</code></td></tr>
+  </table>
+  <p>The standard clean-up chain for a name column: <code>=PROPER(TRIM(CLEAN(A1)))</code> → "Priya Sharma".</p>
+
+  <h3>5.3 Extraction — LEFT, RIGHT, MID, LEN</h3>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Example on A2 = "CS1231-Data Science"</th><th>Result</th></tr>
+    <tr><td>LEFT</td><td><code>=LEFT(text, n)</code></td><td><code>=LEFT(A2, 6)</code></td><td>CS1231</td></tr>
+    <tr><td>RIGHT</td><td><code>=RIGHT(text, n)</code></td><td><code>=RIGHT(A2, 7)</code></td><td>Science</td></tr>
+    <tr><td>MID</td><td><code>=MID(text, start, n)</code></td><td><code>=MID(A2, 8, 4)</code></td><td>Data</td></tr>
+    <tr><td>LEN</td><td><code>=LEN(text)</code></td><td><code>=LEN(A2)</code></td><td>19</td></tr>
+  </table>
+
+  <h3>5.4 Searching — FIND vs SEARCH</h3>
+  <table>
+    <tr><th></th><th>FIND</th><th>SEARCH</th></tr>
+    <tr><td>Syntax</td><td><code>=FIND(find_text, within_text, [start])</code></td><td><code>=SEARCH(find_text, within_text, [start])</code></td></tr>
+    <tr><td>Case</td><td><strong>Case-sensitive</strong></td><td>Case-insensitive</td></tr>
+    <tr><td>Wildcards ? *</td><td>Not allowed</td><td>Allowed</td></tr>
+    <tr><td><code>("s","Data Science")</code></td><td>Result: 11 (lowercase s)</td><td>Result: 6 (first s or S)</td></tr>
+    <tr><td>If not found</td><td colspan="2">Both return #VALUE! error</td></tr>
+  </table>
+
+  <h3>5.5 The dynamic-split pattern (very common exam question)</h3>
+  <p>Split A3 = "Ravi Kumar" into first and last name <strong>for any name length</strong>:</p>
+<pre><span class="c">First name — everything before the space:</span>
+=LEFT(A3, <span class="y">FIND</span>(" ", A3) - 1)                     <span class="c">→ "Ravi"</span>
+
+<span class="c">Last name — everything after the space:</span>
+=MID(A3, <span class="y">FIND</span>(" ", A3) + 1, <span class="y">LEN</span>(A3))            <span class="c">→ "Kumar"</span>
+
+<span class="c">Why it works: FIND(" ",A3)=5 → LEFT takes 4 chars; MID starts at 6;
+LEN(A3) as length is "more than enough", MID just returns what exists.</span></pre>
+
+  <h3>5.6 Replacing — SUBSTITUTE vs REPLACE</h3>
+  <table>
+    <tr><th></th><th>SUBSTITUTE</th><th>REPLACE</th></tr>
+    <tr><td>Replaces by</td><td><strong>Content</strong> (what the text says)</td><td><strong>Position</strong> (where it sits)</td></tr>
+    <tr><td>Syntax</td><td><code>=SUBSTITUTE(text, old, new, [instance])</code></td><td><code>=REPLACE(text, start, num_chars, new)</code></td></tr>
+    <tr><td>Example</td><td><code>=SUBSTITUTE("a-b-c", "-", "/")</code> → a/b/c<br><code>=SUBSTITUTE("a-b-c","-","/",2)</code> → a-b/c (2nd only)</td><td><code>=REPLACE("CS1231", 3, 4, "9999")</code> → CS9999</td></tr>
+    <tr><td>Use when</td><td>You know WHAT to change</td><td>You know WHERE to change</td></tr>
+  </table>
+  <p>Trick — count occurrences of a character: <code>=LEN(A1) - LEN(SUBSTITUTE(A1, ",", ""))</code> counts commas.</p>
+
+  <h3>5.7 Joining — &amp;, CONCATENATE, CONCAT, TEXTJOIN</h3>
+<pre>=A1 &amp; " " &amp; B1                       <span class="c">' operator — simplest</span>
+=CONCATENATE(A1, " ", B1)            <span class="c">' legacy function, same effect</span>
+=CONCAT(A1:C1)                       <span class="c">' newer: accepts ranges</span>
+=TEXTJOIN(", ", TRUE, A1:A5)         <span class="c">' delimiter + ignore-empty flag — best</span></pre>
+
+  <h3>5.8 Converting — TEXT, VALUE, EXACT, REPT</h3>
+  <table>
+    <tr><th>Function</th><th>Example</th><th>Result / purpose</th></tr>
+    <tr><td>TEXT</td><td><code>=TEXT(TODAY(), "dd-mmm-yyyy")</code></td><td>"05-Aug-2026" — number/date → formatted text (needed when joining a date into a sentence).</td></tr>
+    <tr><td>VALUE</td><td><code>=VALUE("1250")</code></td><td>1250 — text-number → real number so SUM works.</td></tr>
+    <tr><td>NUMBERVALUE</td><td><code>=NUMBERVALUE("1.250,50", ",", ".")</code></td><td>Converts with custom decimal/group separators.</td></tr>
+    <tr><td>EXACT</td><td><code>=EXACT("Excel","excel")</code></td><td>FALSE — case-sensitive comparison (the = operator would say TRUE).</td></tr>
+    <tr><td>REPT</td><td><code>=REPT("★", 4)</code></td><td>★★★★ — repeat text n times (in-cell mini charts).</td></tr>
+    <tr><td>CHAR / CODE</td><td><code>=CHAR(10)</code></td><td>Line-break character / ASCII code of a character.</td></tr>
+  </table>
+  <div class="box exam"><div class="bt">Numbers stored as text — spot &amp; fix</div>Symptoms: left-aligned "numbers", green triangle, SUM returns 0. Fixes: <code>=VALUE(A1)</code>, multiply by 1 (<code>=A1*1</code>), or Text-to-Columns with format General. Know this — it's a favourite short question.</div>
+</section>
+
+<!-- ══════════ 6 ══════════ -->
+<section id="s6">
+  <h2 class="sec"><span class="cellref">§6</span>Text Functions with Dates &amp; Times</h2>
+  <div class="secsub">Serial-number system · date functions · time functions · text↔date conversion patterns</div>
+
+  <h3>6.1 How Excel stores dates and times</h3>
+  <ul>
+    <li>A <strong>date</strong> is a <em class="term">serial number</em>: 1 = 1-Jan-1900, 2 = 2-Jan-1900, … so "05-Aug-2026" ≈ 46,239. Because dates are numbers, <code>=B1-A1</code> directly gives days between two dates, and dates sort/compare correctly.</li>
+    <li>A <strong>time</strong> is a <em class="term">fraction of a day</em>: 06:00 = 0.25, 12:00 = 0.5, 18:00 = 0.75. A date-time like "05-Aug-2026 18:00" = 46239.75.</li>
+    <li>Formatting only changes the <em>display</em> — the underlying serial number is unchanged. (Format Cells → Number → Date/Time/Custom.)</li>
+  </ul>
+
+  <h3>6.2 Date functions</h3>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Example</th><th>Result</th></tr>
+    <tr><td>TODAY</td><td><code>=TODAY()</code></td><td>—</td><td>Current date (volatile: recalculates on every change).</td></tr>
+    <tr><td>NOW</td><td><code>=NOW()</code></td><td>—</td><td>Current date + time.</td></tr>
+    <tr><td>DATE</td><td><code>=DATE(y, m, d)</code></td><td><code>=DATE(2026, 8, 5)</code></td><td>05-08-2026 — builds a valid date; also auto-corrects: <code>DATE(2026,13,1)</code> → Jan-2027.</td></tr>
+    <tr><td>DAY / MONTH / YEAR</td><td><code>=MONTH(date)</code></td><td><code>=MONTH(A1)</code></td><td>8 (extract components).</td></tr>
+    <tr><td>WEEKDAY</td><td><code>=WEEKDAY(date, [type])</code></td><td><code>=WEEKDAY(A1)</code></td><td>1–7 (default: 1 = Sunday; type 2: 1 = Monday).</td></tr>
+    <tr><td>EOMONTH</td><td><code>=EOMONTH(date, months)</code></td><td><code>=EOMONTH(A1, 0)</code></td><td>Last day of that month; offset ±n months.</td></tr>
+    <tr><td>EDATE</td><td><code>=EDATE(date, months)</code></td><td><code>=EDATE(A1, 6)</code></td><td>Same day, 6 months later (maturity dates).</td></tr>
+    <tr><td>DATEDIF</td><td><code>=DATEDIF(start, end, unit)</code></td><td><code>=DATEDIF(A1, TODAY(), "y")</code></td><td>Completed years — perfect for AGE. Units: "y","m","d","ym","md". (Hidden from IntelliSense but fully valid.)</td></tr>
+    <tr><td>NETWORKDAYS</td><td><code>=NETWORKDAYS(start, end, [holidays])</code></td><td><code>=NETWORKDAYS(A1, B1)</code></td><td>Working days excluding weekends (+ optional holiday list).</td></tr>
+    <tr><td>WORKDAY</td><td><code>=WORKDAY(start, days)</code></td><td><code>=WORKDAY(A1, 10)</code></td><td>Date 10 working days after start.</td></tr>
+  </table>
+
+  <h3>6.3 Time functions</h3>
+  <table>
+    <tr><th>Function</th><th>Example</th><th>Result</th></tr>
+    <tr><td>TIME(h, m, s)</td><td><code>=TIME(14, 30, 0)</code></td><td>2:30 PM (value 0.6042).</td></tr>
+    <tr><td>HOUR / MINUTE / SECOND</td><td><code>=HOUR(A1)</code></td><td>14 — extract components (0–23 / 0–59 / 0–59).</td></tr>
+    <tr><td>TIMEVALUE</td><td><code>=TIMEVALUE("2:30 PM")</code></td><td>0.6042 — time-text → number.</td></tr>
+  </table>
+  <p>Hours worked between login A1 and logout B1: <code>=(B1-A1)*24</code> — multiply by 24 because the difference is a fraction of a day; format the result as Number, not Time.</p>
+
+  <h3>6.4 Text functions WITH date/time values — the syllabus patterns</h3>
+  <h4>Pattern 1 · Text containing a date → real date</h4>
+<pre><span class="c">A1 = "Joined on 12/05/2023"</span>
+=<span class="y">DATEVALUE</span>(MID(A1, 11, 10))      <span class="c">→ serial 45058 → format as Date → 12-05-2023</span></pre>
+  <h4>Pattern 2 · Text containing a time → real time</h4>
+<pre><span class="c">A1 = "Shift starts 09:30 AM"</span>
+=<span class="y">TIMEVALUE</span>(MID(A1, 14, 8))       <span class="c">→ 0.3958 → format as Time → 9:30 AM</span></pre>
+  <h4>Pattern 3 · Date → text (for messages/joins)</h4>
+<pre>="Report generated on " &amp; <span class="y">TEXT</span>(TODAY(), "dd-mmm-yyyy")
+<span class="c">→ "Report generated on 05-Aug-2026"
+Without TEXT you'd get "Report generated on 46239" — the raw serial!</span></pre>
+  <h4>Pattern 4 · Rebuild a date from a non-standard string</h4>
+<pre><span class="c">A1 = "20260805"  (yyyymmdd, common in exported files)</span>
+=<span class="y">DATE</span>(LEFT(A1,4), MID(A1,5,2), RIGHT(A1,2))   <span class="c">→ 05-08-2026</span></pre>
+  <div class="box key"><div class="bt">Rule of thumb</div>Going text → date/time: DATEVALUE / TIMEVALUE (or rebuild with DATE). Going date/time → text: TEXT with a format code. Format codes: dd, mm, mmm, mmmm, yy, yyyy, hh, mm, ss, AM/PM.</div>
+</section>
+
+<!-- ══════════ 7 ══════════ -->
+<section id="s7">
+  <h2 class="sec"><span class="cellref">§7</span>Conditional Formatting</h2>
+  <div class="secsub">Home → Styles → Conditional Formatting · all six rule families + formula rules + managing rules</div>
+  <p><em class="term">Conditional Formatting</em> automatically applies formatting — cell fill, font colour, borders, icons — to cells that satisfy a condition. The format is <strong>dynamic</strong>: change the value and the formatting updates itself. Purpose: make patterns, trends, and exceptions visible instantly.</p>
+
+  <h3>7.1 The rule families</h3>
+  <table>
+    <tr><th>Family</th><th>Options</th><th>Typical use</th></tr>
+    <tr><td><strong>Highlight Cells Rules</strong></td><td>Greater Than, Less Than, Between, Equal To, Text that Contains, A Date Occurring, <strong>Duplicate Values</strong></td><td>Flag marks &lt; 40 in red; find duplicate roll numbers.</td></tr>
+    <tr><td><strong>Top/Bottom Rules</strong></td><td>Top 10 Items, Top 10 %, Bottom 10 Items/%, Above Average, Below Average</td><td>Highlight top 5 sales reps; below-average performers.</td></tr>
+    <tr><td><strong>Data Bars</strong></td><td>Gradient or solid in-cell horizontal bars, length ∝ value</td><td>Instant bar-chart effect inside the marks column.</td></tr>
+    <tr><td><strong>Color Scales</strong></td><td>2-colour or 3-colour gradients across the range</td><td>Red-yellow-green heat map of a marks grid.</td></tr>
+    <tr><td><strong>Icon Sets</strong></td><td>3–5 icons: arrows, traffic lights, ratings, flags</td><td>▲ growing / ▬ flat / ▼ falling revenue.</td></tr>
+    <tr><td><strong>New Rule → Formula</strong></td><td>"Use a formula to determine which cells to format"</td><td>Any custom logic (below).</td></tr>
+  </table>
+
+  <h3>7.2 Applying a basic rule — step by step</h3>
+  <div class="box steps"><div class="bt">Procedure (write in exams)</div>
+    1. Select the range (e.g., C2:C31, the marks column).<br>
+    2. Home → Styles → Conditional Formatting → Highlight Cells Rules → Less Than.<br>
+    3. Enter 40; pick a format ("Light Red Fill with Dark Red Text") or Custom Format.<br>
+    4. OK — failing marks are now red, and stay red-aware as values change.
+  </div>
+
+  <h3>7.3 Formula-based rules — the powerful one</h3>
+  <p>The formula is written <strong>as if for the top-left cell</strong> of the selection and must return TRUE/FALSE; Excel copies it across the range following relative/absolute reference rules.</p>
+  <table>
+    <tr><th>Goal (selection)</th><th>Formula</th><th>Why the $ matters</th></tr>
+    <tr><td>Highlight ENTIRE row where marks in C &lt; 40 (select A2:F31)</td><td><code>=$C2&lt;40</code></td><td>$C locks the column so every cell in the row tests column C; row 2 stays relative so each row tests its own C.</td></tr>
+    <tr><td>Shade alternate rows (select A2:F31)</td><td><code>=MOD(ROW(),2)=0</code></td><td>Even row numbers → TRUE.</td></tr>
+    <tr><td>Highlight weekends in a date column</td><td><code>=WEEKDAY($A2,2)&gt;5</code></td><td>Type 2 → Sat=6, Sun=7.</td></tr>
+    <tr><td>Flag values above the column average</td><td><code>=B2&gt;AVERAGE($B$2:$B$31)</code></td><td>Average range fully locked.</td></tr>
+  </table>
+
+  <h3>7.4 Managing rules</h3>
+  <ul>
+    <li><strong>Manage Rules…</strong> — view all rules on a sheet, Edit, Delete, and reorder with ▲▼. Rules are evaluated <strong>top-down</strong>; when formats conflict, the higher rule wins.</li>
+    <li><strong>Stop If True</strong> — halt evaluation of lower rules once this rule matches.</li>
+    <li><strong>Clear Rules</strong> — from selected cells or the entire sheet.</li>
+  </ul>
+</section>
+
+<!-- ══════════ 8 ══════════ -->
+<section id="s8">
+  <h2 class="sec"><span class="cellref">§8</span>Sorting</h2>
+  <div class="secsub">Single-level · multi-level · custom lists · colour sort · pitfalls</div>
+  <h3>8.1 Single-level sort</h3>
+  <p>Click any cell in the column → Data → <strong>A→Z</strong> (ascending) or <strong>Z→A</strong> (descending). For numbers the buttons read Smallest→Largest; for dates, Oldest→Newest. Excel auto-detects the surrounding data region and keeps rows intact.</p>
+  <h3>8.2 Multi-level sort</h3>
+  <div class="box steps"><div class="bt">Procedure</div>
+    1. Data → Sort (dialog opens).<br>
+    2. Tick <strong>"My data has headers"</strong> so column names appear (and don't get sorted as data).<br>
+    3. Sort by: <em>Department</em> (A→Z) → <strong>Add Level</strong> → Then by: <em>Salary</em> (Largest→Smallest).<br>
+    4. OK. Rows group by department; within each department, highest salary first.
+  </div>
+  <h3>8.3 Custom &amp; special sorts</h3>
+  <ul>
+    <li><strong>Custom list:</strong> Sort dialog → Order → Custom List — sort Jan, Feb, Mar… or Low/Medium/High instead of alphabetical order. (Own lists: File → Options → Advanced → Edit Custom Lists.)</li>
+    <li><strong>By colour/icon:</strong> Sort On → Cell Color / Font Color / Cell Icon — pairs beautifully with conditional formatting.</li>
+    <li><strong>Left-to-right sort:</strong> Sort → Options → "Sort left to right" to sort columns instead of rows.</li>
+    <li><strong>Case-sensitive:</strong> Sort → Options → tick Case sensitive.</li>
+  </ul>
+  <div class="box exam"><div class="bt">Pitfall to mention</div>Selecting a single column before sorting can sort ONLY that column, scrambling rows (Excel warns "expand the selection" — always expand). Safest: click one cell, let Excel detect the region, or convert to a Table (Ctrl+T) first.</div>
+</section>
+
+<!-- ══════════ 9 ══════════ -->
+<section id="s9">
+  <h2 class="sec"><span class="cellref">§9</span>Filtering</h2>
+  <div class="secsub">AutoFilter · text/number/date filters · Advanced Filter with criteria ranges</div>
+  <h3>9.1 AutoFilter</h3>
+  <p>Data → <strong>Filter</strong> (Ctrl+Shift+L) adds a drop-down arrow to every header. Filtering <strong>hides</strong> non-matching rows (blue row numbers indicate a filtered state) — nothing is deleted. Each dropdown offers:</p>
+  <ul>
+    <li><strong>Checkbox list</strong> of unique values with a search box — tick what to keep.</li>
+    <li><strong>Text Filters:</strong> Equals, Contains, Begins With, Ends With, Does Not Contain, Custom (with wildcards ? and *).</li>
+    <li><strong>Number Filters:</strong> Greater Than, Between, Top 10 (items or %), Above/Below Average.</li>
+    <li><strong>Date Filters:</strong> Today, This Week, Last Month, This Quarter, Year to Date, Between, All Dates in Period.</li>
+    <li><strong>Filter by Color</strong> — by cell fill or font colour.</li>
+  </ul>
+  <p>Filters on multiple columns combine with <strong>AND</strong> logic (a row must pass every column's filter). Clear with Data → Clear, or remove all arrows with Ctrl+Shift+L again.</p>
+
+  <h3>9.2 Advanced Filter</h3>
+  <p>For complex criteria (especially <strong>OR across different columns</strong>) and for extracting results elsewhere. Requires a <em class="term">criteria range</em>: a copy of the header row + condition rows beneath it.</p>
+  <table class="sheet">
+    <tr><th></th><th>H</th><th>I</th></tr>
+    <tr><td>1</td><td>Dept</td><td>Salary</td></tr>
+    <tr><td>2</td><td>IT</td><td>&gt;50000</td></tr>
+    <tr><td>3</td><td>HR</td><td></td></tr>
+  </table>
+  <p><strong>Reading the criteria:</strong> conditions on the <strong>same row</strong> are AND-ed; conditions on <strong>different rows</strong> are OR-ed. So the range above means: (Dept="IT" AND Salary&gt;50000) OR (Dept="HR").</p>
+  <div class="box steps"><div class="bt">Procedure</div>
+    1. Build the criteria range (H1:I3 above), headers spelled exactly like the data's headers.<br>
+    2. Data → Sort &amp; Filter → <strong>Advanced</strong>.<br>
+    3. Choose action: "Filter the list, in-place" or "Copy to another location" (give a destination cell).<br>
+    4. List range = your data; Criteria range = H1:I3.<br>
+    5. Optional: tick <strong>"Unique records only"</strong> to remove duplicates in the output. → OK.
+  </div>
+  <table>
+    <tr><th>AutoFilter</th><th>Advanced Filter</th></tr>
+    <tr><td>Quick, dropdown-driven</td><td>Criteria written in cells</td></tr>
+    <tr><td>AND across columns only (mostly)</td><td>Full AND/OR combinations across columns</td></tr>
+    <tr><td>Filters in place only</td><td>In place OR copy results to another location</td></tr>
+    <tr><td>No duplicate removal</td><td>"Unique records only" option</td></tr>
+  </table>
+</section>
+
+<!-- ══════════ 10 ══════════ -->
+<section id="s10">
+  <h2 class="sec"><span class="cellref">§10</span>Subtotals with Ranges</h2>
+  <div class="secsub">Data → Outline → Subtotal · the SUBTOTAL function · outline levels · nested subtotals</div>
+
+  <h3>10.1 The Subtotal command</h3>
+  <p>Automatically inserts summary rows (subtotals) for each group of a sorted list, plus a grand total, and builds a collapsible <strong>outline</strong> on the left.</p>
+  <div class="box steps"><div class="bt">Procedure (memorise the 3 dialog choices)</div>
+    1. <strong>SORT the list by the grouping column first</strong> — e.g., sort by Region. (If not sorted, identical values aren't adjacent and each cluster gets its own subtotal.)<br>
+    2. Click inside the data → Data → Outline → <strong>Subtotal</strong>.<br>
+    3. <em>At each change in:</em> Region · <em>Use function:</em> Sum · <em>Add subtotal to:</em> ✔ Sales.<br>
+    4. Options: "Replace current subtotals", "Page break between groups", "Summary below data". → OK.<br>
+    5. Use outline buttons <strong>1 / 2 / 3</strong>: 1 = grand total only, 2 = subtotals, 3 = all detail rows. Remove All button clears everything.
+  </div>
+
+  <h4>Before → After (Sum of Sales at each change in Region)</h4>
+  <table class="sheet">
+    <tr><th></th><th>A (Region)</th><th>B (Sales)</th></tr>
+    <tr><td>2</td><td>East</td><td>200</td></tr>
+    <tr><td>3</td><td>East</td><td>150</td></tr>
+    <tr><td>4</td><td><strong>East Total</strong></td><td><strong>350</strong> ← =SUBTOTAL(9,B2:B3)</td></tr>
+    <tr><td>5</td><td>West</td><td>300</td></tr>
+    <tr><td>6</td><td>West</td><td>120</td></tr>
+    <tr><td>7</td><td><strong>West Total</strong></td><td><strong>420</strong> ← =SUBTOTAL(9,B5:B6)</td></tr>
+    <tr><td>8</td><td><strong>Grand Total</strong></td><td><strong>770</strong> ← =SUBTOTAL(9,B2:B6)</td></tr>
+  </table>
+
+  <h3>10.2 The SUBTOTAL function</h3>
+  <p><code>=SUBTOTAL(function_num, ref1, …)</code></p>
+  <table>
+    <tr><th>function_num (incl. hidden)</th><th>function_num (ignore hidden)</th><th>Operation</th></tr>
+    <tr><td>1</td><td>101</td><td>AVERAGE</td></tr>
+    <tr><td>2</td><td>102</td><td>COUNT (numbers)</td></tr>
+    <tr><td>3</td><td>103</td><td>COUNTA (non-empty)</td></tr>
+    <tr><td>4</td><td>104</td><td>MAX</td></tr>
+    <tr><td>5</td><td>105</td><td>MIN</td></tr>
+    <tr><td><strong>9</strong></td><td><strong>109</strong></td><td><strong>SUM</strong> (the one to remember)</td></tr>
+  </table>
+  <p>Three properties that make SUBTOTAL special:</p>
+  <ol>
+    <li>It <strong>ignores other SUBTOTAL results</strong> inside its range — the grand total never double-counts the subtotal rows.</li>
+    <li>With any function number it <strong>ignores rows hidden by a filter</strong> — so <code>=SUBTOTAL(9, B2:B100)</code> on filtered data totals only the visible rows (SUM would total everything).</li>
+    <li>The 100-series additionally ignores <strong>manually hidden</strong> rows.</li>
+  </ol>
+  <div class="box key"><div class="bt">Nested subtotals</div>To subtotal by Region AND by Product: sort by Region then Product → run Subtotal for Region → run Subtotal again for Product but <strong>UNTICK "Replace current subtotals"</strong>. Outline gains a 4th level.</div>
+</section>
+
+<!-- ══════════ WORKED EXAMPLE ══════════ -->
+<section id="worked">
+  <h2 class="sec"><span class="cellref">★</span>End-to-End Worked Example</h2>
+  <div class="secsub">One dirty dataset through the whole unit — this is how the pieces fit together</div>
+  <p><strong>Scenario:</strong> the office exports an employee file. Column A holds messy combined text like <code>"  ravi kumar|IT|12/03/2021|45000  "</code>. Task: produce a clean, analysed report.</p>
+  <ol>
+    <li><strong>Clean the raw text:</strong> <code>=TRIM(CLEAN(A2))</code> → "ravi kumar|IT|12/03/2021|45000".</li>
+    <li><strong>Split the fields</strong> (formula route; Text-to-Columns with "|" delimiter works too):
+<pre>Name : =PROPER(LEFT(B2, FIND("|",B2)-1))                          <span class="c">→ Ravi Kumar</span>
+Dept : =MID(B2, FIND("|",B2)+1, FIND("|",B2,FIND("|",B2)+1) - FIND("|",B2) - 1)  <span class="c">→ IT</span>
+Date : =DATEVALUE(MID(B2, FIND("|",B2,FIND("|",B2)+1)+1, 10))      <span class="c">→ 12-03-2021</span>
+Salary: =VALUE(RIGHT(B2, LEN(B2) - FIND("|",B2,FIND("|",B2,FIND("|",B2)+1)+1)))  <span class="c">→ 45000</span></pre></li>
+    <li><strong>Derive columns:</strong> Years of service <code>=DATEDIF(D2, TODAY(), "y")</code>; joining month name <code>=TEXT(D2, "mmmm")</code>.</li>
+    <li><strong>Conditional formatting:</strong> data bars on Salary; formula rule <code>=$F2&lt;1</code> to shade rows of employees with &lt; 1 year of service; Duplicate Values on Name to catch double entries.</li>
+    <li><strong>Sort:</strong> multi-level — Dept (A→Z), then Salary (Largest→Smallest).</li>
+    <li><strong>Filter:</strong> AutoFilter → Number Filter on Salary → Top 10; or Advanced Filter criteria (Dept="IT" AND Salary&gt;40000) OR (Dept="HR").</li>
+    <li><strong>Subtotal:</strong> already sorted by Dept → Data → Subtotal → at each change in Dept, Sum of Salary → collapse to level 2 for a one-line-per-department payroll summary.</li>
+    <li><strong>Communicate:</strong> the level-2 view + data bars + a title "Payroll generated on " <code>&amp; TEXT(TODAY(),"dd-mmm-yyyy")</code> = the report.</li>
+  </ol>
+  <p>Notice the pipeline mirrors §4 exactly: processing → cleaning → analysis → communication.</p>
+</section>
+
+<!-- ══════════ EXAM QUESTIONS ══════════ -->
+<section id="pyq">
+  <h2 class="sec"><span class="cellref">✎</span>Expected Exam Questions from Unit I</h2>
+  <div class="secsub">Organised by marks — practise writing these under time</div>
+  <h4>2–4 marks (define / differentiate)</h4>
+  <ul>
+    <li>Define data analysis. List the types of data analysis.</li>
+    <li>Differentiate: FIND vs SEARCH · SUBSTITUTE vs REPLACE · TRIM vs CLEAN · sorting vs filtering · descriptive vs inferential statistics.</li>
+    <li>How does Excel store dates and times internally?</li>
+    <li>What is a criteria range in Advanced Filter? How are AND/OR expressed?</li>
+    <li>Write the syntax and one example of: MID, DATEDIF, TEXTJOIN, EOMONTH, SUBTOTAL.</li>
+  </ul>
+  <h4>6–8 marks (explain with example)</h4>
+  <ul>
+    <li>Explain the data analysis process with a neat diagram.</li>
+    <li>Explain any six text functions used for data cleaning with syntax and examples.</li>
+    <li>Explain date and time functions in Excel with examples.</li>
+    <li>Describe conditional formatting: rule types and steps to apply a rule; include one formula-based rule.</li>
+    <li>Explain multi-level sorting and Advanced Filter with steps.</li>
+  </ul>
+  <h4>10 marks (long answer)</h4>
+  <ul>
+    <li>Explain the types of data analysis (mining, BI, statistical, predictive, text analytics) with an example of each.</li>
+    <li>With a sample dataset, demonstrate the Subtotal feature: prerequisites, dialog options, SUBTOTAL function codes, and outline levels.</li>
+    <li>Given messy text data, show step-by-step cleaning using text + date functions (like the worked example above).</li>
+  </ul>
+</section>
+
+<!-- ══════════ SELF TEST ══════════ -->
+<section id="quiz">
+  <h2 class="sec"><span class="cellref">✓</span>Self-Test — 25 rapid questions</h2>
+  <div class="secsub">Click to reveal · aim for 25/25 from memory</div>
+
+  <details><summary>Four verbs in the definition of data analysis?</summary><div class="a">Inspecting, cleaning, transforming, modelling — with the goal of discovering information and supporting decision-making.</div></details>
+  <details><summary>Data mining's other name and its parent fields?</summary><div class="a">KDD (Knowledge Discovery in Databases); intersection of machine learning/AI, statistics, and database systems.</div></details>
+  <details><summary>Which analysis type answers "what is likely to happen"?</summary><div class="a">Predictive analytics — historical data + statistical/ML models to forecast future outcomes.</div></details>
+  <details><summary>BI mainly answers which question?</summary><div class="a">"What happened / what is happening" — descriptive reporting via dashboards and reports for business decisions.</div></details>
+  <details><summary>Two branches of statistical analysis?</summary><div class="a">Descriptive (summarise data at hand: mean, SD) and inferential (conclude about a population from a sample: hypothesis tests, confidence intervals).</div></details>
+  <details><summary>Text analytics converts ______ data into ______ information.</summary><div class="a">Unstructured (free text) into structured (quantifiable) information — e.g., sentiment scores from reviews.</div></details>
+  <details><summary>Six process stages, in order?</summary><div class="a">Requirements Specification → Collection → Processing → Cleaning → Analysis → Communication (with iteration back from Analysis).</div></details>
+  <details><summary>Primary vs secondary data sources?</summary><div class="a">Primary: collected first-hand (surveys, experiments, sensors). Secondary: pre-existing (databases, reports, websites).</div></details>
+  <details><summary>=TRIM("  a   b  ") returns?</summary><div class="a">"a b" — all leading/trailing spaces removed, internal runs collapsed to single spaces.</div></details>
+  <details><summary>What does CLEAN remove that TRIM doesn't?</summary><div class="a">Non-printable characters (ASCII 0–31, e.g., line feeds from imports). TRIM only handles spaces.</div></details>
+  <details><summary>=MID("CS1231-DS", 3, 4) returns?</summary><div class="a">"1231" — 4 characters starting at position 3.</div></details>
+  <details><summary>Formula for first name from "Ravi Kumar" in A1?</summary><div class="a">=LEFT(A1, FIND(" ", A1) - 1) → "Ravi".</div></details>
+  <details><summary>FIND("S","Data Science") vs SEARCH("s","Data Science")?</summary><div class="a">FIND is case-sensitive → 6 (capital S). SEARCH is case-insensitive → 6 as well for "s" (first s/S at position 6); but FIND("s",…) → 11. Know which is case-sensitive: FIND.</div></details>
+  <details><summary>Replace only the 2nd hyphen in "a-b-c"?</summary><div class="a">=SUBSTITUTE("a-b-c", "-", "/", 2) → "a-b/c" — the optional instance argument.</div></details>
+  <details><summary>Count commas in A1?</summary><div class="a">=LEN(A1) − LEN(SUBSTITUTE(A1, ",", "")).</div></details>
+  <details><summary>TEXTJOIN's advantages over CONCATENATE?</summary><div class="a">Takes a delimiter once, accepts whole ranges, and can ignore empty cells (=TEXTJOIN(", ", TRUE, A1:A5)).</div></details>
+  <details><summary>The serial number of 1-Jan-1900? Of 12:00 noon?</summary><div class="a">1; noon = 0.5 (times are fractions of a 24-hour day).</div></details>
+  <details><summary>Formula for age in completed years from DOB in A1?</summary><div class="a">=DATEDIF(A1, TODAY(), "y").</div></details>
+  <details><summary>Convert "Joined 12/05/2023" (date starts at char 8) to a real date?</summary><div class="a">=DATEVALUE(MID(A1, 8, 10)) — then format the cell as a date.</div></details>
+  <details><summary>Why multiply (logout − login) by 24?</summary><div class="a">The difference of two times is a fraction of a day; ×24 converts it to hours.</div></details>
+  <details><summary>Conditional-formatting formula to colour a whole row when C-column marks &lt; 40?</summary><div class="a">Select A2:F31, New Rule → formula =$C2&lt;40. $ locks column C; relative row lets each row test its own value.</div></details>
+  <details><summary>Which sort option orders Jan, Feb, Mar correctly?</summary><div class="a">Custom List sort (Sort dialog → Order → Custom Lists) — alphabetical would give Apr, Aug, Dec…</div></details>
+  <details><summary>In an Advanced Filter criteria range, same row vs different rows mean?</summary><div class="a">Same row = AND; different rows = OR.</div></details>
+  <details><summary>Why sort before using Subtotal, and which button shows only subtotals?</summary><div class="a">Subtotal fires "at each change in" the group column, so identical values must be adjacent. Outline level button 2 shows subtotals + grand total.</div></details>
+  <details><summary>SUBTOTAL(9, range) vs SUM(range) on filtered data?</summary><div class="a">SUBTOTAL(9,…) totals only visible rows and skips other SUBTOTAL cells; SUM totals everything, hidden or not.</div></details>
+
+  <footer>Unit I detailed notes · CS1231-1 · Companion to the full master-notes page (Units I–III). Textbook: Wayne Winston, <em>Excel Data Analysis and Business Modeling</em>.</footer>
+</section>
+
+</main>
+</div>
+
+<script>
+const links=[...document.querySelectorAll('nav a')];
+const targets=links.map(a=>document.querySelector(a.getAttribute('href')));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const i=targets.indexOf(e.target);if(i>-1)links[i].classList.add('active');}});},{rootMargin:'-15% 0px -75% 0px'});
+targets.forEach(t=>t&&io.observe(t));
+</script>
+<script>
+(function(){
+  var files = [{file:"unit1-theory-of-computation.html",title:"Theory of Computation"},{file:"data-science-master-notes.html",title:"Data Science"},{file:"unit1-detailed-notes.html",title:"Detailed Notes"},{file:"unit1-computer-networks_1.html",title:"Computer Networks"}];
+  injectNav("unit1-detailed-notes.html", files);
+})();
+</script>
+</body>
+</html>

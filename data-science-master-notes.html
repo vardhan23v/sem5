@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS1231-1 · Introduction to Data Science — Master Notes</title>
+<style>
+  :root{
+    --paper:#FAFAF5;
+    --ink:#1B2430;
+    --ink-soft:#4A5568;
+    --xl-green:#1D6F42;
+    --xl-green-soft:#E7F2EB;
+    --r-blue:#1F5FA8;
+    --r-blue-soft:#E8F0FA;
+    --amber:#B7791F;
+    --amber-soft:#FCF3E3;
+    --line:#D9DCD2;
+    --cell:#FFFFFF;
+    --code-bg:#12181F;
+    --code-fg:#D7E3F0;
+    --code-green:#7CC98F;
+    --code-amber:#F0C674;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.65;
+    font-size:16.5px;
+  }
+  .mono, code, pre, .cellref{font-family:'Consolas','Menlo','JetBrains Mono',monospace}
+
+  /* ---------- layout ---------- */
+  .wrap{display:grid;grid-template-columns:250px 1fr;max-width:1240px;margin:0 auto}
+  nav{
+    position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+    padding:28px 18px 40px;border-right:1px solid var(--line);
+    font-family:'Segoe UI',system-ui,sans-serif;font-size:13.5px;
+    background:var(--paper);
+  }
+  nav h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:18px 0 6px}
+  nav a{display:block;color:var(--ink);text-decoration:none;padding:4px 8px;border-radius:5px;border-left:3px solid transparent}
+  nav a:hover{background:#EFF1E9}
+  nav a.active{border-left-color:var(--xl-green);background:var(--xl-green-soft);font-weight:600}
+  nav .u3 a.active{border-left-color:var(--r-blue);background:var(--r-blue-soft)}
+  main{padding:0 46px 120px;min-width:0}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:56px 0 34px;border-bottom:2px solid var(--ink)}
+  .hero .kicker{font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+  .hero h1{font-size:clamp(30px,4.5vw,46px);line-height:1.12;margin:10px 0 14px;font-weight:700}
+  .hero h1 em{font-style:italic;color:var(--xl-green)}
+  .hero p{max-width:640px;color:var(--ink-soft)}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;font-family:'Segoe UI',system-ui,sans-serif;font-size:12.5px}
+  .meta span{border:1px solid var(--line);background:var(--cell);padding:4px 12px;border-radius:20px}
+
+  /* ---------- sections ---------- */
+  section.unit{padding-top:52px}
+  .unit-tag{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;color:#fff;
+    padding:6px 16px;border-radius:4px;margin-bottom:14px;
+  }
+  .unit-1 .unit-tag, .unit-2 .unit-tag{background:var(--xl-green)}
+  .unit-3 .unit-tag{background:var(--r-blue)}
+  section.unit>h2{font-size:30px;margin-bottom:6px}
+  .hours{font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink-soft);font-size:13.5px;margin-bottom:26px}
+
+  h3{
+    font-size:21px;margin:40px 0 12px;padding-bottom:6px;
+    border-bottom:1px solid var(--line);
+  }
+  h3 .cellref{
+    font-size:12px;color:#fff;padding:2px 8px;border-radius:3px;margin-right:10px;vertical-align:3px;
+  }
+  .unit-1 h3 .cellref,.unit-2 h3 .cellref{background:var(--xl-green)}
+  .unit-3 h3 .cellref{background:var(--r-blue)}
+  h4{font-family:'Segoe UI',system-ui,sans-serif;font-size:15.5px;margin:22px 0 8px;color:var(--ink)}
+  p{margin:0 0 12px;max-width:76ch}
+  ul,ol{margin:0 0 14px 24px;max-width:74ch}
+  li{margin-bottom:6px}
+  strong{color:var(--ink)}
+  em.term{font-style:normal;font-weight:700;color:var(--xl-green)}
+  .unit-3 em.term{color:var(--r-blue)}
+
+  /* ---------- tables (spreadsheet motif) ---------- */
+  table{
+    border-collapse:collapse;margin:14px 0 22px;width:100%;
+    font-family:'Segoe UI',system-ui,sans-serif;font-size:13.8px;background:var(--cell);
+  }
+  th,td{border:1px solid var(--line);padding:7px 11px;text-align:left;vertical-align:top}
+  th{background:#EFF1E9;font-weight:700;font-size:12.5px;letter-spacing:.03em}
+  td code{background:#F0F2EC;padding:1px 6px;border-radius:3px;font-size:12.8px;white-space:nowrap}
+  tr:nth-child(even) td{background:#FCFCF9}
+
+  /* ---------- code ---------- */
+  pre{
+    background:var(--code-bg);color:var(--code-fg);
+    padding:16px 18px;border-radius:8px;overflow-x:auto;
+    font-size:13.3px;line-height:1.55;margin:12px 0 22px;
+  }
+  pre .c{color:#6B7A8D}
+  pre .g{color:var(--code-green)}
+  pre .y{color:var(--code-amber)}
+  p code, li code{background:#EDEFE8;padding:1px 6px;border-radius:3px;font-size:13.5px}
+
+  /* ---------- callouts ---------- */
+  .box{border:1px solid var(--line);border-left-width:4px;background:var(--cell);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0 22px;max-width:78ch}
+  .box .bt{font-family:'Segoe UI',system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+  .box.exam{border-left-color:var(--amber);background:var(--amber-soft)}
+  .box.exam .bt{color:var(--amber)}
+  .box.key{border-left-color:var(--xl-green);background:var(--xl-green-soft)}
+  .box.key .bt{color:var(--xl-green)}
+  .unit-3 .box.key{border-left-color:var(--r-blue);background:var(--r-blue-soft)}
+  .unit-3 .box.key .bt{color:var(--r-blue)}
+
+  /* ---------- checkable outcomes ---------- */
+  .co{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border:1px solid var(--line);background:var(--cell);border-radius:6px;margin-bottom:8px;font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;cursor:pointer;max-width:78ch}
+  .co input{margin-top:4px;accent-color:var(--xl-green)}
+  .co.done{background:var(--xl-green-soft);text-decoration:line-through;color:var(--ink-soft)}
+
+  details{border:1px solid var(--line);border-radius:8px;background:var(--cell);margin:0 0 12px;max-width:78ch}
+  details summary{cursor:pointer;padding:11px 16px;font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;font-size:14.5px;list-style:none}
+  details summary::before{content:"▸ ";color:var(--xl-green)}
+  details[open] summary::before{content:"▾ "}
+  details .a{padding:0 18px 14px;border-top:1px dashed var(--line);padding-top:10px;font-size:15px}
+
+  footer{margin-top:70px;padding-top:20px;border-top:2px solid var(--ink);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;color:var(--ink-soft)}
+
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr}
+    nav{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+    main{padding:0 20px 90px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/nav.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ================= NAV ================= -->
+<nav id="toc">
+  <h2>Unit I · Excel Analysis</h2>
+  <a href="#u1-intro">Intro &amp; Types of Analysis</a>
+  <a href="#u1-process">Data Analysis Process</a>
+  <a href="#u1-text">Data Cleaning — Text Fns</a>
+  <a href="#u1-dates">Dates &amp; Times</a>
+  <a href="#u1-cf">Conditional Formatting</a>
+  <a href="#u1-sort">Sorting &amp; Filtering</a>
+  <a href="#u1-subtotal">Subtotals with Ranges</a>
+  <h2>Unit II · Quick Analysis</h2>
+  <a href="#u2-lookup">Lookup Functions</a>
+  <a href="#u2-pivot">PivotTables</a>
+  <a href="#u2-viz">Data Visualization</a>
+  <a href="#u2-valid">Data Validation</a>
+  <a href="#u2-fin">Financial Analysis</a>
+  <a href="#u2-consol">Data Consolidation</a>
+  <a href="#u2-ttc">Text to Columns</a>
+  <a href="#u2-whatif">What-If Analysis</a>
+  <a href="#u2-import">Importing &amp; Data Model</a>
+  <a href="#u2-power">PowerPivot · Power View · KPIs</a>
+  <h2 class="u3h">Unit III · R Programming</h2>
+  <span class="u3">
+  <a href="#u3-overview">R Overview &amp; RStudio</a>
+  <a href="#u3-types">Variables &amp; Data Types</a>
+  <a href="#u3-control">Control Structures</a>
+  <a href="#u3-struct">Vector · Matrix · Array · Factor</a>
+  <a href="#u3-fn">Functions &amp; Packages</a>
+  <a href="#u3-io">Reading External Data</a>
+  <a href="#u3-charts">Charts &amp; Graphs</a>
+  </span>
+  <h2>Revision</h2>
+  <a href="#rapid">Rapid-Fire Q&amp;A</a>
+  <a href="#outcomes">Outcome Checklist</a>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<main>
+
+<header class="hero">
+  <div class="kicker">CS1231-1 · PEC · 3 Credits · CIE 50 + SEE 50 · B.Tech CSE</div>
+  <h1>Introduction to <em>Data Science</em><br>— Master Notes</h1>
+  <p>The full syllabus in one page: Excel data analysis (Units I–II) and R programming with visualization (Unit III). Every function has syntax + an example; every concept is exam-ready. Green = Excel, Blue = R, Amber = exam alerts.</p>
+  <div class="meta">
+    <span>Unit I — 15 hrs</span><span>Unit II — 15 hrs</span><span>Unit III — 10 hrs</span><span>Winston · Davies (textbooks)</span>
+  </div>
+</header>
+
+<!-- ═══════════════════ UNIT I ═══════════════════ -->
+<section class="unit unit-1" id="unit1">
+  <span class="unit-tag">Unit I</span>
+  <h2>Introduction to Data Analysis using Excel</h2>
+  <div class="hours">15 Hours · Types of analysis → analysis process → cleaning with text/date functions → conditional formatting → sorting, filtering, subtotals</div>
+
+  <h3 id="u1-intro"><span class="cellref">A1</span>Data Analysis & Its Types</h3>
+  <p><em class="term">Data Analysis</em> is the process of inspecting, cleaning, transforming and modelling data to discover useful information, draw conclusions and support decision-making. Excel is the most widely used entry-level tool because it combines storage (worksheets), computation (formulas), and presentation (charts) in one place.</p>
+
+  <h4>The six types of data analysis (definition + example = 6-mark question)</h4>
+  <table>
+    <tr><th>Type</th><th>What it does</th><th>Example</th></tr>
+    <tr><td><strong>Data Mining</strong></td><td>Discovers hidden patterns, correlations and anomalies in large datasets using statistics + machine learning + database systems.</td><td>A supermarket discovers customers who buy bread often buy butter (market-basket analysis).</td></tr>
+    <tr><td><strong>Business Intelligence (BI)</strong></td><td>Transforms raw data into meaningful business information for dashboards, reports and strategic decisions.</td><td>A sales dashboard showing region-wise revenue for management.</td></tr>
+    <tr><td><strong>Statistical Analysis</strong></td><td>Collection, analysis, interpretation and presentation of data using statistics. Two branches: <strong>descriptive</strong> (summarise — mean, SD) and <strong>inferential</strong> (conclude about a population from a sample).</td><td>Average marks of a class (descriptive); exit-poll prediction (inferential).</td></tr>
+    <tr><td><strong>Predictive Analytics</strong></td><td>Uses historical data + statistical models to forecast future outcomes and probabilities.</td><td>Predicting next quarter's sales from past 5 years' data.</td></tr>
+    <tr><td><strong>Text Analytics</strong></td><td>(Text mining) Derives high-quality structured information from unstructured text using linguistic and statistical techniques.</td><td>Sentiment analysis of product reviews.</td></tr>
+    <tr><td><strong>Data Analysis with Excel</strong></td><td>Using Excel's built-in features — functions, PivotTables, charts, What-If tools, Power add-ins — to perform all of the above at desktop scale.</td><td>PivotTable summarising 50,000 sales rows.</td></tr>
+  </table>
+
+  <div class="box key"><div class="bt">Remember the ladder</div>
+  Descriptive (what happened) → Diagnostic (why) → Predictive (what will happen) → Prescriptive (what should we do). Excel covers the first three well; BI tools extend the last.</div>
+
+  <h3 id="u1-process"><span class="cellref">A2</span>The Data Analysis Process (6 steps)</h3>
+  <ol>
+    <li><strong>Data Requirements Specification</strong> — define <em>what</em> data is needed, based on the questions the analysis must answer (inputs: population, variables, units of measurement).</li>
+    <li><strong>Data Collection</strong> — gather data from identified sources: surveys, sensors, transactions, web, databases. Must be accurate and relevant.</li>
+    <li><strong>Data Processing</strong> — organise collected data into a structure suitable for analysis, e.g. rows/columns in a worksheet or table.</li>
+    <li><strong>Data Cleaning</strong> — detect and correct/remove incomplete, duplicate or erroneous records (the step where text functions shine).</li>
+    <li><strong>Data Analysis</strong> — apply techniques (formulas, statistics, visualization, models) to understand, interpret and derive conclusions. Often iterative — may loop back to collection/cleaning.</li>
+    <li><strong>Communication</strong> — report results to users in their required format: tables, charts, dashboards. Visualization (colour coding, charts) makes the message clear.</li>
+  </ol>
+  <div class="box exam"><div class="bt">Exam alert</div>"Explain the data analysis process" is a guaranteed 8–10 mark question. Draw it as a flow: Requirements → Collection → Processing → Cleaning → Analysis → Communication, with a feedback arrow from Analysis back to Collection.</div>
+
+  <h3 id="u1-text"><span class="cellref">A3</span>Data Cleaning — Text Functions</h3>
+  <p>Real-world data arrives with stray spaces, wrong case, and values glued together. Excel's text functions fix this <em>without retyping</em>.</p>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Purpose / Example</th></tr>
+    <tr><td>TRIM</td><td><code>=TRIM(text)</code></td><td>Removes leading/trailing/extra spaces. <code>TRIM("  data  science ")</code> → "data science"</td></tr>
+    <tr><td>CLEAN</td><td><code>=CLEAN(text)</code></td><td>Removes non-printable characters (line feeds from imports).</td></tr>
+    <tr><td>UPPER / LOWER</td><td><code>=UPPER(A1)</code></td><td>Converts to UPPERCASE / lowercase.</td></tr>
+    <tr><td>PROPER</td><td><code>=PROPER("john doe")</code></td><td>Capitalises first letter of each word → "John Doe".</td></tr>
+    <tr><td>LEFT / RIGHT</td><td><code>=LEFT(A1,3)</code></td><td>First / last n characters. <code>LEFT("CS1231",2)</code> → "CS"</td></tr>
+    <tr><td>MID</td><td><code>=MID(text,start,n)</code></td><td>n characters from position start. <code>MID("CS1231",3,4)</code> → "1231"</td></tr>
+    <tr><td>LEN</td><td><code>=LEN(A1)</code></td><td>Number of characters (spaces count!).</td></tr>
+    <tr><td>FIND</td><td><code>=FIND("a",A1)</code></td><td>Position of substring — <strong>case-sensitive</strong>, no wildcards.</td></tr>
+    <tr><td>SEARCH</td><td><code>=SEARCH("a",A1)</code></td><td>Same but <strong>case-insensitive</strong>, wildcards ? * allowed.</td></tr>
+    <tr><td>SUBSTITUTE</td><td><code>=SUBSTITUTE(text,old,new)</code></td><td>Replace by <strong>content</strong>. <code>SUBSTITUTE("a-b-c","-","/")</code> → "a/b/c"</td></tr>
+    <tr><td>REPLACE</td><td><code>=REPLACE(text,start,n,new)</code></td><td>Replace by <strong>position</strong>.</td></tr>
+    <tr><td>CONCATENATE / &amp;</td><td><code>=A1&" "&B1</code></td><td>Join text values. Newer: <code>CONCAT</code>, <code>TEXTJOIN(", ",TRUE,A1:A5)</code>.</td></tr>
+    <tr><td>TEXT</td><td><code>=TEXT(A1,"dd-mmm-yy")</code></td><td>Converts number/date to formatted text.</td></tr>
+    <tr><td>VALUE</td><td><code>=VALUE("₹1,200")</code></td><td>Converts text-numbers back to real numbers.</td></tr>
+    <tr><td>EXACT</td><td><code>=EXACT(A1,B1)</code></td><td>TRUE only if two strings match exactly (case-sensitive).</td></tr>
+  </table>
+  <div class="box key"><div class="bt">Classic combo</div><code>=TRIM(CLEAN(PROPER(A1)))</code> — the one-line clean-up for imported name columns. Also: extract first name → <code>=LEFT(A1, FIND(" ",A1)-1)</code>; last name → <code>=MID(A1, FIND(" ",A1)+1, LEN(A1))</code>.</div>
+
+  <h3 id="u1-dates"><span class="cellref">A4</span>Dates &amp; Times</h3>
+  <p>Excel stores every date as a <em class="term">serial number</em> (1 = 1-Jan-1900) and every time as a fraction of a day (0.5 = 12:00 noon). That is why date arithmetic works: <code>=B1-A1</code> gives days between two dates.</p>
+  <h4>Date functions</h4>
+  <table>
+    <tr><th>Function</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code>TODAY()</code> / <code>NOW()</code></td><td><code>=TODAY()</code></td><td>Current date / current date-time (volatile — updates on recalculation).</td></tr>
+    <tr><td><code>DATE(y,m,d)</code></td><td><code>=DATE(2026,8,5)</code></td><td>Builds a valid date from parts.</td></tr>
+    <tr><td><code>DATEVALUE</code></td><td><code>=DATEVALUE("05-08-2026")</code></td><td>Text containing a date → serial number.</td></tr>
+    <tr><td><code>DAY / MONTH / YEAR</code></td><td><code>=MONTH(A1)</code></td><td>Extract part of a date (1–31, 1–12, year).</td></tr>
+    <tr><td><code>WEEKDAY</code></td><td><code>=WEEKDAY(A1)</code></td><td>Day of week as number (1 = Sunday by default).</td></tr>
+    <tr><td><code>EOMONTH</code></td><td><code>=EOMONTH(A1,0)</code></td><td>Last day of the month (offset in months).</td></tr>
+    <tr><td><code>DATEDIF</code></td><td><code>=DATEDIF(A1,B1,"y")</code></td><td>Difference in "y" years, "m" months, "d" days (hidden but valid function — age calculations).</td></tr>
+    <tr><td><code>NETWORKDAYS</code></td><td><code>=NETWORKDAYS(A1,B1)</code></td><td>Working days between dates, excluding weekends.</td></tr>
+  </table>
+  <h4>Time functions</h4>
+  <table>
+    <tr><th>Function</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code>TIME(h,m,s)</code></td><td><code>=TIME(14,30,0)</code></td><td>2:30 PM as a time value.</td></tr>
+    <tr><td><code>TIMEVALUE</code></td><td><code>=TIMEVALUE("2:30 PM")</code></td><td>Time-text → fraction (0.604...).</td></tr>
+    <tr><td><code>HOUR / MINUTE / SECOND</code></td><td><code>=HOUR(A1)</code></td><td>Extract components (0–23, 0–59, 0–59).</td></tr>
+  </table>
+  <div class="box exam"><div class="bt">Exam alert</div>Know how to combine text + date functions: e.g. cell has "Joined: 12/05/2023" → <code>=DATEVALUE(MID(A1,9,10))</code> extracts and converts the date. This "text functions with date values" pattern is straight from the syllabus wording.</div>
+
+  <h3 id="u1-cf"><span class="cellref">A5</span>Conditional Formatting</h3>
+  <p><em class="term">Conditional Formatting</em> automatically changes a cell's appearance (fill, font, border, icon) when its value satisfies a condition — making patterns and outliers visible at a glance. <strong>Home → Styles → Conditional Formatting.</strong></p>
+  <ul>
+    <li><strong>Highlight Cells Rules</strong> — greater than, less than, between, equal to, text that contains, a date occurring, duplicate values.</li>
+    <li><strong>Top/Bottom Rules</strong> — top 10 items, top 10%, above/below average.</li>
+    <li><strong>Data Bars</strong> — in-cell horizontal bars proportional to value (mini bar chart).</li>
+    <li><strong>Color Scales</strong> — 2- or 3-colour gradients (e.g., red-yellow-green heat map).</li>
+    <li><strong>Icon Sets</strong> — arrows, traffic lights, flags to classify values into 3–5 bands.</li>
+    <li><strong>Formula-based rule</strong> — "Use a formula to determine which cells to format", e.g. highlight the whole row where marks &lt; 40: apply <code>=$C2&lt;40</code> to A2:F100.</li>
+  </ul>
+  <p>Rules are managed (edit/delete/reorder/Stop-If-True) via <strong>Manage Rules</strong>. Multiple rules can apply to a range; order decides precedence.</p>
+
+  <h3 id="u1-sort"><span class="cellref">A6</span>Sorting &amp; Filtering</h3>
+  <h4>Sorting (Data → Sort)</h4>
+  <ul>
+    <li><strong>Single-level:</strong> A→Z / Z→A on one column (or Smallest→Largest for numbers, Oldest→Newest for dates).</li>
+    <li><strong>Multi-level:</strong> Sort dialog → Add Level, e.g. by Department, then by Salary descending.</li>
+    <li><strong>Custom sort:</strong> by a custom list (Jan, Feb, …), by cell colour, font colour, or icon.</li>
+    <li>Always keep headers checked ("My data has headers") so titles don't get sorted in.</li>
+  </ul>
+  <h4>Filtering</h4>
+  <ul>
+    <li><strong>AutoFilter</strong> (Data → Filter, Ctrl+Shift+L): drop-down arrows per column; check-box selection, Text Filters (contains, begins with), Number Filters (greater than, top 10), Date Filters (this month, between).</li>
+    <li><strong>Filter by colour / icon</strong> — pairs with conditional formatting.</li>
+    <li><strong>Advanced Filter</strong> (Data → Advanced): uses a separate <em>criteria range</em>; supports AND (same row) / OR (different rows) conditions, can copy results to another location, and can extract <strong>unique records only</strong>.</li>
+  </ul>
+  <div class="box key"><div class="bt">Sort vs Filter</div>Sorting <em>rearranges</em> all rows; filtering <em>hides</em> rows that fail the condition — data is not deleted, just hidden.</div>
+
+  <h3 id="u1-subtotal"><span class="cellref">A7</span>Subtotals with Ranges</h3>
+  <p>The <strong>Subtotal</strong> command (Data → Outline → Subtotal) inserts automatic summary rows for each group in a sorted list and builds a collapsible outline.</p>
+  <ol>
+    <li><strong>Sort</strong> the data by the grouping column first (e.g., Region) — mandatory.</li>
+    <li>Data → Subtotal → "At each change in: Region", "Use function: Sum", "Add subtotal to: Sales".</li>
+    <li>Excel inserts <code>=SUBTOTAL(9, range)</code> rows plus a Grand Total, with outline buttons 1/2/3 to collapse or expand levels.</li>
+  </ol>
+  <p><code>SUBTOTAL(function_num, ref)</code> — function_num 1–11 includes hidden rows; 101–111 ignores them. Key codes: 1/101 AVERAGE, 2/102 COUNT, 4/104 MAX, 5/105 MIN, <strong>9/109 SUM</strong>. SUBTOTAL cleverly ignores other SUBTOTAL cells inside its range (no double counting) and, with 9 on filtered data, sums only visible rows.</p>
+</section>
+
+<!-- ═══════════════════ UNIT II ═══════════════════ -->
+<section class="unit unit-2" id="unit2">
+  <span class="unit-tag">Unit II</span>
+  <h2>Data Quick Analysis</h2>
+  <div class="hours">15 Hours · Lookups → PivotTables → visualization → validation → financial functions → consolidation → What-If → import, Data Model, PowerPivot, Power View, KPIs</div>
+
+  <h3 id="u2-lookup"><span class="cellref">B1</span>Understanding Lookup Functions</h3>
+  <p>Lookup functions fetch a value from a table by searching for a key — the backbone of joining data in Excel.</p>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Notes</th></tr>
+    <tr><td><strong>VLOOKUP</strong></td><td><code>=VLOOKUP(value, table, col_index, [range])</code></td><td>Searches the <strong>first column</strong> vertically, returns from column <code>col_index</code>. <code>FALSE</code>/0 = exact match (usual), <code>TRUE</code> = approximate (table must be sorted ascending — used for tax slabs, grades). Limitation: cannot look to the <em>left</em>.</td></tr>
+    <tr><td><strong>HLOOKUP</strong></td><td><code>=HLOOKUP(value, table, row_index, [range])</code></td><td>Same idea but searches the <strong>first row</strong> horizontally.</td></tr>
+    <tr><td><strong>MATCH</strong></td><td><code>=MATCH(value, range, 0)</code></td><td>Returns the <strong>position</strong> of a value (0 = exact).</td></tr>
+    <tr><td><strong>INDEX</strong></td><td><code>=INDEX(range, row, [col])</code></td><td>Returns the value at a given position.</td></tr>
+    <tr><td><strong>INDEX+MATCH</strong></td><td><code>=INDEX(C:C, MATCH("Ravi", A:A, 0))</code></td><td>Flexible lookup — any direction, columns can be inserted safely. Preferred over VLOOKUP.</td></tr>
+    <tr><td><strong>LOOKUP</strong></td><td><code>=LOOKUP(value, lookup_vec, result_vec)</code></td><td>Vector form; requires sorted data; approximate match.</td></tr>
+    <tr><td><strong>XLOOKUP</strong></td><td><code>=XLOOKUP(value, lookup_arr, return_arr, [if_not_found])</code></td><td>Modern (365/2021): exact by default, any direction, built-in not-found message.</td></tr>
+  </table>
+  <div class="box exam"><div class="bt">Exam alert</div>Grade example with approximate VLOOKUP: table {0→F, 40→C, 60→B, 75→A, 90→S} sorted ascending; <code>=VLOOKUP(78, table, 2, TRUE)</code> → "A" (falls back to the largest value ≤ 78). Be ready to write and explain this.</div>
+
+  <h3 id="u2-pivot"><span class="cellref">B2</span>PivotTables — Exploring Data</h3>
+  <p>A <em class="term">PivotTable</em> is an interactive summary tool that groups, aggregates and cross-tabulates large datasets <strong>without formulas</strong>. Insert → PivotTable → choose data → drag fields into four areas:</p>
+  <table>
+    <tr><th>Area</th><th>Role</th><th>Example (Sales data)</th></tr>
+    <tr><td><strong>Rows</strong></td><td>Categories down the side</td><td>Region</td></tr>
+    <tr><td><strong>Columns</strong></td><td>Categories across the top</td><td>Year</td></tr>
+    <tr><td><strong>Values</strong></td><td>Numbers to aggregate (Sum, Count, Average, Max, Min, % of total…)</td><td>Sum of Sales</td></tr>
+    <tr><td><strong>Filters</strong></td><td>Page-level filter above the table</td><td>Product Category</td></tr>
+  </table>
+  <ul>
+    <li><strong>Slicers</strong> (Insert → Slicer): clickable visual filter buttons; <strong>Timelines</strong> for date filtering.</li>
+    <li><strong>Grouping</strong>: group dates into months/quarters/years; group numbers into bins.</li>
+    <li><strong>Value Field Settings</strong>: change aggregation; "Show Values As" → % of Grand Total, Running Total, Rank.</li>
+    <li><strong>Refresh</strong> after source data changes; <strong>PivotChart</strong> = chart bound to a PivotTable.</li>
+    <li>"Pivoting" = dragging a field between rows/columns to instantly change the view.</li>
+  </ul>
+
+  <h3 id="u2-viz"><span class="cellref">B3</span>Data Visualization in Excel</h3>
+  <p>Choose the chart by the question, not by looks:</p>
+  <table>
+    <tr><th>Chart</th><th>Best for</th></tr>
+    <tr><td>Column / Bar</td><td>Comparing values across categories (bar = long labels).</td></tr>
+    <tr><td>Line</td><td>Trends over time (continuous x-axis).</td></tr>
+    <tr><td>Pie / Doughnut</td><td>Parts of a whole — one series, few slices (≤ 6).</td></tr>
+    <tr><td>Scatter (XY)</td><td>Relationship / correlation between two numeric variables.</td></tr>
+    <tr><td>Area</td><td>Cumulative magnitude of trends.</td></tr>
+    <tr><td>Combo</td><td>Two measures with different scales (columns + line, secondary axis).</td></tr>
+    <tr><td>Sparklines</td><td>Tiny in-cell line/column/win-loss trend charts (Insert → Sparklines).</td></tr>
+  </table>
+  <p>Chart anatomy to label in diagrams: chart title, axis titles, legend, data labels, gridlines, data series. <strong>Recommended Charts</strong> and <strong>Quick Analysis (Ctrl+Q)</strong> suggest charts automatically — Quick Analysis also offers instant formatting, totals, tables and sparklines from a selected range.</p>
+
+  <h3 id="u2-valid"><span class="cellref">B4</span>Data Validation</h3>
+  <p><em class="term">Data Validation</em> (Data → Data Validation) restricts what users may enter into a cell — prevention beats cleaning.</p>
+  <ul>
+    <li><strong>Allow criteria:</strong> Whole Number, Decimal, <strong>List</strong> (drop-down, e.g. source =$H$1:$H$5 or "Yes,No"), Date, Time, Text Length, Custom (formula, e.g. <code>=ISNUMBER(A1)</code>).</li>
+    <li><strong>Input Message tab:</strong> tooltip shown on selecting the cell.</li>
+    <li><strong>Error Alert tab:</strong> <strong>Stop</strong> (reject invalid entry), <strong>Warning</strong> (allow with confirmation), <strong>Information</strong> (just inform).</li>
+    <li><strong>Circle Invalid Data</strong> flags pre-existing violations in red ovals.</li>
+  </ul>
+
+  <h3 id="u2-fin"><span class="cellref">B5</span>Financial Analysis Functions</h3>
+  <p>Convention: money you pay out is <strong>negative</strong>, money you receive is <strong>positive</strong>. Rate and Nper must use the same period (monthly loan → rate/12, years×12).</p>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>Meaning</th></tr>
+    <tr><td><strong>PMT</strong></td><td><code>=PMT(rate, nper, pv, [fv], [type])</code></td><td>Periodic loan payment (EMI). ₹10 L @ 9% for 15 yrs: <code>=PMT(9%/12, 180, 1000000)</code> → −₹10,142.67</td></tr>
+    <tr><td><strong>FV</strong></td><td><code>=FV(rate, nper, pmt, [pv])</code></td><td>Future value of an investment / recurring deposit.</td></tr>
+    <tr><td><strong>PV</strong></td><td><code>=PV(rate, nper, pmt, [fv])</code></td><td>Present value — today's worth of future cash flows.</td></tr>
+    <tr><td><strong>NPER</strong></td><td><code>=NPER(rate, pmt, pv)</code></td><td>Number of payment periods.</td></tr>
+    <tr><td><strong>RATE</strong></td><td><code>=RATE(nper, pmt, pv)</code></td><td>Interest rate per period.</td></tr>
+    <tr><td><strong>NPV</strong></td><td><code>=NPV(rate, cf1:cfN) + cf0</code></td><td>Net present value of future cash flows minus initial outlay; accept if NPV &gt; 0.</td></tr>
+    <tr><td><strong>IRR</strong></td><td><code>=IRR(cf0:cfN)</code></td><td>Discount rate at which NPV = 0; accept if IRR &gt; cost of capital.</td></tr>
+    <tr><td>IPMT / PPMT</td><td><code>=IPMT(rate,per,nper,pv)</code></td><td>Interest / principal portion of a specific payment — used in amortization schedules.</td></tr>
+  </table>
+
+  <h3 id="u2-consol"><span class="cellref">B6</span>Data Consolidation</h3>
+  <p><em class="term">Consolidation</em> (Data → Data Tools → Consolidate) combines data from multiple ranges/worksheets/workbooks into one summary using a function (Sum, Count, Average, Max, Min…).</p>
+  <ul>
+    <li><strong>By position:</strong> all source ranges have identical layout — cells are combined by their location (Jan, Feb, Mar sheets with the same structure).</li>
+    <li><strong>By category:</strong> layouts differ — check <strong>"Top row"</strong> and/or <strong>"Left column"</strong> labels so Excel matches by label names.</li>
+    <li><strong>Create links to source data</strong> → consolidated sheet updates automatically and shows an outline.</li>
+    <li><strong>3-D reference</strong> alternative: <code>=SUM(Jan:Mar!B2)</code> sums cell B2 across all sheets from Jan to Mar.</li>
+  </ul>
+  <p><strong>Preparing data for consolidation:</strong> each range on a separate sheet, same labels spelled identically, no blank rows/columns inside ranges, each range formatted as a proper list (labels in first row/column), and preferably name each range (Formulas → Define Name).</p>
+
+  <h3 id="u2-ttc"><span class="cellref">B7</span>Extracting Values — Convert Text to Columns Wizard</h3>
+  <p>Data → Text to Columns splits one column of combined text into several columns in 3 steps:</p>
+  <ol>
+    <li><strong>Choose file type:</strong> <strong>Delimited</strong> (fields separated by characters) or <strong>Fixed Width</strong> (fields aligned in columns with spaces).</li>
+    <li><strong>Set delimiters</strong> (Tab, Semicolon, Comma, Space, Other) or click to place column-break lines.</li>
+    <li><strong>Set column data formats</strong> (General, Text, Date) and the destination cell → Finish.</li>
+  </ol>
+  <p>Example: "Sharma, Priya, Bengaluru" with comma delimiter → three clean columns. Alternative formula-based extraction: LEFT/MID/RIGHT + FIND (Unit I), or <strong>Flash Fill (Ctrl+E)</strong> which learns the pattern from one example.</p>
+
+  <h3 id="u2-whatif"><span class="cellref">B8</span>What-If Analysis</h3>
+  <p>What-If tools (Data → Forecast → What-If Analysis) answer "what happens to the result if inputs change?" Three tools — know all three:</p>
+  <table>
+    <tr><th>Tool</th><th>Direction</th><th>Use case</th></tr>
+    <tr><td><strong>Scenario Manager</strong></td><td>Many inputs → many named cases</td><td>Save "Best / Worst / Likely" sets of input values; switch between them; produce a Scenario Summary report.</td></tr>
+    <tr><td><strong>Goal Seek</strong></td><td>Result → one input (reverse)</td><td>"Set cell B5 (EMI) to value 9000 by changing cell B2 (loan amount)." Works backwards for exactly one variable.</td></tr>
+    <tr><td><strong>Data Table</strong></td><td>1 or 2 inputs → grid of results</td><td>One-variable: column of interest rates → EMI for each. Two-variable: rates × tenures grid. Uses Row/Column input cell.</td></tr>
+  </table>
+
+  <h3 id="u2-import"><span class="cellref">B9</span>Importing Data &amp; the Data Model</h3>
+  <h4>Importing data into Excel (Data → Get &amp; Transform / Get External Data)</h4>
+  <ul>
+    <li><strong>From Text/CSV</strong> — delimiter preview, load or transform (Power Query editor).</li>
+    <li><strong>From Web</strong> — paste a URL, Excel detects HTML tables.</li>
+    <li><strong>From Database</strong> — Access, SQL Server; also from Workbook, XML, JSON.</li>
+    <li>Imported queries can be <strong>refreshed</strong> to pull the latest data — a connection, not a copy-paste.</li>
+  </ul>
+  <h4>Data Model</h4>
+  <p>The <em class="term">Data Model</em> is an in-memory database inside the workbook that can hold <strong>multiple tables connected by relationships</strong> (via common key columns), letting a single PivotTable analyse millions of rows across tables without VLOOKUP. Tick <strong>"Add this data to the Data Model"</strong> when creating a PivotTable, and define relationships via Data → Relationships or the PowerPivot diagram view.</p>
+
+  <h3 id="u2-power"><span class="cellref">B10</span>PowerPivot, Power View &amp; KPIs</h3>
+  <h4>Exploring data with PowerPivot</h4>
+  <ul>
+    <li>Add-in providing an advanced interface to the Data Model: import huge datasets (limited only by memory), create <strong>relationships</strong> in Diagram View, add <strong>calculated columns</strong> and <strong>measures</strong> using <strong>DAX</strong> (Data Analysis Expressions), e.g. <code>Total Sales := SUM(Sales[Amount])</code>.</li>
+    <li>Enable via File → Options → Add-ins → COM Add-ins → Microsoft PowerPivot.</li>
+  </ul>
+  <h4>Exploring data with Power View &amp; aesthetic reports</h4>
+  <ul>
+    <li>Interactive <strong>report/dashboard canvas</strong>: tables, matrices, cards, charts, tiles, slicers and <strong>maps</strong> on one sheet; visuals cross-filter each other on click.</li>
+    <li><em>Aesthetic reports:</em> apply themes/backgrounds, tile visuals by category, use images and card layouts — presentation-ready interactive reports.</li>
+  </ul>
+  <h4>Key Performance Indicators (KPIs)</h4>
+  <p>A <em class="term">KPI</em> is a quantifiable measure of performance against a target. In PowerPivot a KPI has three parts:</p>
+  <ol>
+    <li><strong>Base value</strong> — a calculated measure (e.g., Total Sales).</li>
+    <li><strong>Target value</strong> — another measure or an absolute number (e.g., Sales Target).</li>
+    <li><strong>Status thresholds</strong> — bands rendered as icons (red / yellow / green) showing performance vs target.</li>
+  </ol>
+</section>
+
+<!-- ═══════════════════ UNIT III ═══════════════════ -->
+<section class="unit unit-3" id="unit3">
+  <span class="unit-tag">Unit III</span>
+  <h2>R Programming Basics &amp; Data Visualization</h2>
+  <div class="hours">10 Hours · R overview → RStudio → data types → control structures → data structures → functions &amp; packages → reading external data → charts</div>
+
+  <h3 id="u3-overview"><span class="cellref">C1</span>Overview of R &amp; Environment Setup</h3>
+  <p><em class="term">R</em> is an open-source programming language and environment for <strong>statistical computing and graphics</strong>, created by <strong>Ross Ihaka and Robert Gentleman</strong> (University of Auckland, 1993), an implementation of the S language. Maintained by the R Core Team; distributed via <strong>CRAN</strong> (Comprehensive R Archive Network).</p>
+  <h4>Features (write any 6 in exams)</h4>
+  <ul>
+    <li>Free, open-source, cross-platform (Windows/Linux/macOS).</li>
+    <li>Interpreted language — commands run directly at the <code>&gt;</code> prompt.</li>
+    <li>Rich built-in statistical functions (regression, hypothesis tests, time series…).</li>
+    <li>Excellent graphics — publication-quality plots.</li>
+    <li>19,000+ extension packages on CRAN.</li>
+    <li>Vectorised operations; connects to C/C++/Python/databases; strong community.</li>
+  </ul>
+  <h4>Environment setup with RStudio</h4>
+  <ol>
+    <li>Install <strong>R</strong> from cran.r-project.org (the engine).</li>
+    <li>Install <strong>RStudio</strong> (posit.co) — an IDE on top of R with four panes: <strong>Source</strong> (scripts, top-left), <strong>Console</strong> (bottom-left), <strong>Environment/History</strong> (top-right), <strong>Files/Plots/Packages/Help</strong> (bottom-right).</li>
+  </ol>
+  <h4>Basic commands</h4>
+<pre><span class="c"># assignment (&lt;- preferred, = also works)</span>
+x &lt;- 10;  y = 5
+print(x + y)          <span class="c"># 15</span>
+<span class="y">getwd</span>()               <span class="c"># current working directory</span>
+<span class="y">setwd</span>("C:/data")      <span class="c"># change directory</span>
+<span class="y">ls</span>()                  <span class="c"># list objects in memory</span>
+<span class="y">rm</span>(x)                 <span class="c"># remove object</span>
+<span class="y">help</span>(mean); ?mean     <span class="c"># documentation</span>
+<span class="y">class</span>(y)              <span class="c"># "numeric"</span></pre>
+
+  <h3 id="u3-types"><span class="cellref">C2</span>Variables &amp; Data Types</h3>
+  <p>R has <strong>dynamic typing</strong> — a variable's type is decided by the value stored, checked with <code>class()</code>. Valid names: letters, digits, dot, underscore; must start with a letter (or dot not followed by a digit).</p>
+  <table>
+    <tr><th>Atomic type</th><th>Example</th><th>class()</th></tr>
+    <tr><td>Logical</td><td><code>TRUE, FALSE</code></td><td>"logical"</td></tr>
+    <tr><td>Numeric (double)</td><td><code>12.3, 5</code></td><td>"numeric"</td></tr>
+    <tr><td>Integer</td><td><code>5L</code></td><td>"integer"</td></tr>
+    <tr><td>Complex</td><td><code>3+2i</code></td><td>"complex"</td></tr>
+    <tr><td>Character</td><td><code>"data"</code></td><td>"character"</td></tr>
+    <tr><td>Raw</td><td><code>charToRaw("A")</code></td><td>"raw"</td></tr>
+  </table>
+  <p><strong>R-objects</strong> built from these: <strong>Vector, List, Matrix, Array, Factor, Data Frame</strong>. A <strong>list</strong> can hold mixed types (<code>list(1,"a",TRUE)</code>); a <strong>data frame</strong> is a table whose columns can differ in type — the workhorse for datasets.</p>
+
+  <h3 id="u3-control"><span class="cellref">C3</span>Control Structures</h3>
+  <h4>Decision making</h4>
+<pre>marks &lt;- 78
+<span class="g">if</span> (marks &gt;= 90) {
+  print("Grade S")
+} <span class="g">else if</span> (marks &gt;= 75) {
+  print("Grade A")
+} <span class="g">else</span> {
+  print("Grade B or below")
+}
+
+<span class="c"># switch — matches a value against cases</span>
+day &lt;- "wed"
+result &lt;- <span class="g">switch</span>(day, mon="Start", wed="Midweek", fri="Weekend soon")
+<span class="c"># vectorised one-liner:</span>
+ifelse(marks &gt;= 40, "Pass", "Fail")</pre>
+  <h4>Loops</h4>
+<pre><span class="c"># for — iterate over a vector</span>
+<span class="g">for</span> (i <span class="g">in</span> 1:5) { print(i^2) }
+
+<span class="c"># while — repeat while condition TRUE</span>
+i &lt;- 1
+<span class="g">while</span> (i &lt;= 5) { print(i); i &lt;- i + 1 }
+
+<span class="c"># repeat — runs forever until break</span>
+i &lt;- 1
+<span class="g">repeat</span> {
+  print(i); i &lt;- i + 1
+  <span class="g">if</span> (i &gt; 5) <span class="g">break</span>
+}
+<span class="c"># break exits the loop; next skips to the next iteration</span></pre>
+  <div class="box key"><div class="bt">Compare in one line</div><code>for</code> = known number of iterations · <code>while</code> = condition tested <em>before</em> each pass · <code>repeat</code> = tested inside, needs <code>break</code> (runs at least once).</div>
+
+  <h3 id="u3-struct"><span class="cellref">C4</span>Vectors, Matrices, Arrays &amp; Factors</h3>
+  <h4>Vectors — 1-D, same type</h4>
+<pre>v &lt;- <span class="y">c</span>(10, 20, 30, 40, 50)   <span class="c"># c() combines</span>
+s &lt;- 1:10                    <span class="c"># sequence</span>
+q &lt;- <span class="y">seq</span>(1, 10, by = 2)      <span class="c"># 1 3 5 7 9</span>
+r &lt;- <span class="y">rep</span>(0, 4)               <span class="c"># 0 0 0 0</span>
+v[2]        <span class="c"># 20  (indexing starts at 1, NOT 0!)</span>
+v[c(1,3)]   <span class="c"># 10 30</span>
+v[-1]       <span class="c"># drop first element</span>
+v[v &gt; 25]   <span class="c"># logical filtering: 30 40 50</span>
+v * 2       <span class="c"># vectorised: 20 40 60 80 100</span>
+length(v); sum(v); mean(v); sort(v); rev(v)</pre>
+  <p><strong>Recycling rule:</strong> in <code>c(1,2,3,4) + c(10,20)</code> the shorter vector repeats → 11 22 13 24. <strong>Coercion:</strong> mixing types silently upgrades all — <code>c(1,"a")</code> becomes character.</p>
+
+  <h4>Matrices — 2-D, same type</h4>
+<pre>m &lt;- <span class="y">matrix</span>(1:6, nrow = 2, ncol = 3)          <span class="c"># fills by column</span>
+m2 &lt;- <span class="y">matrix</span>(1:6, nrow = 2, byrow = TRUE)     <span class="c"># fills by row</span>
+m[1, 2]      <span class="c"># row 1, column 2</span>
+m[ , 3]      <span class="c"># entire 3rd column</span>
+dim(m); t(m)                <span class="c"># dimensions; transpose</span>
+A + B; A * B                <span class="c"># element-wise</span>
+A <span class="g">%*%</span> B                     <span class="c"># TRUE matrix multiplication</span>
+rowSums(m); colMeans(m)</pre>
+
+  <h4>Arrays — n-dimensional, same type</h4>
+<pre>a &lt;- <span class="y">array</span>(1:24, dim = c(3, 4, 2))  <span class="c"># two 3×4 "layers"</span>
+a[2, 3, 1]   <span class="c"># row 2, col 3, layer 1</span></pre>
+
+  <h4>Factors — categorical data</h4>
+<pre>g &lt;- <span class="y">factor</span>(c("M","F","M","F","F"))
+levels(g)        <span class="c"># "F" "M" — the distinct categories</span>
+nlevels(g)       <span class="c"># 2</span>
+table(g)         <span class="c"># frequency count: F=3 M=2</span>
+<span class="c"># ordered factor for ordinal data:</span>
+sz &lt;- factor(c("low","high","med"),
+             levels = c("low","med","high"), ordered = TRUE)</pre>
+  <p>Internally a factor stores integer codes + a levels attribute — memory-efficient and required by many statistical functions.</p>
+
+  <h3 id="u3-fn"><span class="cellref">C5</span>Functions &amp; R Packages</h3>
+<pre><span class="c"># user-defined function with a default argument</span>
+area &lt;- <span class="g">function</span>(l, b = l) {   <span class="c"># default: square</span>
+  result &lt;- l * b
+  <span class="g">return</span>(result)               <span class="c"># or just: l * b (last value auto-returned)</span>
+}
+area(5, 3)        <span class="c"># 15 — positional arguments</span>
+area(b = 3, l = 5)<span class="c"># 15 — named arguments (order-free)</span>
+area(4)           <span class="c"># 16 — default used</span></pre>
+  <ul>
+    <li><strong>Components:</strong> function name, arguments (formals), body, return value.</li>
+    <li><strong>Built-in examples:</strong> <code>sum(), mean(), max(), min(), sqrt(), paste(), print(), seq(), rep(), toupper(), nchar()</code>.</li>
+    <li><strong>Lazy evaluation:</strong> an argument is evaluated only when actually used inside the body — a missing unused argument causes no error.</li>
+  </ul>
+  <h4>Packages</h4>
+<pre><span class="y">install.packages</span>("ggplot2")  <span class="c"># download from CRAN (once)</span>
+<span class="y">library</span>(ggplot2)             <span class="c"># load into session (each time; errors if absent)</span>
+require(ggplot2)             <span class="c"># same but returns FALSE instead of error</span>
+installed.packages(); search()  <span class="c"># installed vs currently loaded</span>
+update.packages()</pre>
+  <p>A <em class="term">package</em> = a bundle of functions + data + documentation stored in the <strong>library</strong> folder. Base packages (base, stats, utils, graphics) load automatically. Popular add-ons: ggplot2, dplyr, tidyr, readr, xml2/XML, rjson/jsonlite, readxl.</p>
+
+  <h3 id="u3-io"><span class="cellref">C6</span>Reading &amp; Getting External Data into R</h3>
+  <h4>CSV files</h4>
+<pre>data &lt;- <span class="y">read.csv</span>("input.csv", header = TRUE)
+print(is.data.frame(data))   <span class="c"># TRUE — CSV loads as a data frame</span>
+ncol(data); nrow(data); head(data); str(data); summary(data)
+subset(data, salary &gt; 50000 &amp; dept == "IT")
+<span class="y">write.csv</span>(data, "output.csv", row.names = FALSE)</pre>
+  <h4>Excel files</h4>
+<pre>install.packages("readxl"); library(readxl)   <span class="c"># or package "xlsx"</span>
+d &lt;- <span class="y">read_excel</span>("marks.xlsx", sheet = 1)</pre>
+  <h4>XML files</h4>
+<pre>install.packages("XML"); library(XML)
+doc &lt;- <span class="y">xmlParse</span>(file = "input.xml")
+root &lt;- xmlRoot(doc); xmlSize(root)          <span class="c"># number of child nodes</span>
+df &lt;- <span class="y">xmlToDataFrame</span>("input.xml")           <span class="c"># straight to data frame</span></pre>
+  <h4>JSON files</h4>
+<pre>install.packages("rjson"); library(rjson)
+j &lt;- <span class="y">fromJSON</span>(file = "input.json")           <span class="c"># returns a list</span>
+df &lt;- as.data.frame(j)</pre>
+  <h4>Web data</h4>
+<pre>url &lt;- "https://example.com/data.csv"
+<span class="y">download.file</span>(url, "local.csv"); d &lt;- read.csv("local.csv")
+<span class="c"># or directly: d &lt;- read.csv(url)</span>
+<span class="c"># scraping HTML tables: library(XML) → readHTMLTable(url)</span></pre>
+  <div class="box exam"><div class="bt">Exam alert</div>"Explain how R reads data from CSV, XML, JSON and Excel files with functions" is a classic 10-mark question. Answer pattern per format: package needed → reading function → resulting object (usually data frame) → 2-line code.</div>
+
+  <h3 id="u3-charts"><span class="cellref">C7</span>Working with R Charts &amp; Graphs</h3>
+  <p>Base-graphics functions below all support: <code>main</code> (title), <code>xlab/ylab</code> (axis labels), <code>col</code> (colour), <code>xlim/ylim</code> (ranges). Save any chart to a file with <code>png("f.png") … dev.off()</code>.</p>
+
+  <h4>1 · Histogram — distribution of one numeric variable</h4>
+<pre>v &lt;- c(9, 13, 21, 8, 36, 22, 12, 41, 31, 33, 19)
+<span class="y">hist</span>(v, main = "Marks Distribution", xlab = "Marks",
+     col = "steelblue", breaks = 5)   <span class="c"># breaks = number of bins</span></pre>
+  <h4>2 · Boxplot — five-number summary &amp; outliers</h4>
+<pre><span class="y">boxplot</span>(mpg ~ cyl, data = mtcars,
+        main = "Mileage by Cylinders",
+        xlab = "Cylinders", ylab = "MPG", col = "orange")
+<span class="c"># shows min, Q1, median, Q3, max; dots beyond whiskers = outliers</span></pre>
+  <h4>3 · Bar chart — compare categories</h4>
+<pre>sales &lt;- c(52, 36, 83, 64)
+<span class="y">barplot</span>(sales, names.arg = c("Q1","Q2","Q3","Q4"),
+        main = "Quarterly Sales", col = "seagreen",
+        xlab = "Quarter", ylab = "Sales (lakh)")
+<span class="c"># horiz = TRUE for horizontal bars; matrix input + beside=TRUE → grouped bars</span></pre>
+  <h4>4 · Line graph — trend over sequence/time</h4>
+<pre>v &lt;- c(7, 12, 28, 3, 41)
+<span class="y">plot</span>(v, type = "o", col = "red",
+     main = "Rainfall Trend", xlab = "Month", ylab = "Rainfall")
+<span class="c"># type: "l" line, "p" points, "o" both overlaid</span>
+<span class="y">lines</span>(c(5, 9, 20, 6, 35), type = "o", col = "blue")  <span class="c"># second series</span>
+legend("topleft", legend = c("2025","2026"), col = c("red","blue"), lty = 1)</pre>
+  <h4>5 · Scatterplot — relationship between two numerics</h4>
+<pre><span class="y">plot</span>(x = mtcars$wt, y = mtcars$mpg,
+     main = "Weight vs Mileage", xlab = "Weight", ylab = "MPG",
+     pch = 19, col = "purple")
+<span class="y">pairs</span>(~ mpg + wt + hp, data = mtcars)  <span class="c"># scatterplot matrix</span></pre>
+  <h4>6 · Pie chart — parts of a whole</h4>
+<pre>x &lt;- c(21, 62, 10, 53)
+labels &lt;- c("London", "New York", "Singapore", "Mumbai")
+pct &lt;- round(100 * x / sum(x), 1)
+<span class="y">pie</span>(x, labels = paste(labels, pct, "%"),
+    main = "City Share", col = rainbow(4))
+<span class="c"># 3-D version: library(plotrix); pie3D(x, labels = labels, explode = 0.1)</span></pre>
+
+  <table>
+    <tr><th>Chart</th><th>Function</th><th>Use when…</th></tr>
+    <tr><td>Histogram</td><td><code>hist()</code></td><td>Shape/spread of one continuous variable.</td></tr>
+    <tr><td>Boxplot</td><td><code>boxplot()</code></td><td>Median, quartiles, outliers; compare groups.</td></tr>
+    <tr><td>Bar chart</td><td><code>barplot()</code></td><td>Compare values across categories.</td></tr>
+    <tr><td>Line graph</td><td><code>plot(type="o")</code></td><td>Trend across an ordered sequence.</td></tr>
+    <tr><td>Scatterplot</td><td><code>plot(x, y)</code></td><td>Correlation between two numeric variables.</td></tr>
+    <tr><td>Pie chart</td><td><code>pie()</code></td><td>Proportional share of a whole (few slices).</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════ REVISION ═══════════════════ -->
+<section class="unit unit-1" id="revision">
+  <span class="unit-tag" style="background:var(--amber)">Revision</span>
+  <h2 id="rapid">Rapid-Fire Q&amp;A — test yourself</h2>
+  <p>Click a question to reveal the answer. If you can answer all of these cold, you're exam-ready.</p>
+
+  <details><summary>Name the 6 steps of the data analysis process in order.</summary><div class="a">Requirements Specification → Data Collection → Data Processing → Data Cleaning → Data Analysis → Communication.</div></details>
+  <details><summary>Difference between FIND and SEARCH?</summary><div class="a">FIND is case-sensitive and rejects wildcards; SEARCH is case-insensitive and accepts ? and * wildcards. Both return the position of a substring.</div></details>
+  <details><summary>Difference between SUBSTITUTE and REPLACE?</summary><div class="a">SUBSTITUTE replaces by matching <strong>content</strong> (old text → new text); REPLACE replaces by <strong>position</strong> (start character + length).</div></details>
+  <details><summary>How does Excel store dates and times internally?</summary><div class="a">Dates as serial numbers counting from 1-Jan-1900 (=1); times as fractions of a 24-hour day (12:00 noon = 0.5). This enables direct arithmetic on dates.</div></details>
+  <details><summary>Why must data be sorted before using the Subtotal command?</summary><div class="a">Subtotal inserts a summary row "at each change in" the grouping column — if identical values aren't adjacent (unsorted), each cluster gets its own subtotal and the grouping is meaningless.</div></details>
+  <details><summary>VLOOKUP exact vs approximate match?</summary><div class="a">4th argument FALSE/0 = exact match (any order, #N/A if absent). TRUE/1/omitted = approximate — table's first column must be sorted ascending; returns the largest value ≤ lookup value (grade slabs, tax brackets).</div></details>
+  <details><summary>Why is INDEX+MATCH preferred over VLOOKUP?</summary><div class="a">It can look left or right of the key column, doesn't break when columns are inserted/deleted (no hard-coded column index), and only scans two columns (faster on big data).</div></details>
+  <details><summary>Four areas of a PivotTable field list?</summary><div class="a">Rows, Columns, Values (aggregations), Filters. Slicers/Timelines add visual filtering.</div></details>
+  <details><summary>Three What-If analysis tools and their direction of reasoning?</summary><div class="a">Scenario Manager (many saved input sets → compare outcomes), Goal Seek (desired output → solves backwards for one input), Data Table (1 or 2 varying inputs → grid of outputs).</div></details>
+  <details><summary>Consolidation by position vs by category?</summary><div class="a">By position: identical layouts, combined cell-by-cell. By category: differing layouts, matched using Top-row / Left-column labels (labels must be spelled identically).</div></details>
+  <details><summary>What is the Data Model and why use it instead of VLOOKUP?</summary><div class="a">An in-memory database inside the workbook holding multiple related tables joined through key relationships; one PivotTable can then analyse across tables — handling millions of rows, faster and cleaner than lookup formulas.</div></details>
+  <details><summary>Three components of a KPI in PowerPivot?</summary><div class="a">Base value (measure being tracked), Target value (measure or absolute number), Status thresholds (bands shown as red/yellow/green icons).</div></details>
+  <details><summary>Who created R, and what is CRAN?</summary><div class="a">Ross Ihaka and Robert Gentleman (Univ. of Auckland, 1993), based on the S language. CRAN = Comprehensive R Archive Network — the repository of R distributions and 19,000+ packages.</div></details>
+  <details><summary>List R's 6 atomic data types and 6 main R-objects.</summary><div class="a">Types: logical, numeric, integer, complex, character, raw. Objects: vector, list, matrix, array, factor, data frame.</div></details>
+  <details><summary>for vs while vs repeat in R?</summary><div class="a">for — fixed iterations over a vector; while — condition checked before each pass (may run 0 times); repeat — infinite until break (runs at least once). next skips an iteration, break exits.</div></details>
+  <details><summary>What is the recycling rule?</summary><div class="a">When two vectors of unequal length are combined in an operation, the shorter one is repeated (recycled) to match the longer: c(1,2,3,4)+c(10,20) → 11 22 13 24.</div></details>
+  <details><summary>Difference between a matrix and a data frame?</summary><div class="a">A matrix is 2-D with ALL elements of one type; a data frame is a table whose columns may have different types (numeric, character, factor…) — the standard structure for datasets.</div></details>
+  <details><summary>install.packages() vs library()?</summary><div class="a">install.packages("x") downloads the package from CRAN to disk — done once. library(x) loads it into the current session — every session. require() is like library() but returns FALSE instead of throwing an error.</div></details>
+  <details><summary>Which functions read CSV, XML, JSON, Excel into R?</summary><div class="a">read.csv() (base); xmlParse()/xmlToDataFrame() from package XML; fromJSON() from rjson/jsonlite; read_excel() from readxl (or read.xlsx from xlsx).</div></details>
+  <details><summary>Which chart for: distribution, outliers, trend, correlation, share?</summary><div class="a">Distribution → hist(); outliers/5-number summary → boxplot(); trend → plot(type="o")/line; correlation → scatterplot plot(x,y); share of whole → pie().</div></details>
+
+  <h2 id="outcomes" style="margin-top:48px">Course Outcome Checklist</h2>
+  <p>Tick each one only when you can do it from memory:</p>
+  <label class="co"><input type="checkbox"><span><strong>CO1</strong> — Identify the types of data analysis (mining, BI, statistical, predictive, text) and the 6-step analysis process.</span></label>
+  <label class="co"><input type="checkbox"><span><strong>CO2</strong> — Choose Excel features for conditional formatting, lookups, What-If, financial analysis, and extracting values from text.</span></label>
+  <label class="co"><input type="checkbox"><span><strong>CO3</strong> — Use advanced Excel: PivotTables, PowerPivot, Power View, KPIs, and data consolidation.</span></label>
+  <label class="co"><input type="checkbox"><span><strong>CO4</strong> — Program in R using R-objects, control structures, and functions.</span></label>
+  <label class="co"><input type="checkbox"><span><strong>CO5</strong> — Read external data (CSV/XML/JSON/Excel/web) into R and plot histograms, boxplots, bar charts, line graphs, scatterplots, and pie charts.</span></label>
+
+  <footer>
+    Compiled from the CS1231-1 syllabus · Textbooks: Winston — <em>Excel Data Analysis &amp; Business Modeling</em>; Davies — <em>The Book of R</em>. Progress ticks reset on reload — revise until they don't need to persist.
+  </footer>
+</section>
+
+</main>
+</div>
+
+<script>
+// active nav highlighting
+const links=[...document.querySelectorAll('nav a')];
+const targets=links.map(a=>document.querySelector(a.getAttribute('href')));
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'));
+      const i=targets.indexOf(e.target);
+      if(i>-1)links[i].classList.add('active');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+targets.forEach(t=>t&&io.observe(t));
+// outcome checklist styling (in-memory only)
+document.querySelectorAll('.co input').forEach(cb=>{
+  cb.addEventListener('change',()=>cb.closest('.co').classList.toggle('done',cb.checked));
+});
+</script>
+<script>
+(function(){
+  var files = [{file:"unit1-theory-of-computation.html",title:"Theory of Computation"},{file:"data-science-master-notes.html",title:"Data Science"},{file:"unit1-detailed-notes.html",title:"Detailed Notes"},{file:"unit1-computer-networks_1.html",title:"Computer Networks"}];
+  injectNav("data-science-master-notes.html", files);
+})();
+</script>
+</body>
+</html>
