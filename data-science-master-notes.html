@@ -138,8 +138,7 @@
   }
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
-<link rel="stylesheet" href="assets/css/style.css">
-<script src="assets/js/nav.js" defer></script>
+
 </head>
 <body>
 <div class="wrap">
@@ -717,12 +716,6 @@ targets.forEach(t=>t&&io.observe(t));
 document.querySelectorAll('.co input').forEach(cb=>{
   cb.addEventListener('change',()=>cb.closest('.co').classList.toggle('done',cb.checked));
 });
-</script>
-<script>
-(function(){
-  var files = [{file:"unit1-theory-of-computation.html",title:"Theory of Computation"},{file:"data-science-master-notes.html",title:"Data Science"},{file:"unit1-detailed-notes.html",title:"Detailed Notes"},{file:"unit1-computer-networks_1.html",title:"Computer Networks"}];
-  injectNav("data-science-master-notes.html", files);
-})();
 </script>
 </body>
 </html>

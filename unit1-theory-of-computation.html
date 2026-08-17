@@ -76,8 +76,7 @@ figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-to
   @keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
 }
 </style>
-<link rel="stylesheet" href="assets/css/style.css">
-<script src="assets/js/nav.js" defer></script>
+
 </head>
 <body>
 <div class="layout">
@@ -443,12 +442,6 @@ figcaption{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-to
   const map={};links.forEach(l=>map[l.getAttribute('href').slice(1)]=l);
   const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const l=map[e.target.id];if(l)l.classList.add('active');}})},{rootMargin:'-20% 0px -70% 0px'});
   document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
-})();
-</script>
-<script>
-(function(){
-  var files = [{file:"unit1-theory-of-computation.html",title:"Theory of Computation"},{file:"data-science-master-notes.html",title:"Data Science"},{file:"unit1-detailed-notes.html",title:"Detailed Notes"},{file:"unit1-computer-networks_1.html",title:"Computer Networks"}];
-  injectNav("unit1-theory-of-computation.html", files);
 })();
 </script>
 </body>

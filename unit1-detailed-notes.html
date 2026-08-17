@@ -87,8 +87,7 @@
   @media(max-width:900px){.wrap{grid-template-columns:1fr}nav{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}main{padding:0 20px 90px}}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
-<link rel="stylesheet" href="assets/css/style.css">
-<script src="assets/js/nav.js" defer></script>
+
 </head>
 <body>
 <div class="wrap">
@@ -648,12 +647,6 @@ const links=[...document.querySelectorAll('nav a')];
 const targets=links.map(a=>document.querySelector(a.getAttribute('href')));
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const i=targets.indexOf(e.target);if(i>-1)links[i].classList.add('active');}});},{rootMargin:'-15% 0px -75% 0px'});
 targets.forEach(t=>t&&io.observe(t));
-</script>
-<script>
-(function(){
-  var files = [{file:"unit1-theory-of-computation.html",title:"Theory of Computation"},{file:"data-science-master-notes.html",title:"Data Science"},{file:"unit1-detailed-notes.html",title:"Detailed Notes"},{file:"unit1-computer-networks_1.html",title:"Computer Networks"}];
-  injectNav("unit1-detailed-notes.html", files);
-})();
 </script>
 </body>
 </html>

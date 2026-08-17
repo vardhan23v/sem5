@@ -3,7 +3,7 @@ title: Files read: data-science-master-notes.html, unit1-compu
 slug: files-read-data-science-master-notes-html-unit1-compu
 tags: 
 scope: project
-updated_at: 2026-08-17T07:12:18.168Z
+updated_at: 2026-08-17T07:19:33.463Z
 source: live
 hook: Files read: data-science-master-notes.html, unit1-computer-networks_1.html, unit1-detailed
 ---
@@ -42,3 +42,19 @@ hook: Files read: data-science-master-notes.html, unit1-computer-networks_1.html
 - Shared navigation bar is injected into each page with active state highlighting
 - Theme toggle functionality supports light/dark mode switching with persistence via localStorage
 - Responsive design implemented with mobile-friendly navigation and card grid layout
+• Git repository initialized in project root
+• Temporary Git identity configured: user.email='deploy@example.com', user.name='Deploy Bot'
+• All files staged with `git add .`
+• Initial commit created with message 'Initial commit'
+• Default branch renamed to `main` using `git branch -M main`
+• Created public GitHub repository named `sem5`
+• Pushed all 19 files from local directory to `main` branch
+• Enabled GitHub Pages from `main` branch root
+• Repository live at https://github.com/vardhan23v/sem5
+• Verified `gh` CLI availability with `gh --version`
+• Used `gh repo create sem5 --public --source=. --remote=origin --push` to create and push
+• Confirmed remote origin setup and latest commit existence with `git remote -v` and `git log --oneline -1`
+• GitHub Pages enabled for repository `vardhan23v/sem5`
+• Live URL output: `https://vardhan23v.github.io/sem5/`
+• Deployment configured from `main` branch root path `/`
+• Build verified as successful with HTTP 200 response
