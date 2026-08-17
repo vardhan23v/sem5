@@ -1,9 +1,4 @@
-/* ============================================================
-   NoteVault — Semester 5
-   Dark glassmorphism design system with ambient background
-   ============================================================ */
-
-/* ----- CSS Reset & Root Variables ----- */
+/* ===== CSS Reset & Root Variables ===== */
 *,
 *::before,
 *::after {
@@ -41,12 +36,11 @@
     --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.15);
 
     /* Subject Colors */
-    --clr-cnc: #f97316;
-    --clr-os: #3b82f6;
-    --clr-toc: #a855f7;
-    --clr-ds: #10b981;
-    --clr-da: #06b6d4;
-    --clr-net: #ef4444;
+    --clr-daa: #f97316;
+    --clr-dbms: #3b82f6;
+    --clr-m4: #10b981;
+    --clr-mp: #ef4444;
+    --clr-sepm: #a855f7;
     --clr-general: #6366f1;
 
     /* Layout */
@@ -375,6 +369,50 @@ body {
     max-height: 2000px;
 }
 
+/* Subcategory */
+.subcategory-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 34px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+    user-select: none;
+}
+
+.subcategory-header:hover {
+    background: var(--bg-card-hover);
+}
+
+.subcategory-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex: 1;
+    text-transform: capitalize;
+}
+
+.subcategory-chevron {
+    color: var(--text-muted);
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.subcategory.expanded .subcategory-chevron {
+    transform: rotate(90deg);
+}
+
+.subcategory-files {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow);
+}
+
+.subcategory.expanded .subcategory-files {
+    max-height: 2000px;
+}
+
 /* File Items */
 .file-item {
     display: flex;
@@ -385,6 +423,10 @@ body {
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
     margin: 1px 0;
+}
+
+.file-item.sub-file {
+    padding-left: 50px;
 }
 
 .file-item:hover {
@@ -693,14 +735,106 @@ body {
     color: var(--accent-primary);
 }
 
-/* HTML Note iframe */
-.note-iframe {
+/* Image Viewer */
+.image-viewer {
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+/* PPT Viewer (iframe) */
+.ppt-viewer {
     width: 100%;
     height: 100%;
     border: none;
-    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    background: #1a1a25;
     position: absolute;
     inset: 0;
+}
+
+.pdf-canvas-container {
+    position: relative;
+}
+
+/* PPT Fallback */
+.ppt-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+}
+
+.fallback-card {
+    text-align: center;
+    padding: 48px 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(20px);
+    max-width: 400px;
+}
+
+.fallback-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.fallback-card p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+
+.fallback-hint {
+    color: var(--text-muted) !important;
+    font-size: 0.78rem !important;
+    margin-bottom: 24px !important;
+}
+
+.fallback-btn {
+    padding: 12px 28px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--accent-gradient);
+    color: white;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-glow);
+}
+
+.fallback-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+}
+
+/* File type badges */
+.file-icon.ppt {
+    background: rgba(249, 115, 22, 0.15) !important;
+    color: #f97316 !important;
+}
+
+.file-icon.doc {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #3b82f6 !important;
+}
+
+.file-icon.img {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #10b981 !important;
 }
 
 /* Bottom Bar */
@@ -898,125 +1032,4 @@ body {
         padding: 8px 14px;
         font-size: 0.72rem;
     }
-}
-  padding: 40px;
-}
-
-.welcome-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--accent-gradient);
-  border-radius: var(--radius-xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-glow);
-  margin-bottom: 8px;
-}
-
-.welcome-icon svg {
-  width: 40px;
-  height: 40px;
-  color: white;
-}
-
-.welcome-state h2 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.welcome-state p {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  max-width: 400px;
-  line-height: 1.6;
-}
-
-/* HTML note embed */
-.note-embed {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: var(--bg-secondary);
-}
-
-/* ===== Mobile Sidebar Toggle ===== */
-.mobile-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  :root {
-    --sidebar-width: 280px;
-  }
-
-  .sidebar {
-    transform: translateX(-100%);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .sidebar-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .mobile-overlay.show {
-    display: block;
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .topbar {
-    padding: 0 16px;
-  }
-
-  .topbar-title {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --sidebar-width: 260px;
-    --topbar-height: 52px;
-  }
-
-  .sidebar-header {
-    padding: 14px 14px 12px;
-  }
-
-  .search-container {
-    padding: 12px 14px 8px;
-  }
-
-  .stats-bar {
-    padding: 6px 14px 12px;
-    gap: 12px;
-  }
-
-  .subject-list {
-    padding: 2px 8px 8px;
-  }
-
-  .topbar {
-    padding: 0 12px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orb {
-    animation: none;
-  }
 }

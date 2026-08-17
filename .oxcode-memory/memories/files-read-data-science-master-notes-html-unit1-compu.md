@@ -3,7 +3,7 @@ title: Files read: data-science-master-notes.html, unit1-compu
 slug: files-read-data-science-master-notes-html-unit1-compu
 tags: 
 scope: project
-updated_at: 2026-08-17T07:19:33.463Z
+updated_at: 2026-08-17T07:28:28.033Z
 source: live
 hook: Files read: data-science-master-notes.html, unit1-computer-networks_1.html, unit1-detailed
 ---
@@ -58,3 +58,13 @@ hook: Files read: data-science-master-notes.html, unit1-computer-networks_1.html
 • Live URL output: `https://vardhan23v.github.io/sem5/`
 • Deployment configured from `main` branch root path `/`
 • Build verified as successful with HTTP 200 response
+- Rebuilt NoteVault interface with dark glassmorphism design
+- Implemented sidebar navigation replacing old top nav
+- Added ambient orbs and glassmorphism UI elements
+- Organized 6 subjects with total of 11 files (PDFs + HTML)
+- Embedded PDF viewer and HTML note iframe display
+- Enabled live search filtering for subjects and files
+- Added mobile-responsive hamburger menu for sidebar
+- Assigned unique accent colors per subject
+- Deployed site successfully to GitHub Pages
+- Site returns HTTP 200 and is live at https://vardhan23v.github.io/sem5/

@@ -5,318 +5,488 @@
 
 // ===== Subject Data =====
 var SUBJECTS = [
-  {
-    id: 'cnc',
-    name: 'CNC',
-    fullName: 'Computer Networks & Communication',
-    color: '#f97316',
-    files: [
-      { name: 'CNC Unit 1', path: 'CNC UNIT 1.pdf', type: 'pdf' },
-      { name: 'CNC Unit 2', path: 'CNC UNIT 2.pdf', type: 'pdf' },
-      { name: 'CNC Lab Manual', path: 'CSE_CNC_LAB_MANUAL-20CS502_2023.pdf', type: 'pdf' }
-    ]
-  },
-  {
-    id: 'os',
-    name: 'OS',
-    fullName: 'Operating Systems',
-    color: '#3b82f6',
-    files: [
-      { name: 'OS Unit 1', path: 'OS UNIT 1.pdf', type: 'pdf' },
-      { name: 'OS Unit 2', path: 'OS UNIT 2.pdf', type: 'pdf' },
-      { name: 'OS Unit 3', path: 'OS UNIT 3.pdf', type: 'pdf' }
-    ]
-  },
-  {
-    id: 'toc',
-    name: 'TOC',
-    fullName: 'Theory of Computation',
-    color: '#a855f7',
-    files: [
-      { name: 'TOC Unit 1 — Automata (Master Notes)', path: 'TOC_Unit1_Automata_Master_Notes.pdf', type: 'pdf' },
-      { name: 'TOC Unit 1 — Automata (HTML)', path: 'unit1-theory-of-computation.html', type: 'html' }
-    ]
-  },
-  {
-    id: 'ds',
-    name: 'Data Science',
-    fullName: 'Introduction to Data Science',
-    color: '#10b981',
-    files: [
-      { name: 'Data Science — Master Notes', path: 'data-science-master-notes.html', type: 'html' }
-    ]
-  },
-  {
-    id: 'da',
-    name: 'Data Analysis',
-    fullName: 'Data Analysis using Excel',
-    color: '#06b6d4',
-    files: [
-      { name: 'Data Analysis — Detailed Notes', path: 'unit1-detailed-notes.html', type: 'html' }
-    ]
-  },
-  {
-    id: 'net',
-    name: 'Networks',
-    fullName: 'Computer Network & Communication',
-    color: '#ef4444',
-    files: [
-      { name: 'Computer Networks — Unit 1', path: 'unit1-computer-networks_1.html', type: 'html' }
-    ]
-  }
+    {
+        name: "CNC",
+        fullName: "Computer Networks & Communication",
+        color: "#f97316",
+        files: [
+            { name: "CNC Unit 1.pdf", path: "CNC UNIT 1.pdf", size: "27.0 MB" },
+            { name: "CNC Unit 2.pdf", path: "CNC UNIT 2.pdf", size: "23.1 MB" },
+            { name: "CNC Lab Manual.pdf", path: "CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" }
+        ]
+    },
+    {
+        name: "OS",
+        fullName: "Operating Systems",
+        color: "#3b82f6",
+        files: [
+            { name: "OS Unit 1.pdf", path: "OS UNIT 1.pdf", size: "10.5 MB" },
+            { name: "OS Unit 2.pdf", path: "OS UNIT 2.pdf", size: "16.8 MB" },
+            { name: "OS Unit 3.pdf", path: "OS UNIT 3.pdf", size: "8.8 MB" }
+        ]
+    },
+    {
+        name: "TOC",
+        fullName: "Theory of Computation",
+        color: "#a855f7",
+        files: [
+            { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB" },
+            { name: "TOC Unit 1 — Automata (HTML)", path: "unit1-theory-of-computation.html", size: "33 KB" }
+        ]
+    },
+    {
+        name: "Data Science",
+        fullName: "Introduction to Data Science",
+        color: "#10b981",
+        files: [
+            { name: "Data Science — Master Notes", path: "data-science-master-notes.html", size: "57 KB" }
+        ]
+    },
+    {
+        name: "Data Analysis",
+        fullName: "Data Analysis using Excel",
+        color: "#06b6d4",
+        files: [
+            { name: "Data Analysis — Detailed Notes", path: "unit1-detailed-notes.html", size: "52 KB" }
+        ]
+    },
+    {
+        name: "Networks",
+        fullName: "Computer Network & Communication",
+        color: "#ef4444",
+        files: [
+            { name: "Computer Networks — Unit 1", path: "unit1-computer-networks_1.html", size: "56 KB" }
+        ]
+    }
 ];
 
 // ===== State =====
-var activeSubject = null;
-var activeFile = null;
+var currentPdf = null;
+var pdfDoc = null;
+var currentPage = 1;
+var totalPages = 0;
+var zoomScale = 1.0;
+var rendering = false;
+var pendingRender = null;
+var twoPageMode = false;
+var currentFileType = 'pdf';
 
-// ===== Initialization =====
-document.addEventListener('DOMContentLoaded', function () {
-  renderSidebar();
-  wireSearch();
-  wireMobileToggle();
-  showWelcome();
-});
+// ===== File Type Detection =====
+function getFileType(path) {
+    var ext = path.split('.').pop().toLowerCase();
+    if (ext === 'pdf') return 'pdf';
+    if (ext === 'html') return 'html';
+    return 'pdf';
+}
 
-// ===== Render Sidebar =====
-function renderSidebar() {
-  var list = document.getElementById('subject-list');
-  if (!list) return;
+function getFileLabel(path) {
+    var ext = path.split('.').pop().toLowerCase();
+    if (ext === 'html') return 'HTML';
+    return 'PDF';
+}
 
-  var html = '';
-  var totalFiles = 0;
+// ===== DOM Elements =====
+var sidebar = document.getElementById('sidebar');
+var sidebarOverlay = document.getElementById('sidebarOverlay');
+var subjectList = document.getElementById('subjectList');
+var searchInput = document.getElementById('searchInput');
+var totalPdfsEl = document.getElementById('totalPdfs');
+var welcomeScreen = document.getElementById('welcomeScreen');
+var pdfViewer = document.getElementById('pdfViewer');
+var viewerTitle = document.getElementById('viewerTitle');
+var pdfCanvas = document.getElementById('pdfCanvas');
+var pdfCanvas2 = document.getElementById('pdfCanvas2');
+var pagesWrapper = document.getElementById('pagesWrapper');
+var pdfCanvasContainer = document.getElementById('pdfCanvasContainer');
+var loadingSpinner = document.getElementById('loadingSpinner');
+var pageInfo = document.getElementById('pageInfo');
+var pageInfoBot = document.getElementById('pageInfoBot');
+var zoomLevelEl = document.getElementById('zoomLevel');
+var quickSubjects = document.getElementById('quickSubjects');
+var noteViewer = document.getElementById('noteViewer');
 
-  for (var i = 0; i < SUBJECTS.length; i++) {
-    var subj = SUBJECTS[i];
-    totalFiles += subj.files.length;
-
-    html += '<div class="subject-group">';
-    html += '  <div class="subject-header" data-subject="' + subj.id + '" onclick="toggleSubject(\'' + subj.id + '\')">';
-    html += '    <span class="subject-dot" style="background:' + subj.color + '"></span>';
-    html += '    <span class="subject-name">' + subj.fullName + '</span>';
-    html += '    <span class="subject-count">' + subj.files.length + '</span>';
-    html += '    <span class="subject-chevron">▶</span>';
-    html += '  </div>';
-    html += '  <div class="file-list" id="files-' + subj.id + '">';
-
-    for (var j = 0; j < subj.files.length; j++) {
-      var f = subj.files[j];
-      var icon = f.type === 'pdf' ? '📄' : '🌐';
-      var badgeClass = f.type === 'pdf' ? 'badge-pdf' : 'badge-html';
-      var badgeText = f.type === 'pdf' ? 'PDF' : 'HTML';
-
-      html += '    <div class="file-item" data-subject="' + subj.id + '" data-path="' + f.path + '" data-type="' + f.type + '" onclick="openFile(\'' + subj.id + '\', \'' + f.path + '\', \'' + f.type + '\', this)" title="' + f.name + '">';
-      html += '      <span class="file-icon">' + icon + '</span>';
-      html += '      <span class="file-name">' + f.name + '</span>';
-      html += '      <span class="file-badge ' + badgeClass + '">' + badgeText + '</span>';
-      html += '    </div>';
+// ===== Initialize =====
+function init() {
+    try {
+        buildSidebar();
+        buildQuickSubjects();
+        countPdfs();
+        attachEvents();
+        addMobileToggle();
+    } catch (err) {
+        console.error("Initialization failed:", err);
     }
+}
 
-    html += '  </div>';
-    html += '</div>';
-  }
+function countPdfs() {
+    var count = 0;
+    SUBJECTS.forEach(function(s) {
+        count += s.files.length;
+    });
+    totalPdfsEl.textContent = count;
+}
 
-  list.innerHTML = html;
+// ===== Build Sidebar =====
+function buildSidebar() {
+    var html = '';
+    SUBJECTS.forEach(function(subject) {
+        var totalFiles = subject.files.length;
+        html += '<div class="subject-group" data-subject="' + subject.name + '">';
+        html += '  <div class="subject-header" onclick="toggleSubject(this)">';
+        html += '    <span class="subject-dot" style="color: ' + subject.color + '; background: ' + subject.color + '"></span>';
+        html += '    <span class="subject-name">' + subject.name + '</span>';
+        html += '    <span class="subject-count">' + totalFiles + '</span>';
+        html += '    <svg class="subject-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
+        html += '  </div>';
+        html += '  <div class="subject-files">';
+        html += subject.files.map(function(f) { return fileItemHTML(f, subject.color); }).join('');
+        html += '  </div>';
+        html += '</div>';
+    });
+    subjectList.innerHTML = html;
+}
 
-  // Update stats
-  var subjCount = document.getElementById('stat-subjects');
-  var fileCount = document.getElementById('stat-files');
-  if (subjCount) subjCount.textContent = SUBJECTS.length;
-  if (fileCount) fileCount.textContent = totalFiles;
+function fileItemHTML(file, color) {
+    var label = getFileLabel(file.path);
+    return '<div class="file-item" data-path="' + file.path + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + escapeHtml(file.name) + '\')">' +
+        '<div class="file-icon" style="background: ' + color + '22; color: ' + color + '">' + label + '</div>' +
+        '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
+        '<span class="file-size">' + (file.size || '') + '</span>' +
+        '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + escapeHtml(file.name) + '\')" title="Download">' +
+        '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+        '</button>' +
+        '</div>';
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function buildQuickSubjects() {
+    quickSubjects.innerHTML = SUBJECTS.map(function(s) {
+        return '<button class="quick-btn" onclick="expandSubject(\'' + s.name + '\')" style="border-color: ' + s.color + '30; color: ' + s.color + '">' + s.name + '</button>';
+    }).join('');
 }
 
 // ===== Toggle Subject =====
-function toggleSubject(subjectId) {
-  var header = document.querySelector('.subject-header[data-subject="' + subjectId + '"]');
-  var fileList = document.getElementById('files-' + subjectId);
+function toggleSubject(header) { header.parentElement.classList.toggle('expanded'); }
 
-  if (!header || !fileList) return;
-
-  var isOpen = fileList.classList.contains('open');
-
-  // Close all
-  var allHeaders = document.querySelectorAll('.subject-header');
-  var allLists = document.querySelectorAll('.file-list');
-  for (var i = 0; i < allHeaders.length; i++) {
-    allHeaders[i].classList.remove('expanded', 'active');
-  }
-  for (var j = 0; j < allLists.length; j++) {
-    allLists[j].classList.remove('open');
-  }
-
-  // Open clicked (if it wasn't already open)
-  if (!isOpen) {
-    header.classList.add('expanded', 'active');
-    fileList.classList.add('open');
-    activeSubject = subjectId;
-  } else {
-    activeSubject = null;
-  }
+function expandSubject(name) {
+    var group = document.querySelector('.subject-group[data-subject="' + name + '"]');
+    if (group) {
+        document.querySelectorAll('.subject-group').forEach(function(g) { g.classList.remove('expanded'); });
+        group.classList.add('expanded');
+        group.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 }
 
 // ===== Open File =====
-function openFile(subjectId, path, type, el) {
-  // Highlight active file
-  var allFiles = document.querySelectorAll('.file-item');
-  for (var i = 0; i < allFiles.length; i++) {
-    allFiles[i].classList.remove('active-file');
-  }
-  if (el) el.classList.add('active-file');
+function openFile(encodedPath, name) {
+    var path = decodeURIComponent(encodedPath);
+    currentPdf = path;
+    currentPage = 1;
+    zoomScale = 1.0;
+    currentFileType = getFileType(path);
 
-  activeFile = path;
+    document.querySelectorAll('.file-item').forEach(function(el) { el.classList.remove('active'); });
+    var activeItem = document.querySelector('.file-item[data-path="' + CSS.escape(path) + '"]');
+    if (activeItem) activeItem.classList.add('active');
 
-  // Find subject info
-  var subj = null;
-  for (var s = 0; s < SUBJECTS.length; s++) {
-    if (SUBJECTS[s].id === subjectId) { subj = SUBJECTS[s]; break; }
-  }
+    welcomeScreen.style.display = 'none';
+    pdfViewer.style.display = 'flex';
+    viewerTitle.textContent = name;
+    zoomLevelEl.textContent = '100%';
+    closeSidebar();
 
-  // Update topbar
-  var topbarTitle = document.getElementById('topbar-title');
-  var topbarBadge = document.getElementById('topbar-badge');
-  var viewerContainer = document.getElementById('viewer-container');
+    hideAllViewers();
 
-  if (topbarTitle && el) {
-    topbarTitle.textContent = el.querySelector('.file-name').textContent;
-  }
-  if (topbarBadge && subj) {
-    topbarBadge.textContent = subj.name;
-    topbarBadge.style.background = subj.color + '22';
-    topbarBadge.style.color = subj.color;
-  }
+    var pageControls = [document.getElementById('btnPrevPage'), document.getElementById('btnNextPage'), document.getElementById('btnTwoPage')];
+    var pageInfoEls = [pageInfo, pageInfoBot];
+    var bottomBar = document.getElementById('viewerBottombar');
+    var zoomControls = [document.getElementById('btnZoomIn'), document.getElementById('btnZoomOut'), zoomLevelEl];
 
-  // Render viewer
-  if (viewerContainer) {
-    if (type === 'pdf') {
-      viewerContainer.innerHTML = '<iframe class="viewer-iframe" src="' + path + '#toolbar=0&navpanes=0" title="PDF Viewer"></iframe>';
-    } else if (type === 'html') {
-      viewerContainer.innerHTML = '<iframe class="note-embed" src="' + path + '" title="HTML Note"></iframe>';
+    if (currentFileType === 'pdf') {
+        pageControls.forEach(function(b) { b.style.display = ''; });
+        pageInfoEls.forEach(function(e) { e.style.display = ''; });
+        bottomBar.style.display = '';
+        zoomControls.forEach(function(e) { e.style.display = ''; });
+        openPdfFile(path);
+    } else if (currentFileType === 'html') {
+        pageControls.forEach(function(b) { b.style.display = 'none'; });
+        pageInfoEls.forEach(function(e) { e.style.display = 'none'; });
+        bottomBar.style.display = 'none';
+        zoomControls.forEach(function(e) { e.style.display = 'none'; });
+        openHtmlFile(path);
     }
-  }
+}
 
-  // Close sidebar on mobile
-  closeMobileSidebar();
+function hideAllViewers() {
+    pdfCanvas.style.display = 'none';
+    pdfCanvas2.style.display = 'none';
+    noteViewer.style.display = 'none';
+    pagesWrapper.style.display = 'none';
+    loadingSpinner.classList.remove('visible');
+}
+
+function openHtmlFile(path) {
+    loadingSpinner.classList.remove('visible');
+    pagesWrapper.style.display = 'none';
+    pdfCanvas.style.display = 'none';
+    pdfCanvas2.style.display = 'none';
+    noteViewer.style.display = 'block';
+    noteViewer.src = path;
+}
+
+async function openPdfFile(path) {
+    loadingSpinner.classList.add('visible');
+    pagesWrapper.style.display = 'none';
+    noteViewer.style.display = 'none';
+    try {
+        var loadingTask = pdfjsLib.getDocument(path);
+        pdfDoc = await loadingTask.promise;
+        totalPages = pdfDoc.numPages;
+        updatePageInfo();
+        await renderCurrentView();
+    } catch (err) {
+        console.error('Error loading PDF:', err);
+        loadingSpinner.innerHTML = '<div style="color: var(--text-secondary); text-align: center;">' +
+            '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+            '<p style="margin-top: 12px; font-size: 0.9rem; color: #ef4444;">Failed to load PDF</p>' +
+            '<p style="margin-top: 6px; font-size: 0.8rem;">Make sure the file exists and try again.</p></div>';
+    }
+}
+
+// ===== HiDPI Canvas Rendering =====
+async function renderPageToCanvas(canvas, pageNum) {
+    var page = await pdfDoc.getPage(pageNum);
+    var dpr = window.devicePixelRatio || 1;
+    var baseScale = zoomScale * 1.5;
+    var viewport = page.getViewport({ scale: baseScale });
+
+    canvas.width = Math.floor(viewport.width * dpr);
+    canvas.height = Math.floor(viewport.height * dpr);
+    canvas.style.width = Math.floor(viewport.width) + 'px';
+    canvas.style.height = Math.floor(viewport.height) + 'px';
+
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+}
+
+async function renderCurrentView() {
+    if (rendering) { pendingRender = true; return; }
+    rendering = true;
+
+    try {
+        await renderPageToCanvas(pdfCanvas, currentPage);
+        pdfCanvas.style.display = 'block';
+
+        if (twoPageMode && currentPage + 1 <= totalPages) {
+            await renderPageToCanvas(pdfCanvas2, currentPage + 1);
+            pdfCanvas2.style.display = 'block';
+        } else {
+            pdfCanvas2.style.display = 'none';
+        }
+
+        loadingSpinner.classList.remove('visible');
+        pagesWrapper.style.display = 'flex';
+    } catch (err) {
+        console.error('Error rendering:', err);
+    }
+
+    rendering = false;
+    if (pendingRender) { pendingRender = false; await renderCurrentView(); }
+}
+
+// ===== Navigation =====
+function nextPage() {
+    var step = twoPageMode ? 2 : 1;
+    if (currentPage + step <= totalPages) {
+        currentPage += step;
+        updatePageInfo();
+        renderCurrentView();
+        pdfCanvasContainer.scrollTop = 0;
+    }
+}
+
+function prevPage() {
+    var step = twoPageMode ? 2 : 1;
+    if (currentPage - step >= 1) {
+        currentPage -= step;
+        updatePageInfo();
+        renderCurrentView();
+        pdfCanvasContainer.scrollTop = 0;
+    }
+}
+
+function updatePageInfo() {
+    var text;
+    if (twoPageMode && currentPage + 1 <= totalPages) {
+        text = currentPage + '-' + (currentPage + 1) + ' / ' + totalPages;
+    } else {
+        text = currentPage + ' / ' + totalPages;
+    }
+    pageInfo.textContent = text;
+    pageInfoBot.textContent = text;
+}
+
+// ===== Zoom =====
+function zoomIn() {
+    zoomScale = Math.min(5.0, zoomScale + 0.25);
+    zoomLevelEl.textContent = Math.round(zoomScale * 100) + '%';
+    renderCurrentView();
+}
+
+function zoomOut() {
+    zoomScale = Math.max(0.25, zoomScale - 0.25);
+    zoomLevelEl.textContent = Math.round(zoomScale * 100) + '%';
+    renderCurrentView();
+}
+
+// ===== Two-Page Mode =====
+function toggleTwoPageMode() {
+    twoPageMode = !twoPageMode;
+    var btn = document.getElementById('btnTwoPage');
+    btn.classList.toggle('active', twoPageMode);
+    if (twoPageMode && currentPage % 2 === 0) { currentPage = Math.max(1, currentPage - 1); }
+    updatePageInfo();
+    renderCurrentView();
+}
+
+// ===== Download =====
+function downloadPdf(encodedPath, name) {
+    var path = decodeURIComponent(encodedPath);
+    var a = document.createElement('a');
+    a.href = path;
+    a.download = name || path.split('/').pop();
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function downloadCurrentPdf() {
+    if (currentPdf) downloadPdf(encodeURIComponent(currentPdf), viewerTitle.textContent);
+}
+
+// ===== Fullscreen =====
+function toggleFullscreen() {
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); }
+    else { document.exitFullscreen(); }
+}
+
+// ===== Go Back =====
+function goBack() {
+    pdfViewer.style.display = 'none';
+    welcomeScreen.style.display = 'flex';
+    pdfDoc = null;
+    currentPdf = null;
+    currentFileType = 'pdf';
+    hideAllViewers();
+    loadingSpinner.innerHTML = '<div class="spinner"></div><p>Loading document...</p>';
+    loadingSpinner.classList.remove('visible');
+    noteViewer.src = '';
+    document.querySelectorAll('.file-item').forEach(function(el) { el.classList.remove('active'); });
 }
 
 // ===== Search =====
-function wireSearch() {
-  var input = document.getElementById('search-input');
-  if (!input) return;
-
-  input.addEventListener('input', function () {
-    var query = (this.value || '').trim().toLowerCase();
-
+function filterFiles(query) {
+    var q = query.toLowerCase().trim();
+    var items = document.querySelectorAll('.file-item');
     var groups = document.querySelectorAll('.subject-group');
-    var anyVisible = false;
 
-    for (var i = 0; i < groups.length; i++) {
-      var group = groups[i];
-      var header = group.querySelector('.subject-header');
-      var subjectId = header ? header.getAttribute('data-subject') : '';
-      var fileItems = group.querySelectorAll('.file-item');
-
-      var groupVisible = false;
-
-      // Check if subject name matches
-      var subj = null;
-      for (var s = 0; s < SUBJECTS.length; s++) {
-        if (SUBJECTS[s].id === subjectId) { subj = SUBJECTS[s]; break; }
-      }
-
-      if (!query) {
-        // Show all, collapse all
-        group.style.display = '';
-        var fl = group.querySelector('.file-list');
-        var hd = group.querySelector('.subject-header');
-        if (fl) fl.classList.remove('open');
-        if (hd) hd.classList.remove('expanded', 'active');
-        for (var fi = 0; fi < fileItems.length; fi++) {
-          fileItems[fi].style.display = '';
-        }
-        continue;
-      }
-
-      // Check subject name match
-      if (subj && (subj.name.toLowerCase().indexOf(query) !== -1 || subj.fullName.toLowerCase().indexOf(query) !== -1)) {
-        groupVisible = true;
-        // Show all files in this group
-        for (var fi2 = 0; fi2 < fileItems.length; fi2++) {
-          fileItems[fi2].style.display = '';
-        }
-      } else {
-        // Check individual files
-        for (var fj = 0; fj < fileItems.length; fj++) {
-          var item = fileItems[fj];
-          var name = (item.querySelector('.file-name') || {}).textContent || '';
-          if (name.toLowerCase().indexOf(query) !== -1) {
-            item.style.display = '';
-            groupVisible = true;
-          } else {
-            item.style.display = 'none';
-          }
-        }
-      }
-
-      group.style.display = groupVisible ? '' : 'none';
-
-      // Auto-expand matching groups
-      var fl2 = group.querySelector('.file-list');
-      var hd2 = group.querySelector('.subject-header');
-      if (groupVisible && query) {
-        if (fl2) fl2.classList.add('open');
-        if (hd2) hd2.classList.add('expanded');
-      } else if (!query) {
-        if (fl2) fl2.classList.remove('open');
-        if (hd2) hd2.classList.remove('expanded', 'active');
-      }
-
-      if (groupVisible) anyVisible = true;
+    if (!q) {
+        items.forEach(function(el) { el.style.display = ''; });
+        groups.forEach(function(g) { g.style.display = ''; });
+        return;
     }
-  });
+
+    items.forEach(function(el) {
+        var name = el.querySelector('.file-name').textContent.toLowerCase();
+        el.style.display = name.indexOf(q) !== -1 ? '' : 'none';
+    });
+
+    groups.forEach(function(g) {
+        var vis = g.querySelectorAll('.file-item:not([style*="display: none"])');
+        g.style.display = vis.length > 0 ? '' : 'none';
+        if (vis.length > 0) g.classList.add('expanded');
+    });
 }
 
-// ===== Mobile Sidebar =====
-function wireMobileToggle() {
-  var toggleBtn = document.getElementById('sidebar-toggle');
-  var overlay = document.getElementById('mobile-overlay');
-  var sidebar = document.getElementById('sidebar');
-
-  if (!toggleBtn || !overlay || !sidebar) return;
-
-  toggleBtn.addEventListener('click', function () {
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('show');
-  });
-
-  overlay.addEventListener('click', function () {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
-  });
+// ===== Sidebar Mobile =====
+function addMobileToggle() {
+    var btn = document.createElement('button');
+    btn.className = 'mobile-toggle';
+    btn.id = 'mobileToggle';
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+    btn.onclick = function() {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('visible');
+    };
+    document.body.appendChild(btn);
 }
 
-function closeMobileSidebar() {
-  var sidebar = document.getElementById('sidebar');
-  var overlay = document.getElementById('mobile-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('show');
+function closeSidebar() {
+    if (window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('visible');
+    }
 }
 
-// ===== Welcome State =====
-function showWelcome() {
-  var container = document.getElementById('viewer-container');
-  if (!container) return;
-
-  container.innerHTML =
-    '<div class="welcome-state">' +
-    '  <div class="welcome-icon">' +
-    '    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-    '      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>' +
-    '      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>' +
-    '      <line x1="8" y1="7" x2="16" y2="7"></line>' +
-    '      <line x1="8" y1="11" x2="14" y2="11"></line>' +
-    '    </svg>' +
-    '  </div>' +
-    '  <h2>Welcome to NoteVault</h2>' +
-    '  <p>Your 5th semester materials, organized by subject. Pick a file from the sidebar and start reading.</p>' +
-    '</div>';
+// ===== Share =====
+function shareSite() {
+    var url = window.location.href.split('?')[0].split('#')[0];
+    if (navigator.share) {
+        navigator.share({ title: 'NoteVault | Semester 5 Materials', text: 'Check out these 5th semester study materials!', url: url }).catch(function() { copyToClipboard(url); });
+    } else {
+        copyToClipboard(url);
+    }
 }
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        var btn = document.getElementById('btnShare');
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+        setTimeout(function() { btn.innerHTML = orig; }, 2000);
+    });
+}
+
+// ===== Event Listeners =====
+function attachEvents() {
+    document.getElementById('btnBack').addEventListener('click', goBack);
+    document.getElementById('btnZoomIn').addEventListener('click', zoomIn);
+    document.getElementById('btnZoomOut').addEventListener('click', zoomOut);
+    document.getElementById('btnNextPage').addEventListener('click', nextPage);
+    document.getElementById('btnPrevPage').addEventListener('click', prevPage);
+    document.getElementById('btnFullscreen').addEventListener('click', toggleFullscreen);
+    document.getElementById('btnTwoPage').addEventListener('click', toggleTwoPageMode);
+    document.getElementById('btnDownload').addEventListener('click', downloadCurrentPdf);
+    document.getElementById('btnNextPageBot').addEventListener('click', nextPage);
+    document.getElementById('btnPrevPageBot').addEventListener('click', prevPage);
+    document.getElementById('btnShare').addEventListener('click', shareSite);
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('visible');
+    });
+
+    searchInput.addEventListener('input', function(e) { filterFiles(e.target.value); });
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT') return;
+        switch (e.key) {
+            case 'ArrowRight': case 'ArrowDown': if (pdfDoc) { e.preventDefault(); nextPage(); } break;
+            case 'ArrowLeft': case 'ArrowUp': if (pdfDoc) { e.preventDefault(); prevPage(); } break;
+            case '+': case '=': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomIn(); } break;
+            case '-': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomOut(); } break;
+            case 'Escape': if (pdfDoc) goBack(); break;
+        }
+    });
+}
+
+// ===== Start =====
+document.addEventListener('DOMContentLoaded', init);

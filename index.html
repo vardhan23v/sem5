@@ -1,108 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NoteVault — Semester 5</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteVault | Semester 5</title>
+    <meta name="description" content="Access and read all your 5th semester study materials — PDFs and notes organized by subject.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
 </head>
 <body>
 
-  <!-- Ambient Background -->
-  <div class="ambient-bg">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <!-- Header -->
-    <div class="sidebar-header">
-      <div class="logo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            <line x1="8" y1="7" x2="16" y2="7"></line>
-            <line x1="8" y1="11" x2="14" y2="11"></line>
-          </svg>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-title">NoteVault</h1>
+                    <span class="logo-subtitle">Semester 5</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="sidebar-toggle" id="btnShare" aria-label="Share" title="Copy Link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                </button>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div class="logo-text">
-          <span class="logo-title">NoteVault</span>
-          <span class="logo-subtitle">Semester 5</span>
+
+        <!-- Search -->
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search files...">
         </div>
-      </div>
-      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-    </div>
 
-    <!-- Search -->
-    <div class="search-container">
-      <span class="search-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </span>
-      <input
-        type="text"
-        class="search-input"
-        id="search-input"
-        placeholder="Search subjects and files…"
-        autocomplete="off"
-      >
-    </div>
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-number" id="totalPdfs">0</span>
+                <span class="stat-label">Files</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number" id="totalSubjects">6</span>
+                <span class="stat-label">Subjects</span>
+            </div>
+        </div>
 
-    <!-- Stats -->
-    <div class="stats-bar">
-      <div class="stat">
-        <span class="stat-number" id="stat-subjects">6</span>
-        <span class="stat-label">Subjects</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number" id="stat-files">11</span>
-        <span class="stat-label">Files</span>
-      </div>
-    </div>
+        <!-- Subject List -->
+        <nav class="subject-list" id="subjectList">
+            <!-- Dynamically populated -->
+        </nav>
 
-    <!-- Subject List -->
-    <nav class="subject-list" id="subject-list">
-      <!-- Rendered by app.js -->
-    </nav>
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <div class="views-counter">
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fvardhan23v%2Fsem5&count_bg=%236366F1&title_bg=%23111118&icon=&icon_color=%23E7E7E7&title=Views&edge_flat=false" alt="Views"/>
+            </div>
+        </div>
+    </aside>
 
-    <!-- Footer -->
-    <div class="sidebar-footer">
-      <span style="font-size:0.7rem;color:var(--text-muted)">Made with ❤️ for Sem 5</span>
-    </div>
-  </aside>
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <div class="welcome-card">
+                <div class="welcome-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <h2 class="welcome-title">Welcome to NoteVault</h2>
+                <p class="welcome-text">Your 5th semester materials, organized by subject. Pick a file and start reading.</p>
+                <div class="quick-subjects" id="quickSubjects">
+                    <!-- Quick access buttons -->
+                </div>
+            </div>
+        </div>
 
-  <!-- Mobile Overlay -->
-  <div class="mobile-overlay" id="mobile-overlay"></div>
+        <!-- PDF Viewer -->
+        <div class="pdf-viewer" id="pdfViewer" style="display: none;">
+            <!-- Top Bar -->
+            <div class="viewer-topbar">
+                <button class="btn-back" id="btnBack" aria-label="Go back">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>Back</span>
+                </button>
+                <div class="viewer-title" id="viewerTitle">Document Title</div>
+                <div class="viewer-controls">
+                    <button class="btn-control" id="btnZoomOut" aria-label="Zoom out" title="Zoom Out">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    </button>
+                    <span class="zoom-level" id="zoomLevel">100%</span>
+                    <button class="btn-control" id="btnZoomIn" aria-label="Zoom in" title="Zoom In">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    </button>
+                    <div class="control-divider"></div>
+                    <button class="btn-control" id="btnPrevPage" aria-label="Previous page" title="Previous Page">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <span class="page-info" id="pageInfo">1 / 1</span>
+                    <button class="btn-control" id="btnNextPage" aria-label="Next page" title="Next Page">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <div class="control-divider"></div>
+                    <button class="btn-control" id="btnTwoPage" aria-label="Toggle two-page view" title="Two-Page View">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
+                    </button>
+                    <button class="btn-control" id="btnDownload" aria-label="Download" title="Download">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </button>
+                    <button class="btn-control" id="btnFullscreen" aria-label="Toggle fullscreen" title="Fullscreen">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    </button>
+                </div>
+            </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <!-- Top Bar -->
-    <div class="topbar">
-      <span class="topbar-title" id="topbar-title">Select a file to view</span>
-      <span class="topbar-badge" id="topbar-badge" style="display:none"></span>
-    </div>
+            <!-- PDF Canvas Container -->
+            <div class="pdf-canvas-container" id="pdfCanvasContainer">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Loading document...</p>
+                </div>
+                <div class="pages-wrapper" id="pagesWrapper">
+                    <canvas id="pdfCanvas"></canvas>
+                    <canvas id="pdfCanvas2" style="display:none;"></canvas>
+                </div>
+                <iframe id="noteViewer" class="note-iframe" style="display:none;" allowfullscreen></iframe>
+            </div>
 
-    <!-- Viewer -->
-    <div class="viewer-container" id="viewer-container">
-      <!-- Welcome state rendered by app.js -->
-    </div>
-  </main>
+            <!-- Bottom Bar -->
+            <div class="viewer-bottombar" id="viewerBottombar">
+                <button class="btn-control" id="btnPrevPageBot" aria-label="Previous page" title="Previous Page">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span class="page-info" id="pageInfoBot">1 / 1</span>
+                <button class="btn-control" id="btnNextPageBot" aria-label="Next page" title="Next Page">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+    </main>
 
-  <!-- Scripts -->
-  <script src="assets/js/app.js"></script>
+    <!-- Mobile overlay for sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <script src="assets/js/app.js?v=2"></script>
 </body>
 </html>
