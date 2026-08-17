@@ -12,7 +12,8 @@ var SUBJECTS = [
         files: [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
-            { name: "CNC Lab Manual.pdf", path: "CNC/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" }
+            { name: "CNC Lab Manual.pdf", path: "CNC/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" },
+            { name: "Computer Networks — Unit 1", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" }
         ]
     },
     {
@@ -39,23 +40,8 @@ var SUBJECTS = [
         fullName: "Introduction to Data Science",
         color: "#10b981",
         files: [
-            { name: "Data Science — Master Notes", path: "Data Science/data-science-master-notes.html", size: "57 KB" }
-        ]
-    },
-    {
-        name: "Data Analysis",
-        fullName: "Data Analysis using Excel",
-        color: "#06b6d4",
-        files: [
-            { name: "Data Analysis — Detailed Notes", path: "Data Analysis/unit1-detailed-notes.html", size: "52 KB" }
-        ]
-    },
-    {
-        name: "Networks",
-        fullName: "Computer Network & Communication",
-        color: "#ef4444",
-        files: [
-            { name: "Computer Networks — Unit 1", path: "Networks/unit1-computer-networks_1.html", size: "56 KB" }
+            { name: "Data Science — Master Notes", path: "Data Science/data-science-master-notes.html", size: "57 KB" },
+            { name: "Data Analysis — Detailed Notes", path: "Data Science/unit1-detailed-notes.html", size: "52 KB" }
         ]
     }
 ];
