@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit I · Automata — Solved &amp; Animated | CS3103-1 Theory of Computation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#0d2240; --paper-deep:#081830;
+  --ink:#e9f1fb; --ink-dim:#9db4d1;
+  --grid:rgba(233,241,251,.05);
+  --amber:#ffb454; --cyan:#6fd3e7; --rose:#ff7a8a; --green:#7ee2a8;
+  --card:rgba(233,241,251,.045); --card-line:rgba(233,241,251,.14);
+  --mono:'IBM Plex Mono',monospace; --disp:'Space Grotesk',sans-serif; --body:'Public Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;color:var(--ink);font-family:var(--body);line-height:1.65;font-size:16.5px}
+::selection{background:var(--amber);color:#081830}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+header{padding:72px 0 40px;border-bottom:1px dashed var(--card-line)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.22em;color:var(--amber);text-transform:uppercase}
+h1{font-family:var(--disp);font-size:clamp(2rem,5vw,3.3rem);font-weight:700;line-height:1.1;margin:.5rem 0 .8rem}
+h1 .thin{color:var(--ink-dim);font-weight:400}
+.meta{font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);display:flex;gap:1.6em;flex-wrap:wrap}
+.meta b{color:var(--cyan);font-weight:500}
+
+nav.toc{padding:26px 0;border-bottom:1px dashed var(--card-line)}
+nav.toc ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 22px;counter-reset:t}
+nav.toc a{color:var(--ink-dim);text-decoration:none;font-size:.9rem;font-family:var(--mono);counter-increment:t;display:block;padding:3px 0;transition:color .2s,transform .2s}
+nav.toc a::before{content:counter(t,decimal-leading-zero)" / ";color:var(--amber)}
+nav.toc a:hover{color:var(--ink);transform:translateX(4px)}
+
+section{padding:64px 0 20px}
+.sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
+.secnum{font-family:var(--mono);color:var(--amber);font-size:.95rem}
+h2{font-family:var(--disp);font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700}
+h3{font-family:var(--disp);font-size:1.18rem;font-weight:500;color:var(--cyan);margin:30px 0 10px}
+p{margin:0 0 14px}
+p.dim,li.dim{color:var(--ink-dim)}
+strong{color:var(--amber);font-weight:600}
+em{color:var(--cyan);font-style:normal}
+code{font-family:var(--mono);font-size:.88em;background:rgba(111,211,231,.12);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+ul,ol{margin:0 0 16px 1.3em}
+li{margin-bottom:7px}
+.card{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:22px 24px;margin:18px 0}
+.card h4{font-family:var(--mono);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+.formula{font-family:var(--mono);background:var(--paper-deep);border-left:3px solid var(--amber);padding:14px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:1rem;overflow-x:auto}
+.formula small{display:block;color:var(--ink-dim);font-size:.78rem;margin-top:6px;font-family:var(--body)}
+.solved{font-family:var(--mono);background:var(--paper-deep);border-left:3px solid var(--green);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.88rem;line-height:1.95;overflow-x:auto;white-space:pre-wrap}
+.solved b{color:var(--green);font-weight:600}
+.solved i{color:var(--amber);font-style:normal}
+.note{border:1px dashed var(--cyan);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim)}
+.note::before{content:"✦ EXAM POINT — ";font-family:var(--mono);color:var(--cyan);font-size:.75rem;letter-spacing:.12em}
+.trap{border:1px dashed var(--rose);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim)}
+.trap::before{content:"⚠ COMMON MISTAKE — ";font-family:var(--mono);color:var(--rose);font-size:.75rem;letter-spacing:.12em}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+th{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--card-line)}
+td{padding:10px 12px;border-bottom:1px solid rgba(233,241,251,.08);vertical-align:top}
+tr:hover td{background:rgba(233,241,251,.03)}
+td code{white-space:nowrap}
+
+/* ====== AUTOMATON SIMULATOR ====== */
+.sim{background:var(--paper-deep);border:1px solid var(--card-line);border-radius:14px;padding:20px;margin:18px 0}
+.sim .simtitle{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;color:var(--amber);margin-bottom:10px}
+.sim svg{width:100%;height:auto;display:block;overflow:visible}
+.st circle{fill:var(--paper);stroke:var(--card-line);stroke-width:2;transition:.35s}
+.st text{fill:var(--ink);font-family:var(--mono);font-size:15px;text-anchor:middle;dominant-baseline:middle}
+.st.acc circle.outer{fill:none}
+.st.on circle{stroke:var(--amber);fill:rgba(255,180,84,.18);filter:drop-shadow(0 0 8px rgba(255,180,84,.7))}
+.ed{stroke:var(--ink-dim);stroke-width:1.8;fill:none;transition:.3s;marker-end:url(#arw)}
+.ed.both{marker-start:url(#arwS)}
+.ed.on{stroke:var(--cyan);stroke-width:3;filter:drop-shadow(0 0 5px rgba(111,211,231,.8))}
+.elbl{fill:var(--ink-dim);font-family:var(--mono);font-size:13px;text-anchor:middle}
+.startarrow{stroke:var(--green);stroke-width:2;marker-end:url(#arwG)}
+.tape{display:flex;gap:6px;margin:16px 0 10px;flex-wrap:wrap;align-items:center}
+.tape .tl{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);margin-right:8px}
+.tape span.ch{font-family:var(--mono);width:32px;height:36px;border:1.5px solid var(--card-line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.3s}
+.tape span.ch.done{border-color:var(--green);color:var(--green);background:rgba(126,226,168,.08)}
+.tape span.ch.cur{border-color:var(--amber);color:var(--amber);transform:translateY(-4px);box-shadow:0 4px 10px rgba(255,180,84,.25)}
+.ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ctrl button{font-family:var(--mono);font-size:.8rem;background:none;border:1.5px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:7px 16px;cursor:pointer;transition:.2s}
+.ctrl button:hover{background:rgba(111,211,231,.12)}
+.verdict{font-family:var(--mono);font-size:.85rem;color:var(--ink-dim);min-height:1.4em}
+.verdict.ok{color:var(--green)}
+.verdict.set{color:var(--cyan)}
+
+/* staggered table rows */
+.rrow{opacity:0;transform:translateX(-16px);transition:opacity .5s,transform .5s}
+.visible .rrow{opacity:1;transform:none}
+.visible .rrow:nth-child(2){transition-delay:.12s}.visible .rrow:nth-child(3){transition-delay:.24s}
+.visible .rrow:nth-child(4){transition-delay:.36s}.visible .rrow:nth-child(5){transition-delay:.48s}
+
+/* pumping animation */
+.pump{background:var(--paper-deep);border:1px solid var(--card-line);border-radius:14px;padding:22px;margin:18px 0;text-align:center}
+.pump .lbls{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);display:flex;justify-content:center;gap:8px;margin-bottom:6px}
+.pump .lbls i{font-style:normal}
+.pump .row{display:flex;justify-content:center;gap:0;flex-wrap:wrap}
+.pump .blk{font-family:var(--mono);font-size:.95rem;padding:8px 12px;border:1.5px solid;border-radius:6px;margin:2px;white-space:nowrap}
+.pump .bx{border-color:var(--ink-dim);color:var(--ink-dim)}
+.pump .by{border-color:var(--amber);color:var(--amber)}
+.pump .bz{border-color:var(--cyan);color:var(--cyan)}
+.pump .ghost{opacity:0;transform:scale(.6);animation:pumpin 5s ease infinite}
+.pump .ghost.g2{animation-delay:.5s}
+@keyframes pumpin{0%,18%{opacity:0;transform:scale(.6)}30%,72%{opacity:1;transform:scale(1)}86%,100%{opacity:0;transform:scale(.6)}}
+.pump .cap{font-family:var(--mono);font-size:.75rem;color:var(--rose);margin-top:12px}
+
+details.master{background:rgba(126,226,168,.05);border:1px dashed var(--green);border-radius:12px;margin:26px 0 4px;overflow:hidden}
+details.master summary{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;color:var(--green);padding:13px 20px;cursor:pointer;list-style:none;user-select:none}
+details.master summary::before{content:"▸ "}
+details.master[open] summary::before{content:"▾ "}
+details.master .inner{padding:4px 24px 18px}
+details.master ol{margin-bottom:0}
+details.master li{font-size:.92rem}
+details.master li small{color:var(--ink-dim);display:block}
+
+.fsheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:20px 0}
+.fs{background:var(--paper-deep);border:1px solid var(--card-line);border-radius:10px;padding:14px 18px;font-family:var(--mono);font-size:.85rem}
+.fs b{color:var(--amber);font-weight:500;display:block;font-size:.7rem;letter-spacing:.12em;margin-bottom:6px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+footer{margin-top:70px;padding:34px 0 50px;border-top:1px dashed var(--card-line);font-family:var(--mono);font-size:.78rem;color:var(--ink-dim);text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal,.rrow{opacity:1!important;transform:none!important}}
+@media(max-width:640px){body{font-size:15.5px}.solved{font-size:.8rem}}
+</style>
+<style id="theme-graphpaper">
+/* ===== LIGHT "MATHEMATICIAN'S GRAPH PAPER" THEME — distinct from the CNC blueprint ===== */
+:root{
+  --paper:#f7f4ec;          /* warm exam-sheet paper */
+  --paper-deep:#efebe0;     /* panels / worked-solution slips */
+  --ink:#232a38;            /* fountain-pen ink */
+  --ink-dim:#68718a;
+  --grid:rgba(35,42,56,.10);
+  --amber:#6d3bd6;          /* violet — highlights, strong, active states */
+  --cyan:#0c7d84;           /* teal — em, edges, exam points */
+  --rose:#c43d55;           /* crimson — traps, errors */
+  --green:#177a4b;          /* marker green — solved, master checks */
+  --card:rgba(35,42,56,.035);
+  --card-line:rgba(35,42,56,.20);
+  --disp:'Fraunces',serif;  /* serif display: theorem-book voice */
+}
+::selection{background:#6d3bd6;color:#fff}
+body{
+  background:var(--paper);
+  background-image:radial-gradient(var(--grid) 1.2px,transparent 1.2px);
+  background-size:26px 26px;
+}
+h1,h2,h3,.dev h5,.flowbox h5,.wave h5{font-family:'Fraunces',serif}
+code{background:rgba(12,125,132,.09)}
+tr:hover td{background:rgba(35,42,56,.045)}
+/* simulator on light ground */
+.st circle{fill:#fdfcf8}
+.st.on circle{stroke:var(--amber);fill:rgba(109,59,214,.13);filter:drop-shadow(0 0 6px rgba(109,59,214,.45))}
+.ed.on{filter:drop-shadow(0 0 4px rgba(12,125,132,.5))}
+#arw path,#arwS path{fill:#68718a}
+#arwG path{fill:#177a4b}
+.tape span.ch.done{background:rgba(23,122,75,.08)}
+.tape span.ch.cur{box-shadow:0 4px 10px rgba(109,59,214,.22)}
+.ctrl button:hover{background:rgba(12,125,132,.09)}
+details.master{background:rgba(23,122,75,.05)}
+.sim,.solved,.formula,.crc,.pump,.fs{box-shadow:0 1px 3px rgba(35,42,56,.06)}
+.verdict.ok{color:var(--green)}
+.verdict.set{color:var(--cyan)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9db4d1"/></marker>
+    <marker id="arwS" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#9db4d1"/></marker>
+    <marker id="arwG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7ee2a8"/></marker>
+  </defs>
+</svg>
+
+<header class="wrap">
+  <div class="eyebrow">CS3103-1 · Theory of Computation · PCC · Unit I</div>
+  <h1>Automata <span class="thin">— DFA · NFA · ε-NFA · Regular Expressions · Non-Regularity</span></h1>
+  <div class="meta"><span>Hours: <b>15</b></span><span>Ref: <b>Hopcroft–Motwani–Ullman (T1)</b></span><span>Format: <b>theory + solved problems + step-through machines</b></span></div>
+</header>
+
+<nav class="toc wrap">
+  <ol>
+    <li><a href="#s1">Why Automata · Central Concepts</a></li>
+    <li><a href="#s2">DFA — Definition &amp; Solved Designs</a></li>
+    <li><a href="#s3">NFA — Definition &amp; Subset Construction</a></li>
+    <li><a href="#s4">ε-NFA &amp; ε-Closure</a></li>
+    <li><a href="#s5">Application: Text Search</a></li>
+    <li><a href="#s6">Regular Expressions — Solved</a></li>
+    <li><a href="#s7">FA ↔ RE (Thompson · Arden)</a></li>
+    <li><a href="#s8">Pumping Lemma — Non-Regular Proofs</a></li>
+    <li><a href="#s9">Summary Sheet &amp; Likely Questions</a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 1 ============ -->
+<section id="s1" class="reveal">
+  <div class="sechead"><span class="secnum">01</span><h2>Why Study Automata · Central Concepts</h2></div>
+  <p><strong>Automata theory</strong> studies abstract computing machines and the problems they can solve. Why it matters: automata model <em>software</em> (lexical analyzers in compilers, text-search engines, protocol/circuit verifiers) and mark the <em>limits of computation</em> — the ladder finite automata → pushdown automata → Turing machines is exactly the ladder regular → context-free → computable languages that structures this whole course. Formal proofs (deductive, induction, contradiction) are the working language throughout.</p>
+  <h3>The vocabulary — get these razor-sharp</h3>
+  <table>
+    <tr><th>Concept</th><th>Definition</th><th>Examples / notes</th></tr>
+    <tr><td><strong>Alphabet Σ</strong></td><td>Finite, non-empty set of symbols</td><td>Σ = {0,1} (binary), {a,…,z}, ASCII</td></tr>
+    <tr><td><strong>String (word)</strong></td><td>Finite sequence of symbols from Σ</td><td>01101; length |01101| = 5</td></tr>
+    <tr><td><strong>ε</strong></td><td>The empty string, |ε| = 0</td><td>ε is a string, <em>not</em> a symbol and not "nothing at all"</td></tr>
+    <tr><td><strong>Σᵏ, Σ*</strong></td><td>All strings of length k; all strings of any length</td><td>Σ⁰={ε}; Σ* = Σ⁰∪Σ¹∪Σ²∪… ; Σ⁺ = Σ*−{ε}</td></tr>
+    <tr><td><strong>Concatenation</strong></td><td>xy = x followed by y</td><td>x=01, y=10 → xy=0110; εx = xε = x (ε is identity)</td></tr>
+    <tr><td><strong>Language L</strong></td><td>Any set of strings over Σ, i.e. L ⊆ Σ*</td><td>{0ⁿ1ⁿ : n≥0}, set of valid C programs, ∅, {ε}</td></tr>
+    <tr><td><strong>Problem</strong></td><td>Deciding membership: is w ∈ L?</td><td>"Language = problem" is the course's key equation</td></tr>
+  </table>
+  <div class="trap">∅ (no strings), {ε} (one string, the empty one), and ε (a string) are three different things. Confusing them costs marks in RE identities and pumping-lemma proofs alike.</div>
+  <details class="master"><summary>MASTER CHECK · 01</summary><div class="inner"><ol>
+    <li>|Σᵏ| for |Σ|=2? <small>2ᵏ; and Σ* is countably infinite.</small></li>
+    <li>Is ∅ a language? Is {ε}? Are they equal? <small>yes · yes · no</small></li>
+    <li>Name two real systems modeled by finite automata.</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2" class="reveal">
+  <div class="sechead"><span class="secnum">02</span><h2>Deterministic Finite Automata (DFA)</h2></div>
+  <div class="formula">DFA A = (Q, Σ, δ, q₀, F)
+    <small>Q finite state set · Σ input alphabet · δ : Q × Σ → Q (exactly <em>one</em> next state — the "deterministic") · q₀ ∈ Q start state · F ⊆ Q accepting states.</small></div>
+  <p>Extended transition function <code>δ̂</code>: <code>δ̂(q,ε)=q</code>; <code>δ̂(q,xa)=δ(δ̂(q,x),a)</code> — process the string one symbol at a time. <strong>L(A) = { w : δ̂(q₀,w) ∈ F }</strong>. A DFA is specified by a <em>transition diagram</em> (states = circles, accept = double circles, start = arrow) or a <em>transition table</em>.</p>
+
+  <h3>Solved Problem 1 — DFA for strings ending in <code>01</code> (Σ = {0,1})</h3>
+  <div class="solved"><b>DESIGN THINKING ·</b> The machine must remember only "how much of a final 01 have I just seen?"
+A = seen nothing useful · B = last symbol was 0 (half-way) · C = last two symbols were 01 → accept.
+δ: A—0→B (a 0 might begin 01) · A—1→A (a 1 restarts) · B—0→B (still ends in 0) · B—1→C (completed 01!) · C—0→B (…010: new 0 pending) · C—1→A (…011: dead end, restart).
+<i>States = memory. A DFA's states are exactly the distinctions the language forces you to remember — nothing more.</i></div>
+  <div class="sim" id="sim1">
+    <div class="simtitle">STEP-THROUGH · INPUT 100101 — WATCH THE MEMORY UPDATE</div>
+    <svg viewBox="0 0 520 175">
+      <line class="startarrow" x1="10" y1="88" x2="42" y2="88"/>
+      <path id="e1AA" class="ed" d="M56,68 C40,18 100,18 84,68"/><text class="elbl" x="70" y="26">1</text>
+      <path id="e1AB" class="ed" d="M94,88 L232,88"/><text class="elbl" x="163" y="78">0</text>
+      <path id="e1BB" class="ed" d="M246,68 C230,18 290,18 274,68"/><text class="elbl" x="260" y="26">0</text>
+      <path id="e1BC" class="ed" d="M284,88 L422,88"/><text class="elbl" x="353" y="78">1</text>
+      <path id="e1CB" class="ed" d="M432,106 C390,150 320,150 278,106"/><text class="elbl" x="355" y="150">0</text>
+      <path id="e1CA" class="ed" d="M444,112 C360,195 160,195 76,112"/><text class="elbl" x="260" y="188">1</text>
+      <g class="st" id="s1A"><circle cx="70" cy="88" r="24"/><text x="70" y="89">A</text></g>
+      <g class="st" id="s1B"><circle cx="258" cy="88" r="24"/><text x="258" y="89">B</text></g>
+      <g class="st acc" id="s1C"><circle cx="446" cy="88" r="24"/><circle class="outer" cx="446" cy="88" r="29"/><text x="446" y="89">C</text></g>
+    </svg>
+    <div class="tape"><span class="tl">INPUT</span></div>
+    <div class="ctrl"><button data-act="step">STEP ›</button><button data-act="play">▶ PLAY</button><button data-act="reset">↺ RESET</button><span class="verdict"></span></div>
+  </div>
+
+  <h3>Solved Problem 2 — even number of 0s AND even number of 1s</h3>
+  <div class="solved"><b>DESIGN THINKING ·</b> Two independent parities → remember the <i>pair</i> (parity of 0s, parity of 1s) → 2×2 = 4 states.
+EE (even,even) = start = accept · OE · EO · OO.
+A symbol 0 flips the first coordinate; a symbol 1 flips the second. Every 0-edge moves horizontally, every 1-edge vertically — the diagram is a square.
+<i>Pattern to reuse: "count X mod m and Y mod n" ⇒ m·n states, one per remainder pair.</i></div>
+  <div class="sim" id="sim2">
+    <div class="simtitle">STEP-THROUGH · INPUT 0110 — PARITIES FLIP AND RETURN</div>
+    <svg viewBox="0 0 430 305">
+      <line class="startarrow" x1="20" y1="40" x2="66" y2="60"/>
+      <path id="e2A" class="ed both" d="M132,72 L288,72"/><text class="elbl" x="210" y="62">0</text>
+      <path id="e2B" class="ed both" d="M132,232 L288,232"/><text class="elbl" x="210" y="222">0</text>
+      <path id="e2C" class="ed both" d="M100,104 L100,200"/><text class="elbl" x="86" y="156">1</text>
+      <path id="e2D" class="ed both" d="M320,104 L320,200"/><text class="elbl" x="336" y="156">1</text>
+      <g class="st acc" id="s2EE"><circle cx="100" cy="72" r="26"/><circle class="outer" cx="100" cy="72" r="31"/><text x="100" y="73">EE</text></g>
+      <g class="st" id="s2OE"><circle cx="320" cy="72" r="26"/><text x="320" y="73">OE</text></g>
+      <g class="st" id="s2EO"><circle cx="100" cy="232" r="26"/><text x="100" y="233">EO</text></g>
+      <g class="st" id="s2OO"><circle cx="320" cy="232" r="26"/><text x="320" y="233">OO</text></g>
+    </svg>
+    <div class="tape"><span class="tl">INPUT</span></div>
+    <div class="ctrl"><button data-act="step">STEP ›</button><button data-act="play">▶ PLAY</button><button data-act="reset">↺ RESET</button><span class="verdict"></span></div>
+  </div>
+
+  <h3>Solved Problem 3 — strings <em>containing</em> the substring <code>01</code></h3>
+  <div class="solved"><b>SOLUTION ·</b> Progress-toward-pattern states: q0 = nothing seen · q1 = a 0 seen (pattern half-done) · q2 = 01 has occurred (accept, and stay forever).
+δ: q0—1→q0, q0—0→q1 · q1—0→q1, q1—1→q2 · q2—0,1→q2 (a <i>trap/absorbing accept</i>: once the substring occurs it can't un-occur).
+<i>Contrast with Problem 1: "ends with" states can fall out of acceptance; "contains" states never do. Same pattern, different exits.</i></div>
+  <div class="trap">Every DFA state must have <em>exactly one</em> outgoing edge per symbol — no missing moves, no choices. If your diagram has a state with no 1-edge, it's not a DFA (add a dead state if a move should reject).</div>
+  <details class="master"><summary>MASTER CHECK · 02 — design these fully before checking any source</summary><div class="inner"><ol>
+    <li>DFA: strings over {0,1} with |w| divisible by 3. <small>3 states in a cycle; accept = start.</small></li>
+    <li>DFA: strings not containing 11. <small>3 states: fresh, "just saw 1", dead.</small></li>
+    <li>DFA: binary numbers divisible by 3. <small>States = remainder mod 3; on bit b, r → (2r+b) mod 3.</small></li>
+    <li>Trace Problem 1's DFA on 0011 by hand — accepted? <small>A→B→B→C→A: rejected (correct: doesn't end in 01… careful: 0011 ends in 11 → reject ✓).</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3" class="reveal">
+  <div class="sechead"><span class="secnum">03</span><h2>Nondeterministic Finite Automata (NFA)</h2></div>
+  <div class="formula">NFA A = (Q, Σ, δ, q₀, F) with δ : Q × Σ → 2^Q
+    <small>δ returns a <em>set</em> of states — zero, one, or many. The machine is in a set of states at once; a string is accepted if <em>some</em> choice sequence ends in F ("guess and verify").</small></div>
+  <table>
+    <tr><th></th><th>DFA</th><th>NFA</th></tr>
+    <tr><td>δ output</td><td>One state</td><td>A set of states (possibly ∅)</td></tr>
+    <tr><td>Missing moves</td><td>Not allowed</td><td>Allowed (that branch dies)</td></tr>
+    <tr><td>Acceptance</td><td>The unique run ends in F</td><td>Some run ends in F</td></tr>
+    <tr><td>Power</td><td colspan="2"><strong>Equal</strong> — every NFA has an equivalent DFA (subset construction)</td></tr>
+    <tr><td>Size</td><td>May need up to 2ⁿ states</td><td>Often exponentially smaller / easier to design</td></tr>
+  </table>
+
+  <h3>Solved Problem 4 — NFA for strings ending in <code>01</code>, then convert to DFA</h3>
+  <div class="solved"><b>NFA DESIGN ·</b> Nondeterminism = guessing. q0 loops on 0,1 (reading the irrelevant prefix), and on a 0 <i>also guesses</i> "this is the final 01 starting now" → q1; q1 on 1 → q2 (accept). Three states, near-zero thought — compare with the DFA's careful case analysis in §02.</div>
+  <div class="sim" id="sim3">
+    <div class="simtitle">STEP-THROUGH · INPUT 1001 — MULTIPLE STATES GLOW: THE MACHINE IS IN ALL OF THEM</div>
+    <svg viewBox="0 0 520 160">
+      <line class="startarrow" x1="10" y1="88" x2="62" y2="88"/>
+      <path id="e3LL" class="ed" d="M76,68 C60,14 120,14 104,68"/><text class="elbl" x="90" y="24">0,1</text>
+      <path id="e3AB" class="ed" d="M114,88 L242,88"/><text class="elbl" x="178" y="78">0</text>
+      <path id="e3BC" class="ed" d="M294,88 L412,88"/><text class="elbl" x="353" y="78">1</text>
+      <g class="st" id="s3q0"><circle cx="90" cy="88" r="24"/><text x="90" y="89">q0</text></g>
+      <g class="st" id="s3q1"><circle cx="268" cy="88" r="24"/><text x="268" y="89">q1</text></g>
+      <g class="st acc" id="s3q2"><circle cx="436" cy="88" r="24"/><circle class="outer" cx="436" cy="88" r="29"/><text x="436" y="89">q2</text></g>
+    </svg>
+    <div class="tape"><span class="tl">INPUT</span></div>
+    <div class="ctrl"><button data-act="step">STEP ›</button><button data-act="play">▶ PLAY</button><button data-act="reset">↺ RESET</button><span class="verdict"></span></div>
+  </div>
+
+  <h3>Subset (powerset) construction — NFA → DFA</h3>
+  <p>DFA states = <em>sets</em> of NFA states. Start = {q₀}. For a set S and symbol a: <code>δ_D(S,a) = ⋃_{q∈S} δ_N(q,a)</code>. Accepting: any set containing an NFA accept state. Build lazily — only sets actually reachable:</p>
+  <div class="card anim">
+    <h4>Conversion of Problem 4's NFA (rows appear in discovery order)</h4>
+    <table style="margin:0">
+      <tr><th>DFA state (set)</th><th>on 0</th><th>on 1</th><th>accepting?</th></tr>
+      <tr class="rrow"><td><code>{q0}</code> ← start</td><td><code>{q0,q1}</code> (loop + guess)</td><td><code>{q0}</code></td><td>no</td></tr>
+      <tr class="rrow"><td><code>{q0,q1}</code></td><td><code>{q0,q1}</code></td><td><code>{q0,q2}</code></td><td>no</td></tr>
+      <tr class="rrow"><td><code>{q0,q2}</code></td><td><code>{q0,q1}</code></td><td><code>{q0}</code></td><td><strong>yes</strong> (contains q2)</td></tr>
+    </table>
+    <p class="dim" style="font-size:.88rem;margin:12px 0 0">Only 3 of the 2³ = 8 possible subsets are reachable — and relabeling {q0}=A, {q0,q1}=B, {q0,q2}=C gives <em>exactly the DFA of Solved Problem 1</em>. The theory closes its own loop.</p>
+  </div>
+  <div class="note">Subset construction is a near-certain 8/10-mark numerical. Show: the lazy table (start set, expand each new set per symbol), the accepting-set rule, and the reachable-states remark. Worst case 2ⁿ — quote the "ends with n-th symbol from the end = 0" family as the language forcing the blow-up.</div>
+  <details class="master"><summary>MASTER CHECK · 03</summary><div class="inner"><ol>
+    <li>Convert: NFA q0—a→{q0,q1}, q0—b→{q0}, q1—b→{q2}, F={q2}. <small>Same 3-row pattern as above with a,b.</small></li>
+    <li>Why does an NFA branch "dying" (δ = ∅) not reject the whole string?</li>
+    <li>State the theorem relating DFA and NFA power, and the cost of the translation.</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4" class="reveal">
+  <div class="sechead"><span class="secnum">04</span><h2>ε-NFA — Epsilon Transitions &amp; ε-Closure</h2></div>
+  <div class="formula">ε-NFA: δ : Q × (Σ ∪ {ε}) → 2^Q
+    <small>The machine may jump between states <em>without consuming input</em>. Adds convenience (gluing machines together — see Thompson, §07), not power.</small></div>
+  <p><strong>ε-closure(q)</strong> = all states reachable from q by ε-edges alone (q itself included, then follow ε-arrows transitively). Processing a symbol a from a state set S: take ε-closure of S, move on a, take ε-closure again.</p>
+  <h3>Solved Problem 5 — the a*b*c* machine</h3>
+  <div class="solved"><b>MACHINE ·</b> q0 —a→ q0, q0 —ε→ q1 · q1 —b→ q1, q1 —ε→ q2 · q2 —c→ q2, F = {q2}.
+This accepts a*b*c*: any number of a's, then b's, then c's — the ε-edges let the machine silently "move on to the next phase".
+
+<b>ε-CLOSURES ·</b>
+ECLOSE(q0) = {q0, q1, q2}   (q0 → q1 → q2 by ε-chain)
+ECLOSE(q1) = {q1, q2} · ECLOSE(q2) = {q2}
+
+<b>TRACE "abc" ·</b>
+start: ECLOSE(q0) = {q0,q1,q2}
+read a: only q0 moves → {q0}; close → {q0,q1,q2}
+read b: only q1 moves → {q1}; close → {q1,q2}
+read c: only q2 moves → {q2}; close → {q2} ∈ F → <b>ACCEPT</b>
+Also: ε itself is accepted (start closure already contains q2 ∈ F) — a*b*c* includes the empty string ✓.
+
+<b>DFA CONVERSION (lazy) ·</b>
+A={q0,q1,q2}: a→A, b→{q1,q2}=B, c→{q2}=C
+B: a→∅(dead), b→B, c→C · C: a,b→dead, c→C · all of A,B,C accepting (contain q2).</div>
+  <div class="trap">Two classic ε mistakes: (1) forgetting q ∈ ECLOSE(q) always; (2) closing only once — the closure must be applied <em>after every symbol move</em>, and transitively (follow chains of ε-edges, not one hop).</div>
+  <details class="master"><summary>MASTER CHECK · 04</summary><div class="inner"><ol>
+    <li>Recompute all three closures with an added edge q2—ε→q0. <small>All closures become {q0,q1,q2}.</small></li>
+    <li>Trace "acb" through the machine above — accepted? <small>After c the set is {q2}; b kills it → reject ✓ (b after c breaks a*b*c*).</small></li>
+    <li>Why do ε-transitions add no expressive power? <small>The closure-based conversion produces an ordinary DFA.</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5" class="reveal">
+  <div class="sechead"><span class="secnum">05</span><h2>Application — Text Search</h2></div>
+  <p>Searching a document for keywords is automaton territory. To find occurrences of <code>web</code> or <code>ebay</code> in a character stream:</p>
+  <ul>
+    <li><strong>NFA design (trivial):</strong> a start state q1 looping on <em>every</em> character Σ, plus one chain per keyword: q1 —w→ q2 —e→ q3 —b→ q4 (accept "web"); q1 —e→ q5 —b→ q6 —a→ q7 —y→ q8 (accept "ebay"). The loop nondeterministically "guesses" where a keyword begins.</li>
+    <li><strong>Then convert to a DFA</strong> via subset construction and run it: one state transition per input character, <em>no backtracking</em> — this is how grep-style tools and lexical analyzers achieve linear-time scanning.</li>
+    <li>Useful fact from the conversion: for keyword-NFAs of this shape, the DFA has <em>the same number of states as the NFA</em> — the exponential worst case doesn't bite here. Each DFA state remembers "which prefixes of which keywords are currently alive".</li>
+  </ul>
+  <div class="note">Expected short question: "Explain text search using finite automata" → draw the two-chain NFA, state the guess-the-start role of the Σ-loop, mention DFA conversion for backtrack-free linear scanning.</div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6" class="reveal">
+  <div class="sechead"><span class="secnum">06</span><h2>Regular Expressions</h2></div>
+  <p><strong>Regular expressions</strong> denote languages algebraically. Basis: <code>∅</code>, <code>ε</code>, and <code>a</code> for each a ∈ Σ. Induction: if E, F are REs then so are <code>E+F</code> (union), <code>EF</code> (concatenation), <code>E*</code> (Kleene star = zero or more copies), <code>(E)</code>. Precedence: <strong>* &gt; concatenation &gt; +</strong> — so <code>01* + 1</code> means <code>(0(1*)) + 1</code>.</p>
+  <div class="card">
+    <h4>Identities worth memorizing</h4>
+    <p class="dim" style="margin:0;font-family:var(--mono);font-size:.9rem;line-height:2">
+    ∅ + L = L &nbsp;·&nbsp; εL = Lε = L &nbsp;·&nbsp; ∅L = L∅ = ∅ &nbsp;·&nbsp; ∅* = ε &nbsp;·&nbsp; ε* = ε<br>
+    L + L = L &nbsp;·&nbsp; (L*)* = L* &nbsp;·&nbsp; L(M+N) = LM+LN &nbsp;·&nbsp; (ε + L)* = L* &nbsp;·&nbsp; L*L* = L*</p>
+  </div>
+  <h3>Solved Problem 6 — a battery of RE designs (Σ = {0,1})</h3>
+  <div class="solved"><b>a) Ends in 01:</b>  (0+1)*01
+   anything, then the mandatory suffix. <i>(Same language as §02 P1 and §03 P4 — three formalisms, one language.)</i>
+
+<b>b) Contains 01:</b>  (0+1)*01(0+1)*
+   the pattern somewhere in the middle.
+
+<b>c) No two consecutive 1s:</b>  (0 + 10)* (1 + ε)
+   every 1 must be followed by a 0 — chain blocks of "0" or "10" — except possibly one final 1.
+
+<b>d) Even length:</b>  ((0+1)(0+1))*
+   pairs of symbols, repeated.
+
+<b>e) Even number of 0s:</b>  1* (01*01*)*
+   1s are free; 0s consumed strictly in pairs, 1s allowed anywhere between.
+
+<b>f) Third symbol from the right is 1:</b>  (0+1)* 1 (0+1)(0+1)
+   the language whose DFA needs 2³ = 8 states but whose NFA/RE are tiny — the standard witness that NFAs can be exponentially smaller.
+
+<b>g) At most one pair of consecutive 0s AND at most one pair of consecutive 1s</b> — left as the hard master-check; attack it by cases on where the pairs sit.</div>
+  <h3>Applications of regular expressions</h3>
+  <ul>
+    <li><strong>Lexical analysis</strong> — tokens of a programming language (identifiers, numbers, keywords) are specified by REs; tools like <em>lex</em> compile them into a DFA scanner. E.g. identifiers: <code>letter (letter + digit)*</code>.</li>
+    <li><strong>Text search / grep</strong> — UNIX REs add conveniences (character classes <code>[a-z]</code>, <code>.</code>, <code>?</code> = ε-or-one, <code>+</code> = one-or-more) but compile to the same automata.</li>
+    <li><strong>Pattern description in data</strong> — e.g. recognizing addresses, dates, DNA motifs.</li>
+  </ul>
+  <div class="trap">(0+1)* means "any string", not "0 or 1 repeated in a fixed choice"; and 0* + 1* ≠ (0+1)* — the left side is only all-0 strings or all-1 strings. Test any RE you write on: ε, 0, 1, 01, 10.</div>
+  <details class="master"><summary>MASTER CHECK · 06</summary><div class="inner"><ol>
+    <li>RE for: strings with at least two 0s. <small>(0+1)* 0 (0+1)* 0 (0+1)*</small></li>
+    <li>RE for: odd length. <small>(0+1)((0+1)(0+1))*</small></li>
+    <li>Simplify: (ε + 00)* <small>= (00)*</small>; and 0(ε+0)* <small>= 00* = 0⁺</small>.</li>
+    <li>Attempt f)'s DFA sketch to feel the 8-state blow-up, then problem g).</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7" class="reveal">
+  <div class="sechead"><span class="secnum">07</span><h2>Equivalence: Finite Automata ↔ Regular Expressions</h2></div>
+  <p>The pillar theorem of the unit: <strong>a language is regular ⟺ it is L(DFA) ⟺ L(NFA) ⟺ L(ε-NFA) ⟺ L(RE)</strong>. Both directions are constructive:</p>
+  <h3>RE → ε-NFA (Thompson / McNaughton–Yamada construction)</h3>
+  <ul>
+    <li>Each RE gets an ε-NFA with <em>one start, one accept state</em>, built by structural induction:</li>
+    <li><strong>Basis:</strong> ε → two states joined by an ε-edge; a → two states joined by an a-edge; ∅ → two states, no edge.</li>
+    <li><strong>E+F:</strong> new start with ε-edges into E's and F's starts; both accepts ε-jump to a new accept (parallel branches = choice).</li>
+    <li><strong>EF:</strong> E's accept ε-jumps into F's start (series = sequence).</li>
+    <li><strong>E*:</strong> new start/accept; ε-edges: start→E-start, E-accept→E-start (loop!), start→accept (zero copies), E-accept→accept.</li>
+  </ul>
+  <div class="solved"><b>SOLVED · (0+1)*01 step by step:</b>
+1. Machines for 0 and for 1 (one edge each).
+2. Union (0+1): parallel wiring with ε in/out — 6 states.
+3. Star (0+1)*: wrap with the loop-and-bypass ε skeleton — 8 states.
+4. Concatenate machine for 0, then for 1: ε-glue in series — 12 states total.
+Every step is mechanical — which is exactly why compilers can do it. Convert onward to DFA via ε-closure subset construction (§04) and you land, once again, on the 3-state machine of §02.</div>
+  <h3>DFA → RE, exam style: Arden's theorem + state equations</h3>
+  <div class="formula">Arden: if P doesn't contain ε, then R = Q + RP has the unique solution R = QP*
+    <small>Write one equation per state (incoming edges), substitute, and crank until the accept state's expression has no state variables.</small></div>
+  <div class="solved"><b>SOLVED · RE for "odd number of 1s"</b> (DFA: A start, B accept; 0 loops on both; 1 toggles A↔B)
+Equations (each state = how you can arrive there):
+  A = ε + A0 + B1        (start contributes ε)
+  B = A1 + B0
+Solve B by Arden (R = Q + RP with Q = A1, P = 0):
+  B = A1(0)*
+Substitute into A:
+  A = ε + A0 + A1(0)*1 = ε + A(0 + 1(0)*1)
+Arden again (Q = ε, P = 0 + 10*1):
+  A = (0 + 10*1)*
+Answer (accept state B):
+  <b>L = (0 + 10*1)* 1 0*</b>
+Read it: blocks that preserve parity (a 0, or a 1…0s…1 pair), then the one unmatched 1, then trailing 0s. Sanity tests: "1" ✓, "10" ✓, "11" ✗ (needs the pair) ✓.</div>
+  <p class="dim">The alternative textbook route is <strong>state elimination</strong>: remove states one by one, relabeling edges with REs; the final two-state picture reads off the answer. Know that it exists and its name; Arden is faster in exams.</p>
+  <details class="master"><summary>MASTER CHECK · 07</summary><div class="inner"><ol>
+    <li>Thompson-construct 0*1 and count states. <small>0 machine (2) → star wrap (4) → concat 1 (6).</small></li>
+    <li>By Arden, find the RE for the "even 0s, even 1s" DFA of §02 P2 — a genuinely hard crank; even setting up the 4 equations correctly earns most marks.</li>
+    <li>State Arden's theorem with its ε-condition, and show why the condition matters. <small>If ε ∈ P, solutions aren't unique.</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8" class="reveal">
+  <div class="sechead"><span class="secnum">08</span><h2>Proving Languages Not Regular — the Pumping Lemma</h2></div>
+  <p>Finite automata have finite memory; languages requiring <em>unbounded counting</em> can't be regular. The tool:</p>
+  <div class="formula">Pumping Lemma: L regular ⇒ ∃ constant p ≥ 1 such that every w ∈ L with |w| ≥ p splits as w = xyz with
+(1) y ≠ ε &nbsp; (2) |xy| ≤ p &nbsp; (3) xyⁱz ∈ L for all i ≥ 0
+    <small>Intuition: a run of length ≥ p must revisit some state (pigeonhole over p states); the loop between the revisits is y — traverse it any number of times, the machine can't tell.</small></div>
+  <p><strong>How to use it — the adversary game.</strong> The lemma is a one-way test used by contradiction: assume L regular; the adversary fixes p (unknown to you); <em>you choose one clever w ∈ L, |w| ≥ p</em>; the adversary splits w = xyz obeying (1),(2) — your proof must work for <em>every</em> legal split; you pick one pumping count i and show xyⁱz ∉ L. Contradiction ⇒ L not regular.</p>
+
+  <h3>Solved Problem 7 — L = {0ⁿ1ⁿ : n ≥ 0} is not regular</h3>
+  <div class="pump">
+    <div class="lbls"><i style="color:var(--ink-dim)">x</i><i style="color:var(--amber)">y (pumped)</i><i style="color:var(--cyan)">z</i></div>
+    <div class="row">
+      <span class="blk bx">0…0</span><span class="blk by">0ᵏ</span><span class="blk by ghost">0ᵏ</span><span class="blk by ghost g2">0ᵏ</span><span class="blk bz">1…1 (p ones)</span>
+    </div>
+    <div class="cap">pumping y adds 0s but never 1s → count breaks → xy²z ∉ L</div>
+  </div>
+  <div class="solved"><b>PROOF ·</b> Suppose L is regular with pumping constant p.
+Choose <b>w = 0ᵖ1ᵖ</b> ∈ L, |w| = 2p ≥ p.
+Let w = xyz be any split with |xy| ≤ p and y ≠ ε.
+Since |xy| ≤ p and the first p symbols are all 0s: <b>y = 0ᵏ for some k ≥ 1</b> — the split has no freedom that matters; this is why w was chosen with the 0-block first.
+Pump with i = 2: xy²z = 0^(p+k) 1ᵖ. Now #0 = p+k &gt; p = #1 → xy²z ∉ L.
+Contradiction with condition (3). Hence <b>L is not regular ∎</b>
+(i = 0 works equally: 0^(p−k)1ᵖ ∉ L. State one; mentioning both shows command.)</div>
+
+  <h3>Solved Problem 8 — L = { w : #0(w) = #1(w) } is not regular (closure shortcut)</h3>
+  <div class="solved"><b>PROOF BY CLOSURE ·</b> Regular languages are closed under intersection, and 0*1* is regular (it's an RE!).
+If L were regular, then L ∩ 0*1* = {0ⁿ1ⁿ : n ≥ 0} would be regular.
+But Problem 7 proved it isn't. Contradiction ⇒ <b>L is not regular ∎</b>
+<i>Lesson: before grinding a pumping argument, check whether intersecting/complementing into a known non-regular language kills it in two lines.</i></div>
+
+  <h3>Solved Problem 9 — L = { 0^(i) 1^(j) : i &gt; j } is not regular</h3>
+  <div class="solved"><b>PROOF ·</b> Assume regular, constant p. Choose <b>w = 0^(p+1) 1ᵖ</b> ∈ L (one more 0 than 1s, |w| ≥ p).
+|xy| ≤ p ⇒ y = 0ᵏ, k ≥ 1, entirely inside the 0-block.
+Pump <b>down, i = 0</b>: xz = 0^(p+1−k) 1ᵖ. Since k ≥ 1: p+1−k ≤ p ⇒ #0 ≤ #1 ⇒ xz ∉ L. <b>∎</b>
+<i>Lesson: when the language is an inequality, pump in the direction that violates it — here pumping UP keeps i &gt; j true forever, so only i = 0 finishes the proof. Choosing the pumping direction is half the marks.</i></div>
+
+  <div class="trap">Three proof-killing errors: (1) letting <em>yourself</em> choose the split — the adversary owns x,y,z; your argument must cover every legal split; (2) choosing w not in L or with |w| &lt; p; (3) forgetting |xy| ≤ p, which is precisely what pins y inside your chosen leading block. Also: the lemma can never prove a language IS regular — satisfying it proves nothing.</div>
+  <details class="master"><summary>MASTER CHECK · 08</summary><div class="inner"><ol>
+    <li>Prove {ww : w ∈ {0,1}*} not regular. <small>w = 0ᵖ10ᵖ1; y = 0ᵏ in the first block; i = 2 breaks the halves.</small></li>
+    <li>Prove {0^(n²)} not regular. <small>w = 0^(p²); pumping gives length between p² and p²+p &lt; (p+1)² — not a square.</small></li>
+    <li>Why does the pumping lemma follow from the pigeonhole principle? Write the 3-line argument.</li>
+    <li>Give a non-regular language whose complement is also non-regular. <small>{0ⁿ1ⁿ} works (complement contains it via closure tricks — argue with intersection).</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9" class="reveal">
+  <div class="sechead"><span class="secnum">09</span><h2>Summary Sheet &amp; Likely Questions</h2></div>
+  <div class="fsheet">
+    <div class="fs"><b>DFA</b>(Q,Σ,δ,q₀,F) · δ: Q×Σ→Q, total, single-valued<br>L(A)={w : δ̂(q₀,w)∈F}</div>
+    <div class="fs"><b>NFA</b>δ: Q×Σ→2^Q · accept if SOME run reaches F<br>NFA→DFA: subset construction, ≤ 2ⁿ states</div>
+    <div class="fs"><b>ε-NFA</b>+ ε-moves · ECLOSE(q) ∋ q, transitive<br>process: close → move on symbol → close</div>
+    <div class="fs"><b>RE OPERATORS</b>+ (union) · juxtaposition (concat) · * (Kleene)<br>precedence * &gt; · &gt; + · basis ∅, ε, a</div>
+    <div class="fs"><b>KEY IDENTITIES</b>∅+L=L · εL=L · ∅L=∅ · ∅*=ε<br>(L*)*=L* · (ε+L)*=L* · L*L*=L*</div>
+    <div class="fs"><b>EQUIVALENCE</b>DFA ≡ NFA ≡ ε-NFA ≡ RE<br>RE→ε-NFA: Thompson · DFA→RE: Arden / elimination</div>
+    <div class="fs"><b>ARDEN</b>R = Q + RP, ε∉P ⇒ R = QP*<br>one equation per state, accept state = answer</div>
+    <div class="fs"><b>PUMPING LEMMA</b>|w|≥p ⇒ w=xyz, y≠ε, |xy|≤p, xyⁱz∈L ∀i<br>use by contradiction · adversary owns the split</div>
+    <div class="fs"><b>STOCK NON-REGULAR SET</b>0ⁿ1ⁿ · equal 0s&amp;1s · ww · 0^(n²) · 0^prime<br>+ closure shortcut: L∩(regular) known non-regular</div>
+  </div>
+  <div class="card">
+    <h4>The five near-certain questions of Unit I</h4>
+    <ol style="margin-bottom:0">
+      <li>Design a DFA for a stated language + trace a string. <em>(§02 patterns: suffix, substring, parity, mod-counting)</em></li>
+      <li>NFA → DFA subset construction, full table. <em>(§03)</em></li>
+      <li>ε-closures + ε-NFA → DFA. <em>(§04)</em></li>
+      <li>Write REs for given languages / DFA → RE by Arden. <em>(§06–07)</em></li>
+      <li>Pumping-lemma proof for 0ⁿ1ⁿ or a variant. <em>(§08 — follow the adversary-game template verbatim)</em></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  CS3103-1 · UNIT I · SOURCE: HOPCROFT–MOTWANI–ULLMAN, INTRODUCTION TO AUTOMATA THEORY (T1)<br>
+  one language, three machines, one algebra, one impossibility proof — that is the whole unit.
+</footer>
+
+<script>
+/* scroll reveal */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}})},{threshold:.1});
+document.querySelectorAll('.reveal,.anim').forEach(el=>io.observe(el));
+
+/* ====== automaton step-through engine ====== */
+const SIMS={
+ sim1:{input:'100101',final:'ACCEPT — halted in C (ends with 01)',finalOk:true,
+  steps:[{a:['s1A']},{a:['s1A'],e:['e1AA']},{a:['s1B'],e:['e1AB']},{a:['s1B'],e:['e1BB']},
+         {a:['s1C'],e:['e1BC']},{a:['s1B'],e:['e1CB']},{a:['s1C'],e:['e1BC']}]},
+ sim2:{input:'0110',final:'ACCEPT — back to EE: both parities even',finalOk:true,
+  steps:[{a:['s2EE']},{a:['s2OE'],e:['e2A']},{a:['s2OO'],e:['e2D']},{a:['s2OE'],e:['e2D']},{a:['s2EE'],e:['e2A']}]},
+ sim3:{input:'1001',final:'ACCEPT — active set {q0,q2} contains q2',finalOk:true,
+  steps:[{a:['s3q0']},{a:['s3q0'],e:['e3LL']},{a:['s3q0','s3q1'],e:['e3LL','e3AB']},
+         {a:['s3q0','s3q1'],e:['e3LL','e3AB']},{a:['s3q0','s3q2'],e:['e3LL','e3BC']}]}
+};
+document.querySelectorAll('.sim').forEach(sim=>{
+  const cfg=SIMS[sim.id]; if(!cfg) return;
+  const tape=sim.querySelector('.tape');
+  [...cfg.input].forEach(c=>{const s=document.createElement('span');s.className='ch';s.textContent=c;tape.appendChild(s);});
+  const chars=sim.querySelectorAll('.ch'), verdict=sim.querySelector('.verdict');
+  let pos=0, timer=null;
+  function render(){
+    sim.querySelectorAll('.st').forEach(s=>s.classList.remove('on'));
+    sim.querySelectorAll('.ed').forEach(s=>s.classList.remove('on'));
+    const st=cfg.steps[pos];
+    st.a.forEach(id=>{const el=sim.querySelector('#'+id); if(el) el.classList.add('on');});
+    if(st.e) st.e.forEach(id=>{const el=sim.querySelector('#'+id); if(el) el.classList.add('on');});
+    chars.forEach((c,i)=>{c.classList.toggle('done',i<pos);c.classList.toggle('cur',i===pos-1);});
+    if(pos===cfg.steps.length-1){verdict.textContent=cfg.final;verdict.className='verdict '+(cfg.finalOk?'ok':'');}
+    else if(st.a.length>1){verdict.textContent='active set: '+st.a.map(x=>x.replace(/^s\d/,'')).join(', ');verdict.className='verdict set';}
+    else{verdict.textContent='';verdict.className='verdict';}
+  }
+  function step(){ if(pos<cfg.steps.length-1){pos++;render();} else stop(); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+  sim.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    const act=b.dataset.act;
+    if(act==='step'){stop();step();}
+    if(act==='reset'){stop();pos=0;render();}
+    if(act==='play'){stop();if(pos===cfg.steps.length-1){pos=0;render();}timer=setInterval(step,950);}
+  }));
+  render();
+});
+</script>
+</body>
+</html>

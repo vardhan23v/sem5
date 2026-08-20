@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit I · OS Structure · Processes · Threads · CPU Scheduling | CS2004-1 Operating Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== "AMBER CONSOLE" THEME — warm dark terminal, phosphor-amber accents, scanlines ===== */
+:root{
+  --paper:#191512;
+  --panel:#211c16;
+  --panel2:#28221b;
+  --ink:#f2e9dc;
+  --ink-dim:#a89a86;
+  --amber:#ffb347;          /* phosphor amber — primary */
+  --cyan:#6cc7de;           /* cool secondary */
+  --green:#7fd493;          /* solved / ok */
+  --rose:#ff8080;           /* traps / errors */
+  --mag:#e19bda;            /* 4th process color */
+  --card-line:rgba(242,233,220,.15);
+  --mono:'IBM Plex Mono',monospace;
+  --disp:'Chakra Petch',sans-serif;
+  --body:'Public Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.65;font-size:16.5px;position:relative}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px);opacity:.5}
+::selection{background:var(--amber);color:#191512}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+header{padding:66px 0 40px;border-bottom:1px solid var(--card-line)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.22em;color:var(--amber);text-transform:uppercase}
+.eyebrow::before{content:"$ ";color:var(--green)}
+h1{font-family:var(--disp);font-weight:700;font-size:clamp(2rem,5vw,3.2rem);line-height:1.1;margin:.5rem 0 .8rem;text-shadow:0 0 24px rgba(255,179,71,.25)}
+h1 .thin{color:var(--ink-dim);font-weight:500}
+.meta{font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);display:flex;gap:1.6em;flex-wrap:wrap}
+.meta b{color:var(--cyan);font-weight:500}
+.boot{font-family:var(--mono);font-size:.85rem;margin-top:28px;background:var(--panel);border:1px solid var(--card-line);border-radius:10px;padding:16px 20px;line-height:1.9}
+.boot .ln{opacity:0;animation:bootln .01s forwards}
+.boot .ln:nth-child(1){animation-delay:.2s}.boot .ln:nth-child(2){animation-delay:.8s}
+.boot .ln:nth-child(3){animation-delay:1.4s}.boot .ln:nth-child(4){animation-delay:2s}
+.boot .ok{color:var(--green)}.boot .k{color:var(--amber)}
+@keyframes bootln{to{opacity:1}}
+.boot .cursor{display:inline-block;width:9px;height:16px;background:var(--amber);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+nav.toc{padding:26px 0;border-bottom:1px dashed var(--card-line)}
+nav.toc ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 22px}
+nav.toc a{color:var(--ink-dim);text-decoration:none;font-size:.9rem;font-family:var(--mono);display:block;padding:3px 0;transition:.2s}
+nav.toc a b{color:var(--amber);font-weight:500}
+nav.toc a:hover{color:var(--ink);transform:translateX(4px)}
+
+section{padding:62px 0 20px}
+.sechead{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.secnum{font-family:var(--mono);font-size:.8rem;border:1.5px solid var(--amber);color:var(--amber);border-radius:6px;padding:4px 10px;letter-spacing:.08em}
+h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.4rem,3vw,2rem)}
+h3{font-family:var(--disp);font-weight:600;font-size:1.15rem;color:var(--cyan);margin:30px 0 10px}
+p{margin:0 0 14px}
+p.dim,li.dim{color:var(--ink-dim)}
+strong{color:var(--amber);font-weight:600}
+em{color:var(--cyan);font-style:normal}
+code{font-family:var(--mono);font-size:.86em;background:rgba(108,199,222,.12);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+ul,ol{margin:0 0 16px 1.3em}
+li{margin-bottom:7px}
+.card{background:var(--panel);border:1px solid var(--card-line);border-radius:12px;padding:22px 24px;margin:18px 0}
+.card h4{font-family:var(--mono);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+.formula{font-family:var(--mono);background:var(--panel);border-left:3px solid var(--amber);padding:14px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.95rem;overflow-x:auto}
+.formula small{display:block;color:var(--ink-dim);font-size:.78rem;margin-top:6px;font-family:var(--body)}
+.solved{font-family:var(--mono);background:var(--panel);border-left:3px solid var(--green);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.87rem;line-height:1.95;overflow-x:auto;white-space:pre-wrap}
+.solved b{color:var(--green);font-weight:600}
+.solved i{color:var(--amber);font-style:normal}
+.note{border:1px dashed var(--cyan);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim)}
+.note::before{content:"✦ EXAM POINT — ";font-family:var(--mono);color:var(--cyan);font-size:.75rem;letter-spacing:.12em}
+.trap{border:1px dashed var(--rose);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim)}
+.trap::before{content:"⚠ COMMON MISTAKE — ";font-family:var(--mono);color:var(--rose);font-size:.75rem;letter-spacing:.12em}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem}
+th{font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-align:left;padding:9px 12px;border-bottom:1.5px solid var(--card-line)}
+td{padding:9px 12px;border-bottom:1px solid rgba(242,233,220,.08);vertical-align:top}
+tr:hover td{background:rgba(242,233,220,.03)}
+.grid{display:grid;gap:16px;margin:18px 0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.dev{background:var(--panel);border:1px solid var(--card-line);border-radius:10px;padding:18px 20px;transition:transform .25s,border-color .25s}
+.dev:hover{transform:translateY(-5px);border-color:var(--amber)}
+.dev .icon{font-size:1.6rem;margin-bottom:8px}
+.dev h5{font-family:var(--disp);font-weight:600;font-size:1.02rem;margin-bottom:2px}
+.dev .layer{font-family:var(--mono);font-size:.66rem;color:var(--cyan);letter-spacing:.1em;display:block;margin-bottom:8px}
+.dev p{font-size:.88rem;color:var(--ink-dim);margin:0}
+
+/* ===== process state diagram ===== */
+.statesviz{background:var(--panel);border:1px solid var(--card-line);border-radius:14px;padding:18px;margin:18px 0;position:relative}
+.statesviz svg{width:100%;height:auto;display:block;overflow:visible}
+.snode rect{fill:var(--panel2);stroke:var(--card-line);stroke-width:1.5;rx:10}
+.snode text{fill:var(--ink);font-family:var(--mono);font-size:14px;text-anchor:middle;dominant-baseline:middle}
+.sedge{stroke:var(--ink-dim);stroke-width:1.6;fill:none;marker-end:url(#arwA)}
+.selbl{fill:var(--ink-dim);font-family:var(--mono);font-size:11.5px;text-anchor:middle}
+.ptoken{fill:var(--amber);filter:drop-shadow(0 0 8px rgba(255,179,71,.9));animation:tok 12s linear infinite}
+@keyframes tok{
+  0%{cx:0} /* replaced by transform path below */
+}
+.tokmove{animation:tokpath 14s ease-in-out infinite}
+@keyframes tokpath{
+  0%   {transform:translate(90px,40px)}   /* new */
+  9%   {transform:translate(250px,40px)}  /* -> ready */
+  17%  {transform:translate(250px,40px)}
+  26%  {transform:translate(455px,40px)}  /* dispatched -> running */
+  36%  {transform:translate(455px,40px)}
+  45%  {transform:translate(360px,150px)} /* I/O wait -> waiting */
+  55%  {transform:translate(360px,150px)}
+  63%  {transform:translate(250px,40px)}  /* I/O done -> ready */
+  70%  {transform:translate(250px,40px)}
+  78%  {transform:translate(455px,40px)}  /* dispatched again */
+  86%  {transform:translate(455px,40px)}
+  95%  {transform:translate(620px,40px)}  /* exit -> terminated */
+  100% {transform:translate(620px,40px)}
+}
+.statecap{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);text-align:center;margin-top:8px}
+
+/* ===== syscall trace ===== */
+.sysviz{background:var(--panel);border:1px solid var(--card-line);border-radius:14px;padding:20px;margin:18px 0}
+.modebar{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--card-line);font-family:var(--mono);font-size:.72rem;margin-bottom:14px}
+.modebar div{flex:1;text-align:center;padding:7px 0;transition:.4s}
+.modebar .u{background:rgba(108,199,222,.14);color:var(--cyan)}
+.modebar .k{background:rgba(255,179,71,.1);color:var(--ink-dim)}
+.sysviz.play .modebar .u{background:rgba(108,199,222,.05);color:var(--ink-dim)}
+.sysviz.play .modebar .k{background:rgba(255,179,71,.22);color:var(--amber)}
+.syslane{position:relative;height:120px}
+.sbox{position:absolute;width:170px;border:1.5px solid var(--card-line);border-radius:10px;background:var(--panel2);font-family:var(--mono);font-size:.72rem;text-align:center;padding:10px 8px;line-height:1.7}
+.sbox b{color:var(--cyan);font-weight:500;display:block}
+.sbox.kk b{color:var(--amber)}
+.sdot{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px rgba(255,179,71,.8);top:52px;left:180px;animation:sysdot 6s ease-in-out infinite}
+@keyframes sysdot{
+  0%{left:180px;opacity:0}6%{opacity:1}
+  30%{left:calc(100% - 200px);opacity:1}
+  50%{left:calc(100% - 200px)}
+  74%{left:180px;opacity:1}
+  95%{left:180px;opacity:1}100%{opacity:0}
+}
+.syscap{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);margin-top:10px;text-align:center}
+
+/* ===== fork tree ===== */
+.forkviz{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap;background:var(--panel);border:1px solid var(--card-line);border-radius:14px;padding:20px;margin:18px 0}
+.forkcode{font-family:var(--mono);font-size:.85rem;line-height:2;background:var(--panel2);border-radius:10px;padding:14px 18px;min-width:230px}
+.forkcode .c{color:var(--ink-dim)}
+.forktree{flex:1;min-width:260px}
+.fnode{border:1.5px solid var(--card-line);border-radius:8px;background:var(--panel2);font-family:var(--mono);font-size:.76rem;padding:8px 12px;display:inline-block;margin:5px 0;opacity:0;transform:translateY(10px)}
+.fnode b{color:var(--amber);font-weight:500}
+.visible .fnode{animation:fin .5s forwards}
+.visible .fnode.d1{animation-delay:.5s}.visible .fnode.d2{animation-delay:1s}
+.visible .fnode.d3{animation-delay:1.5s}
+@keyframes fin{to{opacity:1;transform:none}}
+.findent{margin-left:34px;border-left:1.5px dashed var(--card-line);padding-left:18px}
+
+/* ===== SCHEDULER SIMULATOR ===== */
+.sched{background:var(--panel);border:1.5px solid var(--amber);border-radius:16px;padding:22px;margin:20px 0;box-shadow:0 0 40px rgba(255,179,71,.08)}
+.sched .stitle{font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;color:var(--amber);margin-bottom:6px}
+.sched .stitle::before{content:"▶ SIMULATOR · "}
+.sched .ssub{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);margin-bottom:14px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.btnrow button{font-family:var(--mono);font-size:.78rem;background:none;border:1.5px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:7px 14px;cursor:pointer;transition:.2s}
+.btnrow button:hover{background:rgba(108,199,222,.12)}
+.btnrow button.sel{background:var(--cyan);color:#14100d;font-weight:600}
+.ptable{font-family:var(--mono);font-size:.8rem;margin:10px 0}
+.gantt{position:relative;margin:18px 0 4px;height:64px}
+.glane{display:flex;height:40px;border:1px solid var(--card-line);border-radius:6px;overflow:hidden;background:var(--panel2)}
+.gseg{height:100%;width:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;color:#14100d;font-weight:600;transition:width .38s linear;white-space:nowrap;overflow:hidden}
+.gseg.P1{background:var(--amber)}.gseg.P2{background:var(--cyan)}.gseg.P3{background:var(--green)}.gseg.P4{background:var(--mag)}
+.gticks{position:relative;height:20px;font-family:var(--mono);font-size:.62rem;color:var(--ink-dim)}
+.gticks span{position:absolute;transform:translateX(-50%)}
+.mtable{font-family:var(--mono);font-size:.8rem}
+.mtable td.avg{color:var(--amber);font-weight:600}
+.verdictline{font-family:var(--mono);font-size:.78rem;color:var(--green);min-height:1.5em;margin-top:8px}
+
+details.master{background:rgba(127,212,147,.06);border:1px dashed var(--green);border-radius:12px;margin:26px 0 4px;overflow:hidden}
+details.master summary{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;color:var(--green);padding:13px 20px;cursor:pointer;list-style:none;user-select:none}
+details.master summary::before{content:"▸ "}
+details.master[open] summary::before{content:"▾ "}
+details.master .inner{padding:4px 24px 18px}
+details.master ol{margin-bottom:0}
+details.master li{font-size:.92rem}
+details.master li small{color:var(--ink-dim);display:block}
+
+.fsheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:20px 0}
+.fs{background:var(--panel);border:1px solid var(--card-line);border-radius:10px;padding:14px 18px;font-family:var(--mono);font-size:.83rem}
+.fs b{color:var(--amber);font-weight:500;display:block;font-size:.68rem;letter-spacing:.12em;margin-bottom:6px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+footer{margin-top:70px;padding:34px 0 50px;border-top:1px solid var(--card-line);font-family:var(--mono);font-size:.78rem;color:var(--ink-dim);text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal,.fnode,.boot .ln{opacity:1!important;transform:none!important}.gseg{transition:none!important}}
+@media(max-width:640px){body{font-size:15.5px}.solved{font-size:.79rem}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a89a86"/></marker>
+</defs></svg>
+
+<header class="wrap">
+  <div class="eyebrow">CS2004-1 · Operating Systems · PCC · Unit I</div>
+  <h1>OS Structure · Processes · Threads <span class="thin">· CPU Scheduling</span></h1>
+  <div class="meta"><span>Hours: <b>15</b></span><span>Ref: <b>Silberschatz–Galvin–Gagne, 12e (T1)</b></span><span>Format: <b>notes + live scheduling simulator</b></span></div>
+  <div class="boot">
+    <div class="ln"><span class="ok">[ OK ]</span> loading kernel concepts: services, interfaces, <span class="k">system calls</span>, linkers &amp; loaders</div>
+    <div class="ln"><span class="ok">[ OK ]</span> spawning <span class="k">processes</span>: states, PCB, scheduling queues, fork(), IPC</div>
+    <div class="ln"><span class="ok">[ OK ]</span> attaching <span class="k">threads</span>: multithreading models, PCS/SCS</div>
+    <div class="ln"><span class="ok">[ OK ]</span> starting <span class="k">CPU scheduler</span>: FCFS · SJF · SRTF · Priority · RR — interactive below <span class="cursor"></span></div>
+  </div>
+</header>
+
+<nav class="toc wrap">
+  <ol>
+    <li><a href="#s1"><b>PID 01</b> / What an OS Does · Services</a></li>
+    <li><a href="#s2"><b>PID 02</b> / User–OS Interface · System Services</a></li>
+    <li><a href="#s3"><b>PID 03</b> / System Calls</a></li>
+    <li><a href="#s4"><b>PID 04</b> / Linkers &amp; Loaders</a></li>
+    <li><a href="#s5"><b>PID 05</b> / Process Concept · States · PCB</a></li>
+    <li><a href="#s6"><b>PID 06</b> / Process Scheduling · Queues</a></li>
+    <li><a href="#s7"><b>PID 07</b> / Operations on Processes</a></li>
+    <li><a href="#s8"><b>PID 08</b> / Inter-Process Communication</a></li>
+    <li><a href="#s9"><b>PID 09</b> / Threads &amp; Multithreading Models</a></li>
+    <li><a href="#s10"><b>PID 10</b> / CPU Scheduling — Concepts &amp; Criteria</a></li>
+    <li><a href="#s11"><b>PID 11</b> / Scheduling Algorithms + Simulator</a></li>
+    <li><a href="#s12"><b>PID 12</b> / Thread Scheduling · Summary</a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+
+<!-- ===== PID 01 ===== -->
+<section id="s1" class="reveal">
+  <div class="sechead"><span class="secnum">PID 01</span><h2>What an Operating System Does · OS Services</h2></div>
+  <p>An <strong>operating system</strong> is the program that manages the computer's hardware, acting as an <em>intermediary</em> between users/applications and the machine. Two complementary views: <strong>resource allocator</strong> (decides who gets CPU time, memory, I/O — fairly and efficiently) and <strong>control program</strong> (supervises execution, prevents errors and improper use). The one program running at all times is the <strong>kernel</strong>; everything else is system programs or applications.</p>
+  <h3>OS services — the exam list</h3>
+  <div class="grid g2">
+    <div class="dev"><div class="icon">🧑‍💻</div><h5>Helpful to the user</h5><span class="layer">VISIBLE SERVICES</span>
+      <p><strong>User interface</strong> (CLI/GUI/touch) · <strong>Program execution</strong> (load, run, end normally or with error) · <strong>I/O operations</strong> (user programs can't drive devices directly) · <strong>File-system manipulation</strong> (create, delete, read, write, search, permissions) · <strong>Communications</strong> (between processes, same machine or networked — shared memory or message passing) · <strong>Error detection</strong> (CPU, memory, I/O, program errors — detect, and act to keep computing consistent).</p></div>
+    <div class="dev"><div class="icon">⚙️</div><h5>Ensuring efficient operation</h5><span class="layer">SYSTEM-FACING SERVICES</span>
+      <p><strong>Resource allocation</strong> (CPU cycles, memory, files, I/O among concurrent users/jobs) · <strong>Logging / accounting</strong> (which users use how much of what — billing, statistics, tuning) · <strong>Protection &amp; security</strong> (control access to system resources; authenticate users; defend against outsiders). Protection = internal correctness; security = external defense.</p></div>
+  </div>
+  <div class="note">"Explain the services of an operating system" = list all nine with one line each, grouped into user-helpful vs system-efficiency — the grouping itself carries marks.</div>
+  <details class="master"><summary>MASTER CHECK · 01</summary><div class="inner"><ol>
+    <li>Resource allocator vs control program — one sentence + one example each.</li>
+    <li>Why can't user programs perform I/O directly? <small>Protection: devices are shared; direct access could corrupt other users' data — hence I/O goes through the OS (→ system calls, PID 03).</small></li>
+    <li>Distinguish protection from security.</li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 02 ===== -->
+<section id="s2" class="reveal">
+  <div class="sechead"><span class="secnum">PID 02</span><h2>User–OS Interface · System Services</h2></div>
+  <h3>Three interface styles</h3>
+  <ul>
+    <li><strong>Command-line interface (CLI / shell)</strong> — commands typed at a prompt; the shell (bash, PowerShell) either contains the command's code or (UNIX way) locates a <em>system program</em> of that name and runs it — so adding commands doesn't change the shell. Faster for experts, scriptable.</li>
+    <li><strong>Graphical user interface (GUI)</strong> — desktop metaphor: windows, icons, menus, pointer. Discoverable, friendlier to non-specialists.</li>
+    <li><strong>Touch-screen interface</strong> — gestures (tap, swipe, pinch) replace keyboard/mouse; standard on mobile OSes.</li>
+    <li>The choice is preference/context; many systems provide all (macOS: Aqua GUI + Terminal). <em>System administrators and power users lean CLI; end users lean GUI/touch.</em></li>
+  </ul>
+  <h3>System services (system programs)</h3>
+  <p>The layer between the OS proper and application programs — convenient environment for program development and execution:</p>
+  <ul>
+    <li><strong>File management</strong> — create, delete, copy, rename, print, list files/directories.</li>
+    <li><strong>Status information</strong> — date, disk/memory usage, performance monitors, logging.</li>
+    <li><strong>File modification</strong> — text editors, search, transformation tools.</li>
+    <li><strong>Programming-language support</strong> — compilers, assemblers, debuggers, interpreters.</li>
+    <li><strong>Program loading and execution</strong> — loaders (absolute, relocatable), linkage editors, debuggers (→ PID 04).</li>
+    <li><strong>Communications</strong> — remote login, messaging, file transfer, browsers.</li>
+    <li><strong>Background services (daemons)</strong> — launched at boot, run while the system runs: network daemons, schedulers, print servers.</li>
+  </ul>
+</section>
+
+<!-- ===== PID 03 ===== -->
+<section id="s3" class="reveal">
+  <div class="sechead"><span class="secnum">PID 03</span><h2>System Calls</h2></div>
+  <p><strong>System calls</strong> are the programming interface to the services the OS provides — the only doorway from user code into the kernel. Hardware enforces the boundary with a <strong>mode bit</strong>: <em>user mode (1)</em> for applications, <em>kernel mode (0)</em> for the OS; privileged instructions execute only in kernel mode. A system call executes a <strong>trap (software interrupt)</strong>: mode switches to kernel, the kernel performs the service, then returns to user mode.</p>
+  <div class="sysviz anim" id="sysviz">
+    <div class="modebar"><div class="u">USER MODE (mode bit = 1)</div><div class="k">KERNEL MODE (mode bit = 0)</div></div>
+    <div class="syslane">
+      <div class="sbox" style="left:0;top:24px"><b>user process</b>calls printf()<br>→ library API<br>→ write() wrapper</div>
+      <div class="sbox kk" style="right:0;top:24px"><b>kernel</b>trap handler →<br>syscall table[#write]<br>→ device driver → I/O</div>
+      <div class="sdot"></div>
+    </div>
+    <div class="syscap">trap → kernel executes write() → return-from-trap back to user mode — the mode bar flips with the dot</div>
+  </div>
+  <ul>
+    <li><strong>API vs system call:</strong> programmers use an API (C library, Win32, POSIX) — e.g. <code>printf()</code> calls the <code>write()</code> system call underneath. APIs give portability and convenience; the <em>run-time environment (RTE)</em> provides the <strong>system-call interface</strong> that traps into the kernel by number.</li>
+    <li><strong>Parameter passing — three methods:</strong> (1) in <em>registers</em> (fastest, limited count); (2) in a <em>memory block/table</em> whose address is passed in a register (Linux for &gt;5 params); (3) <em>pushed on the stack</em> by the program, popped by the OS.</li>
+  </ul>
+  <h3>The six categories (with UNIX examples)</h3>
+  <table>
+    <tr><th>Category</th><th>Purpose</th><th>Examples</th></tr>
+    <tr><td>Process control</td><td>create/terminate/load/execute, wait, allocate memory</td><td><code>fork() exec() exit() wait()</code></td></tr>
+    <tr><td>File management</td><td>create, open, read, write, close, attributes</td><td><code>open() read() write() close()</code></td></tr>
+    <tr><td>Device management</td><td>request/release devices, read/write devices</td><td><code>ioctl() read() write()</code></td></tr>
+    <tr><td>Information maintenance</td><td>time/date, system data, process attributes</td><td><code>getpid() alarm() sleep()</code></td></tr>
+    <tr><td>Communications</td><td>create/delete connections, send/receive, shared memory</td><td><code>pipe() shm_open() send() recv()</code></td></tr>
+    <tr><td>Protection</td><td>get/set permissions, allow/deny access</td><td><code>chmod() umask() chown()</code></td></tr>
+  </table>
+  <div class="trap">printf() is NOT a system call — it's a library function that eventually invokes write(). "API = what you call, system call = what traps." Exam answers that equate them lose the definition mark.</div>
+  <details class="master"><summary>MASTER CHECK · 03</summary><div class="inner"><ol>
+    <li>Walk the full journey of <code>cp in.txt out.txt</code> in system calls. <small>open×2 (create out), loop read/write, close×2, terminate — with error paths (file not found, disk full).</small></li>
+    <li>Why is the mode bit hardware, not software? <small>Software alone could be overwritten by a malicious program; the trap instruction is the only way to flip it to 0.</small></li>
+    <li>Three parameter-passing methods — when does the block method win? <small>More parameters than registers.</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 04 ===== -->
+<section id="s4" class="reveal">
+  <div class="sechead"><span class="secnum">PID 04</span><h2>Linkers &amp; Loaders</h2></div>
+  <p>How does <code>main.c</code> become a process in memory? The pipeline:</p>
+  <div class="solved"><b>source (main.c)</b> ──compiler──▶ <b>object file (main.o)</b>   relocatable machine code, unresolved symbols
+<b>main.o + other .o + libraries</b> ──<i>LINKER</i>──▶ <b>executable (a.out / .exe)</b>   one file, symbols resolved
+<b>executable</b> ──<i>LOADER</i>──▶ <b>process image in memory</b>   ready to run (./a.out makes the shell fork + exec, and exec invokes the loader)</div>
+  <ul>
+    <li><strong>Linker</strong> — combines relocatable object files into a single executable: resolves cross-file references (<code>printf</code> → its library code), arranges sections, performs <em>relocation</em> (adjusting addresses to final layout).</li>
+    <li><strong>Loader</strong> — brings the executable into memory, sets up the process's address space, and starts it at the entry point; relocation may finish here for load-time-decided addresses.</li>
+    <li><strong>Static linking</strong> — library code copied <em>into</em> the executable: self-contained but large, duplicated in every program.</li>
+    <li><strong>Dynamic linking (DLLs / shared objects .so)</strong> — linking postponed to load/run time: the executable holds a <em>stub</em>; first call locates or loads the shared library, and all processes share one in-memory copy. Saves disk + memory, and library updates don't require relinking programs.</li>
+    <li>Executable formats: <strong>ELF</strong> (Linux) / <strong>PE</strong> (Windows) — headers describe sections (text, data), entry point, needed libraries.</li>
+  </ul>
+  <details class="master"><summary>MASTER CHECK · 04</summary><div class="inner"><ol>
+    <li>Draw the source→process pipeline labeling compiler, linker, loader, and what each resolves.</li>
+    <li>Static vs dynamic linking — two advantages each.</li>
+    <li>What exactly happens on <code>./a.out</code>? <small>shell fork()s; child exec()s; exec invokes the loader; ELF headers drive memory setup.</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 05 ===== -->
+<section id="s5" class="reveal">
+  <div class="sechead"><span class="secnum">PID 05</span><h2>Process Concept · States · PCB</h2></div>
+  <p>A <strong>process is a program in execution</strong> — the unit of work of a modern system. A <em>program</em> is a passive file on disk; a <em>process</em> is active, with a program counter and a full memory image. One program can spawn several processes (run it twice = two processes, same text).</p>
+  <h3>Memory layout of a process</h3>
+  <ul>
+    <li><strong>Text</strong> — the executable code (fixed size).</li>
+    <li><strong>Data</strong> — global variables (fixed size).</li>
+    <li><strong>Heap</strong> — memory allocated dynamically at run time (<code>malloc</code>) — grows upward.</li>
+    <li><strong>Stack</strong> — function-call frames: parameters, return addresses, locals — grows downward toward the heap; the OS must keep them from colliding.</li>
+  </ul>
+  <h3>Process states — the diagram that must be drawn from memory</h3>
+  <div class="statesviz">
+    <svg viewBox="0 0 720 210">
+      <g class="snode"><rect x="40" y="18" width="100" height="44" rx="10"/><text x="90" y="41">new</text></g>
+      <g class="snode"><rect x="200" y="18" width="100" height="44" rx="10"/><text x="250" y="41">ready</text></g>
+      <g class="snode"><rect x="405" y="18" width="100" height="44" rx="10"/><text x="455" y="41">running</text></g>
+      <g class="snode"><rect x="570" y="18" width="110" height="44" rx="10"/><text x="625" y="41">terminated</text></g>
+      <g class="snode"><rect x="310" y="128" width="100" height="44" rx="10"/><text x="360" y="151">waiting</text></g>
+      <path class="sedge" d="M140,40 L196,40"/><text class="selbl" x="168" y="30">admitted</text>
+      <path class="sedge" d="M300,32 C340,18 370,18 401,32"/><text class="selbl" x="352" y="14">dispatch</text>
+      <path class="sedge" d="M405,52 C370,66 336,66 302,52"/><text class="selbl" x="353" y="78">interrupt / preempt</text>
+      <path class="sedge" d="M505,40 L566,40"/><text class="selbl" x="536" y="30">exit</text>
+      <path class="sedge" d="M440,62 C420,100 400,118 412,126"/><text class="selbl" x="452" y="104">I/O or event wait</text>
+      <path class="sedge" d="M310,150 C240,150 226,100 240,66"/><text class="selbl" x="222" y="122">I/O complete</text>
+      <circle class="ptoken tokmove" r="8" cx="0" cy="0"/>
+    </svg>
+    <div class="statecap">the amber token lives one process lifetime: new → ready → running → waiting (I/O) → ready → running → terminated</div>
+  </div>
+  <ul>
+    <li><strong>new</strong> — being created · <strong>ready</strong> — waiting for a CPU · <strong>running</strong> — instructions executing (one per core!) · <strong>waiting/blocked</strong> — awaiting an event (I/O completion, signal) · <strong>terminated</strong> — finished, awaiting cleanup.</li>
+    <li>Key edges: ready→running only via the <em>dispatcher</em>; running→ready via <em>interrupt/preemption</em>; running→waiting is <em>voluntary</em> (the process asked for I/O); waiting→ready when the event fires — never waiting→running directly.</li>
+  </ul>
+  <h3>Process Control Block (PCB) — the process's identity card</h3>
+  <div class="card">
+    <h4>What the kernel stores per process</h4>
+    <p class="dim" style="margin:0">Process <strong>state</strong> · <strong>Program counter</strong> (next instruction) · <strong>CPU registers</strong> (saved on interrupt) · <strong>CPU-scheduling info</strong> (priority, queue pointers) · <strong>Memory-management info</strong> (page tables/base-limit) · <strong>Accounting info</strong> (CPU used, time limits, PID) · <strong>I/O status</strong> (open files, allocated devices). The PCB is what gets saved/restored at every context switch — it <em>is</em> the process, as far as the kernel is concerned.</p>
+  </div>
+  <div class="trap">"Waiting" and "ready" both mean 'not running' but are opposite situations: ready lacks only a CPU; waiting cannot use a CPU even if offered one. Merging them in the diagram is the classic lost mark.</div>
+  <details class="master"><summary>MASTER CHECK · 05</summary><div class="inner"><ol>
+    <li>Draw the 5-state diagram with all six labeled transitions, unaided.</li>
+    <li>Process vs program — three differences.</li>
+    <li>Which PCB fields must be saved at a context switch, and why the PC above all?</li>
+    <li>Why can waiting→running never be a direct edge?</li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 06 ===== -->
+<section id="s6" class="reveal">
+  <div class="sechead"><span class="secnum">PID 06</span><h2>Process Scheduling · Queues · Context Switch</h2></div>
+  <ul>
+    <li>Goal of <strong>multiprogramming</strong>: some process running at all times (CPU utilization); of <strong>time sharing</strong>: switch fast enough that every user can interact. The <em>process scheduler</em> selects who runs; the <strong>degree of multiprogramming</strong> = number of processes in memory.</li>
+    <li><strong>Queues:</strong> the <em>ready queue</em> (PCBs of ready processes, typically a linked list) and per-device/event <em>wait queues</em>. A process migrates: ready → CPU → (I/O wait queue → ready) or (time slice expires → ready) or (create child, wait → ready) … until termination. This picture is the <em>queueing diagram</em> — drawable from the state diagram of PID 05.</li>
+    <li><strong>Process behavior:</strong> <em>I/O-bound</em> (many short CPU bursts, lots of I/O) vs <em>CPU-bound</em> (few, long bursts). A good mix keeps both CPU and devices busy.</li>
+    <li><strong>Schedulers</strong> (classical terminology): <em>long-term</em> — which jobs enter memory (controls degree of multiprogramming, runs rarely); <em>short-term / CPU scheduler</em> — which ready process gets the CPU next (runs every few milliseconds — must be fast); <em>medium-term</em> — swap processes out/in to reduce memory pressure.</li>
+    <li><strong>Context switch:</strong> on an interrupt or system call the kernel saves the current process's context (into its PCB) and loads another's. Pure overhead — no useful work during the switch (typically a few μs); speed depends on hardware (register sets, memory speed).</li>
+  </ul>
+  <div class="note">Frequent 5-marker: queueing diagram + the three schedulers with frequency ("seconds/minutes · milliseconds · as-needed") + context-switch definition with the word <em>overhead</em>.</div>
+</section>
+
+<!-- ===== PID 07 ===== -->
+<section id="s7" class="reveal">
+  <div class="sechead"><span class="secnum">PID 07</span><h2>Operations on Processes — Creation &amp; Termination</h2></div>
+  <p>Processes form a <strong>tree</strong>: a parent creates children via <code>fork()</code>, each with a unique <strong>PID</strong>. On UNIX:</p>
+  <div class="forkviz anim">
+    <div class="forkcode">pid_t pid = fork();<br>if (pid &lt; 0) {…}      <span class="c">// fail</span><br>else if (pid == 0)   <span class="c">// CHILD</span><br>&nbsp;&nbsp;execlp("/bin/ls","ls",NULL);<br>else {               <span class="c">// PARENT</span><br>&nbsp;&nbsp;wait(NULL);<br>&nbsp;&nbsp;printf("child done");<br>}</div>
+    <div class="forktree">
+      <div class="fnode"><b>PID 512</b> parent — calls fork()</div>
+      <div class="findent">
+        <div class="fnode d1"><b>PID 613</b> child — exact copy, fork() returned 0</div>
+        <div class="findent">
+          <div class="fnode d2">child exec()s → address space replaced by /bin/ls</div>
+          <div class="fnode d3">exit(status) → parent's wait() collects status</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul>
+    <li><strong>fork()</strong> — duplicates the caller: child gets a <em>copy</em> of the address space and continues after the fork. Return value distinguishes them: <em>0 in the child, child's PID in the parent</em> — that's the whole trick of the if-ladder.</li>
+    <li><strong>exec()</strong> family — replaces the process's memory image with a new program (same PID, new code). fork + exec = how the shell runs every command.</li>
+    <li><strong>wait()</strong> — parent blocks until a child terminates; collects the exit status.</li>
+    <li><strong>exit(status)</strong> — voluntary termination; OS deallocates resources. Parents can also kill children (needing the child's PID — one reason fork returns it).</li>
+    <li><strong>Zombie</strong> — child terminated but parent hasn't wait()ed: only the PCB entry lingers, holding the status. <strong>Orphan</strong> — parent died first; init/systemd adopts the child and wait()s. <strong>Cascading termination</strong> — some systems kill all descendants when a parent dies.</li>
+  </ul>
+  <div class="solved"><b>P1 · How many processes does this create?</b>   fork(); fork(); fork();
+Each fork doubles the population: 2 × 2 × 2 = 8 total → <b>1 original + 7 children</b>.
+General rule: n consecutive forks ⇒ <b>2ⁿ processes</b> (2ⁿ − 1 new).
+<b>P2 ·</b> if(fork()==0) fork();   → original forks (2 processes); only the child forks again → <b>3 processes</b>. Draw the tree; count nodes — never guess.
+<b>P3 · What prints?</b>  x=5; if(fork()==0){x+=5;} else {x-=5;}  → child prints 10, parent prints 0 — <i>separate copies</i>: fork copies the address space; they don't share x.</div>
+  <details class="master"><summary>MASTER CHECK · 07</summary><div class="inner"><ol>
+    <li>Why does fork() return two different values? To whom is each useful?</li>
+    <li>Zombie vs orphan — definitions + who cleans each up.</li>
+    <li>Count processes: for(i=0;i&lt;3;i++) fork(); <small>Same as three forks: 8.</small></li>
+    <li>Why is exec() usually paired with fork() rather than called alone?</li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 08 ===== -->
+<section id="s8" class="reveal">
+  <div class="sechead"><span class="secnum">PID 08</span><h2>Inter-Process Communication (IPC)</h2></div>
+  <p><em>Independent</em> processes neither affect nor are affected by others; <em>cooperating</em> processes share data — for <strong>information sharing, computation speedup (parallel subtasks), and modularity</strong>. Cooperation requires IPC, in two fundamental models:</p>
+  <div class="grid g2">
+    <div class="dev"><div class="icon">🗄️</div><h5>Shared Memory</h5><span class="layer">FAST · APP-MANAGED</span>
+      <p>One process creates a shared region; others attach it to their address space; they read/write directly. <strong>Kernel involved only at setup</strong> → fastest IPC (memory speed). Burden: <em>the processes themselves must synchronize access</em> (Unit II's whole story). Canonical use: the <strong>producer–consumer bounded buffer</strong> — a circular array with <code>in</code>/<code>out</code> pointers; producer waits when full (<code>(in+1)%SIZE == out</code>), consumer waits when empty (<code>in == out</code>).</p></div>
+    <div class="dev"><div class="icon">📨</div><h5>Message Passing</h5><span class="layer">SIMPLER · KERNEL-MEDIATED</span>
+      <p>Processes exchange via <code>send(msg)</code> / <code>receive(msg)</code> — no shared variables; every message crosses the kernel (slower, but easy across machines, and no user-level sync needed). Design axes: <strong>naming</strong> — <em>direct</em> (name the process: send(P,msg)) vs <em>indirect</em> (mailboxes/ports shared by many); <strong>synchronization</strong> — <em>blocking (synchronous)</em> vs <em>non-blocking (asynchronous)</em> send/receive (blocking send + blocking receive = rendezvous); <strong>buffering</strong> — zero capacity (sender must wait), bounded (wait when full), unbounded (never waits).</p></div>
+  </div>
+  <table>
+    <tr><th>Aspect</th><th>Shared memory</th><th>Message passing</th></tr>
+    <tr><td>Speed</td><td>Fastest (memory access)</td><td>Slower (kernel per message)</td></tr>
+    <tr><td>Kernel role</td><td>Setup only</td><td>Every send/receive</td></tr>
+    <tr><td>Synchronization</td><td>Programmer's problem</td><td>Provided by the primitives</td></tr>
+    <tr><td>Best for</td><td>Large data, same machine</td><td>Small messages, distributed systems</td></tr>
+  </table>
+  <div class="note">The bounded-buffer with the "one slot wasted" full test — full when (in+1)%n == out, empty when in == out, hence at most n−1 items — is a favorite short question. Be able to write both loops.</div>
+  <details class="master"><summary>MASTER CHECK · 08</summary><div class="inner"><ol>
+    <li>Three reasons for process cooperation, one example each.</li>
+    <li>Write producer and consumer pseudocode for the n-slot circular buffer, with both wait conditions.</li>
+    <li>Direct vs indirect naming; what changes when two receivers share a mailbox?</li>
+    <li>Which model would you choose for (a) a chat app across machines, (b) a video pipeline on one machine — why?</li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 09 ===== -->
+<section id="s9" class="reveal">
+  <div class="sechead"><span class="secnum">PID 09</span><h2>Threads · Multithreading Models</h2></div>
+  <p>A <strong>thread</strong> is the basic unit of CPU utilization: its own <em>thread ID, program counter, registers, and stack</em> — while sharing with sibling threads of the same process the <em>code, data, and OS resources (open files, signals)</em>. A word processor is the standard picture: one thread for keystrokes, one for spell-check, one for autosave — all in one address space.</p>
+  <ul>
+    <li><strong>Benefits:</strong> <em>responsiveness</em> (UI thread lives while workers block), <em>resource sharing</em> (no IPC needed — same memory by default), <em>economy</em> (creating/switching threads is far cheaper than processes), <em>scalability</em> (threads run in parallel across cores).</li>
+    <li><strong>User threads</strong> — managed by a thread library (Pthreads, Java) above the kernel; <strong>kernel threads</strong> — managed by the OS. The mapping between them is the <em>multithreading model</em>:</li>
+  </ul>
+  <div class="grid g3">
+    <div class="dev"><div class="icon">🔻</div><h5>Many-to-One</h5><span class="layer">N USER → 1 KERNEL</span>
+      <p>Thread library does everything; efficient switching — but <strong>one blocking system call blocks all threads</strong>, and no parallelism on multicore (only one thread in the kernel at a time). Historic (early Java green threads).</p></div>
+    <div class="dev"><div class="icon">↔️</div><h5>One-to-One</h5><span class="layer">1 USER → 1 KERNEL</span>
+      <p>Each user thread gets a kernel thread: true concurrency, one blocked thread doesn't stall the rest. Cost: kernel thread per thread → creation overhead limits thread count. <strong>Linux &amp; Windows use this.</strong></p></div>
+    <div class="dev"><div class="icon">🔀</div><h5>Many-to-Many</h5><span class="layer">N USER → ≤N KERNEL</span>
+      <p>Multiplex many user threads over a smaller/equal pool of kernel threads: create threads freely <em>and</em> get parallelism; blocking handled by scheduling another user thread on the kernel thread. Variant: <strong>two-level</strong> — many-to-many plus the option to <em>bind</em> a user thread to a kernel thread.</p></div>
+  </div>
+  <div class="trap">"Threads share everything" is false — each thread owns its <em>stack and registers</em>. Shared: code, data (globals!), heap, open files. That globals are shared is exactly why Unit II's synchronization exists.</div>
+  <details class="master"><summary>MASTER CHECK · 09</summary><div class="inner"><ol>
+    <li>Per-thread vs shared — sort: PC, globals, stack, open files, registers, heap.</li>
+    <li>Four benefits of multithreading with one concrete example each.</li>
+    <li>Why does many-to-one give zero speedup on 8 cores?</li>
+    <li>Which model do Linux/Windows use and what tradeoff did they accept?</li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 10 ===== -->
+<section id="s10" class="reveal">
+  <div class="sechead"><span class="secnum">PID 10</span><h2>CPU Scheduling — Basic Concepts &amp; Criteria</h2></div>
+  <ul>
+    <li><strong>Why:</strong> a process alternates <em>CPU bursts</em> and <em>I/O bursts</em> (the CPU–I/O burst cycle). While one process waits on I/O, the CPU would idle — so the OS gives it to another. Burst histograms: <em>many short bursts, few long ones</em> — the shape that motivates SJF and RR.</li>
+    <li><strong>When decisions happen:</strong> (1) running→waiting (I/O request), (2) running→ready (interrupt), (3) waiting→ready (I/O completes), (4) termination. Scheduling only at 1&amp;4 = <strong>non-preemptive/cooperative</strong>; otherwise <strong>preemptive</strong> (needs a timer; raises shared-data races → Unit II).</li>
+    <li><strong>Dispatcher</strong> — the module that hands the CPU over: context switch, switch to user mode, jump to the program's location. Its cost = <strong>dispatch latency</strong> — pure overhead, keep it tiny.</li>
+  </ul>
+  <h3>Scheduling criteria — what "good" means</h3>
+  <table>
+    <tr><th>Criterion</th><th>Definition</th><th>Goal</th></tr>
+    <tr><td>CPU utilization</td><td>Fraction of time the CPU does useful work</td><td>Maximize</td></tr>
+    <tr><td>Throughput</td><td>Processes completed per time unit</td><td>Maximize</td></tr>
+    <tr><td>Turnaround time (TAT)</td><td>Submission → completion: TAT = CT − AT</td><td>Minimize</td></tr>
+    <tr><td>Waiting time (WT)</td><td>Total time in the ready queue: WT = TAT − BT</td><td>Minimize (the only part scheduling controls!)</td></tr>
+    <tr><td>Response time</td><td>Submission → <em>first</em> response (interactive systems)</td><td>Minimize / bound the variance</td></tr>
+  </table>
+  <div class="formula">TAT = Completion − Arrival &nbsp;&nbsp;·&nbsp;&nbsp; WT = TAT − Burst &nbsp;&nbsp;·&nbsp;&nbsp; Response = first-CPU − Arrival
+    <small>These three lines solve every numerical in PID 11. Scheduling can't shorten bursts or I/O — only the queueing, hence WT is the headline metric.</small></div>
+</section>
+
+<!-- ===== PID 11 ===== -->
+<section id="s11" class="reveal">
+  <div class="sechead"><span class="secnum">PID 11</span><h2>Scheduling Algorithms — with a Live Simulator</h2></div>
+  <p>One process set, five algorithms. Press each button: the Gantt chart <em>executes</em> left to right, then the metrics table appears. The same numbers below are then dissected algorithm by algorithm.</p>
+  <div class="sched" id="sched">
+    <div class="stitle">CPU SCHEDULER — GANTT CHART EXECUTES IN REAL TIME</div>
+    <div class="ssub">process set (fixed): P1(AT=0, BT=7, Pri=2) · P2(AT=2, BT=4, Pri=1) · P3(AT=4, BT=1, Pri=3) · P4(AT=5, BT=4, Pri=2) · lower Pri number = higher priority · RR quantum = 2</div>
+    <div class="btnrow" id="algBtns">
+      <button data-a="fcfs">FCFS</button>
+      <button data-a="sjf">SJF (non-preemptive)</button>
+      <button data-a="srtf">SRTF (preemptive SJF)</button>
+      <button data-a="prio">Priority (non-preemptive)</button>
+      <button data-a="rr">Round Robin (q=2)</button>
+    </div>
+    <div class="gantt"><div class="glane" id="glane"></div><div class="gticks" id="gticks"></div></div>
+    <div id="mwrap"></div>
+    <div class="verdictline" id="gverdict"></div>
+  </div>
+
+  <h3>Reading the results</h3>
+  <div class="solved"><b>FCFS — First Come, First Served</b> (non-preemptive; ready queue = FIFO)
+Gantt: P1 0–7 | P2 7–11 | P3 11–12 | P4 12–16 · avg WT = 4.75, avg TAT = 8.75
+Simple &amp; fair by arrival — but the long P1 up front makes everyone queue behind it: the <i>convoy effect</i> (short/I/O-bound processes trail a CPU hog; device utilization collapses).
+
+<b>SJF — Shortest Job First</b> (non-preemptive; pick smallest next burst among the ready)
+Gantt: P1 0–7 | P3 7–8 | P2 8–12 | P4 12–16 · avg WT = 4.00
+<i>Provably optimal</i> average waiting time among non-preemptive schedules — moving a short job before a long one reduces the short job's wait more than it grows the long one's. Catch: the next burst length must be <i>predicted</i> — exponential average: τₙ₊₁ = α·tₙ + (1−α)·τₙ.
+
+<b>SRTF — Shortest Remaining Time First</b> (preemptive SJF: a new arrival with smaller remaining time preempts)
+Gantt: P1 0–2 | P2 2–4 | P3 4–5 | P2 5–7 | P4 7–11 | P1 11–16 · avg WT = 3.00 — best of all five here.
+Watch the simulator: P2's arrival at t=2 preempts P1 (4 &lt; 5 remaining); P3 preempts P2 at t=4. Cost: more context switches; long jobs can starve.
+
+<b>Priority — non-preemptive, lower number = higher</b>
+Gantt: P1 0–7 | P2 7–11 | P4 11–15 | P3 15–16 · avg WT = 5.50
+P3 (lowest priority) waits 11 units — in a busy system it might wait forever: <i>starvation</i>. Cure: <b>aging</b> — gradually raise the priority of long-waiting processes. (SJF is priority scheduling with priority = predicted burst.)
+
+<b>Round Robin — quantum q = 2</b> (FCFS + preemption every q; ready queue circular)
+Gantt: P1 | P2 | P1 | P3 | P2 | P4 | P1 | P4 | P1 · avg WT = 5.00, avg TAT = 9.00
+Nobody waits more than (n−1)q before the next turn → excellent <i>response time</i>: the interactive-systems algorithm. Tuning: q → ∞ degenerates to FCFS; q → 0 drowns in context switches. Rule of thumb: q large vs switch cost, small vs typical burst (∼80% of bursts inside one quantum).</div>
+  <div class="trap">Numericals: (1) WT is NOT "start − arrival" under preemption — always compute WT = TAT − BT; (2) in RR, note your tie convention (new arrival enters the queue before/after the preempted process) and apply it consistently; (3) in priority questions, read whether LOWER number means higher or lower priority — both conventions appear.</div>
+  <details class="master"><summary>MASTER CHECK · 11</summary><div class="inner"><ol>
+    <li>Re-derive all five Gantt charts and averages on paper, then verify against the simulator.</li>
+    <li>Define the convoy effect and name its cure among the five algorithms.</li>
+    <li>Why is SJF optimal? Sketch the exchange argument in two sentences.</li>
+    <li>Starvation vs aging; which algorithms are starvation-prone? <small>SJF/SRTF and Priority.</small></li>
+    <li>Effect of quantum on RR at both extremes.</li>
+  </ol></div></details>
+</section>
+
+<!-- ===== PID 12 ===== -->
+<section id="s12" class="reveal">
+  <div class="sechead"><span class="secnum">PID 12</span><h2>Thread Scheduling · Summary &amp; Likely Questions</h2></div>
+  <ul>
+    <li>On modern systems the OS schedules <em>kernel threads</em>, not processes. For many-to-many/many-to-one models the thread library first maps user threads onto LWPs: <strong>PCS — process-contention scope</strong> (competition among threads of the <em>same process</em>, priorities set by the programmer); the kernel then schedules kernel threads onto CPUs: <strong>SCS — system-contention scope</strong> (competition among <em>all</em> threads in the system). One-to-one systems (Linux, Windows) use SCS only.</li>
+    <li>Pthreads exposes the choice: <code>PTHREAD_SCOPE_PROCESS</code> vs <code>PTHREAD_SCOPE_SYSTEM</code> via <code>pthread_attr_setscope()</code>.</li>
+  </ul>
+  <div class="fsheet">
+    <div class="fs"><b>SERVICES</b>UI · execution · I/O · files · comms · errors<br>+ allocation · logging · protection&amp;security</div>
+    <div class="fs"><b>SYSTEM CALL</b>API → RTE → trap → kernel mode → return<br>params: registers / block / stack · 6 categories</div>
+    <div class="fs"><b>LINK &amp; LOAD</b>compiler → .o → linker → exe → loader → process<br>static (copy in) vs dynamic (shared .so/DLL)</div>
+    <div class="fs"><b>PROCESS</b>= program in execution · text/data/heap/stack<br>5 states · PCB = state+PC+regs+sched+mem+acct+I/O</div>
+    <div class="fs"><b>fork()</b>returns 0 to child, child-PID to parent<br>n forks ⇒ 2ⁿ processes · zombie/orphan</div>
+    <div class="fs"><b>IPC</b>shared memory (fast, self-sync) vs messages (kernel, easy)<br>bounded buffer: full=(in+1)%n==out · empty=in==out</div>
+    <div class="fs"><b>THREADS</b>own: PC, regs, stack · share: code, data, files<br>models: M:1 · 1:1 (Linux/Win) · M:M · two-level</div>
+    <div class="fs"><b>SCHEDULING MATH</b>TAT = CT − AT · WT = TAT − BT<br>Response = first CPU − AT</div>
+    <div class="fs"><b>ALGORITHM ONE-LINERS</b>FCFS: convoy · SJF: optimal, needs prediction<br>SRTF: preemptive SJF · Priority: starvation→aging · RR: response, tune q</div>
+  </div>
+  <div class="card">
+    <h4>The five near-certain questions of Unit I</h4>
+    <ol style="margin-bottom:0">
+      <li>OS services / system-call categories with examples, and the trap-mode-bit story. <em>(PID 01, 03)</em></li>
+      <li>Process state diagram + PCB contents. <em>(PID 05 — draw both)</em></li>
+      <li>fork() programs: predict output / count processes. <em>(PID 07 — P1–P3 patterns)</em></li>
+      <li>Shared memory vs message passing + bounded buffer code. <em>(PID 08)</em></li>
+      <li>Scheduling numerical: Gantt + WT/TAT for 2–3 algorithms on one process set, then compare. <em>(PID 11 — practice with the simulator until your paper answer matches it)</em></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  CS2004-1 · UNIT I · SOURCE: SILBERSCHATZ–GALVIN–GAGNE, OPERATING SYSTEM CONCEPTS 12e (T1)<br>
+  $ shutdown — everything is a process; everything else is scheduling.
+</footer>
+
+<script>
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}})},{threshold:.1});
+document.querySelectorAll('.reveal,.anim').forEach(el=>io.observe(el));
+
+/* ===== scheduling simulator (all schedules precomputed & verified) ===== */
+const TOTAL=16, PXU=1; // widths in % of 16 units
+const ALGOS={
+ fcfs:{name:'FCFS',segs:[['P1',0,7],['P2',7,11],['P3',11,12],['P4',12,16]],
+   rows:[['P1',0,7,7,7,0],['P2',2,4,11,9,5],['P3',4,1,12,8,7],['P4',5,4,16,11,7]],awt:4.75,atat:8.75,
+   v:'convoy effect visible: everyone queued behind the long P1'},
+ sjf:{name:'SJF (non-preemptive)',segs:[['P1',0,7],['P3',7,8],['P2',8,12],['P4',12,16]],
+   rows:[['P1',0,7,7,7,0],['P2',2,4,12,10,6],['P3',4,1,8,4,3],['P4',5,4,16,11,7]],awt:4.00,atat:8.00,
+   v:'tiny P3 slips ahead at t=7 → average waiting drops below FCFS'},
+ srtf:{name:'SRTF (preemptive)',segs:[['P1',0,2],['P2',2,4],['P3',4,5],['P2',5,7],['P4',7,11],['P1',11,16]],
+   rows:[['P1',0,7,16,16,9],['P2',2,4,7,5,1],['P3',4,1,5,1,0],['P4',5,4,11,6,2]],awt:3.00,atat:7.00,
+   v:'P2 preempts P1 at t=2, P3 preempts P2 at t=4 — best avg WT of all five'},
+ prio:{name:'Priority (non-preemptive)',segs:[['P1',0,7],['P2',7,11],['P4',11,15],['P3',15,16]],
+   rows:[['P1',0,7,7,7,0],['P2',2,4,11,9,5],['P3',4,1,16,12,11],['P4',5,4,15,10,6]],awt:5.50,atat:9.50,
+   v:'P3 (priority 3) waits 11 units — the starvation risk that aging cures'},
+ rr:{name:'Round Robin q=2',segs:[['P1',0,2],['P2',2,4],['P1',4,6],['P3',6,7],['P2',7,9],['P4',9,11],['P1',11,13],['P4',13,15],['P1',15,16]],
+   rows:[['P1',0,7,16,16,9],['P2',2,4,9,7,3],['P3',4,1,7,3,2],['P4',5,4,15,10,6]],awt:5.00,atat:9.00,
+   v:'everyone gets a turn within (n−1)·q — the response-time champion'}
+};
+const lane=document.getElementById('glane'),ticks=document.getElementById('gticks'),
+      mwrap=document.getElementById('mwrap'),gv=document.getElementById('gverdict');
+let timers=[];
+function run(a){
+  timers.forEach(clearTimeout); timers=[];
+  const A=ALGOS[a];
+  lane.innerHTML=''; mwrap.innerHTML=''; gv.textContent='';
+  ticks.innerHTML=Array.from({length:TOTAL+1},(_,i)=>'<span style="left:'+(i/TOTAL*100)+'%">'+i+'</span>').join('');
+  const els=A.segs.map(s=>{
+    const d=document.createElement('div');
+    d.className='gseg '+s[0]; d.textContent=s[0]; lane.appendChild(d); return d;
+  });
+  let t=0;
+  A.segs.forEach((s,i)=>{
+    const dur=s[2]-s[1];
+    timers.push(setTimeout(()=>{els[i].style.transitionDuration=(dur*.34)+'s';els[i].style.width=(dur/TOTAL*100)+'%';},t*340+60));
+    t+=dur;
+  });
+  timers.push(setTimeout(()=>{
+    mwrap.innerHTML='<table class="mtable"><tr><th>Proc</th><th>AT</th><th>BT</th><th>CT</th><th>TAT=CT−AT</th><th>WT=TAT−BT</th></tr>'+
+      A.rows.map(r=>'<tr><td>'+r.join('</td><td>')+'</td></tr>').join('')+
+      '<tr><td class="avg" colspan="4">'+A.name+'</td><td class="avg">avg TAT = '+A.atat.toFixed(2)+'</td><td class="avg">avg WT = '+A.awt.toFixed(2)+'</td></tr></table>';
+    gv.textContent='» '+A.v;
+  },t*340+260));
+}
+document.getElementById('algBtns').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#algBtns button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  run(b.dataset.a);
+});
+document.querySelector('#algBtns button').classList.add('sel'); run('fcfs');
+</script>
+</body>
+</html>

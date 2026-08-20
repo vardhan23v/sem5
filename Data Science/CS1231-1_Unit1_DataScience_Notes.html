@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit I · Data Analysis with Excel — Interactive Notes | CS1231-1 Intro to Data Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== "WORKSHEET" THEME — light spreadsheet paper, Excel-green ledger accents ===== */
+:root{
+  --paper:#f5f7f5;
+  --panel:#ffffff;
+  --ink:#1e2b26;
+  --ink-dim:#5f6f68;
+  --cell:rgba(30,43,38,.08);
+  --xl:#1d7044;          /* Excel ledger green — primary accent */
+  --xl-soft:rgba(29,112,68,.09);
+  --blue:#2563a8;        /* chart blue — formulas, links, em */
+  --amber:#b3690f;       /* highlight / warning tint */
+  --rose:#bb3a4c;        /* traps, errors */
+  --card-line:rgba(30,43,38,.16);
+  --mono:'IBM Plex Mono',monospace;
+  --disp:'Archivo',sans-serif;
+  --body:'Public Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  background-image:linear-gradient(var(--cell) 1px,transparent 1px),linear-gradient(90deg,var(--cell) 1px,transparent 1px);
+  background-size:96px 28px;
+  color:var(--ink);font-family:var(--body);line-height:1.65;font-size:16.5px;
+}
+::selection{background:var(--xl);color:#fff}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+header{padding:66px 0 40px;border-bottom:2px solid var(--xl)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.22em;color:var(--xl);text-transform:uppercase}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,5vw,3.2rem);line-height:1.08;margin:.5rem 0 .8rem}
+h1 .thin{color:var(--ink-dim);font-weight:500}
+.meta{font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);display:flex;gap:1.6em;flex-wrap:wrap}
+.meta b{color:var(--blue);font-weight:500}
+
+/* hero formula bar */
+.fxbar{margin:34px 0 4px;display:flex;align-items:stretch;border:1.5px solid var(--card-line);border-radius:10px;overflow:hidden;background:var(--panel);box-shadow:0 2px 8px rgba(30,43,38,.08)}
+.fxbar .cellref{font-family:var(--mono);font-size:.9rem;padding:12px 16px;background:var(--xl-soft);color:var(--xl);border-right:1.5px solid var(--card-line);display:flex;align-items:center}
+.fxbar .fx{font-family:var(--mono);font-size:.9rem;color:var(--ink-dim);padding:12px 10px;display:flex;align-items:center;border-right:1.5px solid var(--card-line)}
+.fxbar .typing{font-family:var(--mono);font-size:.95rem;padding:12px 14px;color:var(--ink);white-space:nowrap;overflow:hidden;border-right:2px solid var(--xl);width:0;animation:typefx 6s steps(34) infinite}
+@keyframes typefx{0%{width:0}55%,90%{width:34ch}100%{width:0}}
+.herocap{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);margin-top:8px}
+
+nav.toc{padding:26px 0;border-bottom:1px dashed var(--card-line)}
+nav.toc ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 22px}
+nav.toc a{color:var(--ink-dim);text-decoration:none;font-size:.9rem;font-family:var(--mono);display:block;padding:3px 0;transition:.2s}
+nav.toc a b{color:var(--xl);font-weight:500}
+nav.toc a:hover{color:var(--ink);transform:translateX(4px)}
+
+section{padding:62px 0 20px}
+.sechead{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.secnum{font-family:var(--mono);font-size:.85rem;background:var(--xl);color:#fff;border-radius:6px;padding:4px 10px}
+h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.4rem,3vw,2rem)}
+h3{font-family:var(--disp);font-weight:600;font-size:1.15rem;color:var(--xl);margin:30px 0 10px}
+p{margin:0 0 14px}
+p.dim,li.dim{color:var(--ink-dim)}
+strong{color:var(--xl);font-weight:600}
+em{color:var(--blue);font-style:normal}
+code{font-family:var(--mono);font-size:.86em;background:rgba(37,99,168,.09);padding:1px 6px;border-radius:4px;color:var(--blue)}
+ul,ol{margin:0 0 16px 1.3em}
+li{margin-bottom:7px}
+.card{background:var(--panel);border:1px solid var(--card-line);border-radius:12px;padding:22px 24px;margin:18px 0;box-shadow:0 1px 4px rgba(30,43,38,.05)}
+.card h4{font-family:var(--mono);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--xl);margin-bottom:12px}
+.formula{font-family:var(--mono);background:var(--panel);border-left:3px solid var(--blue);padding:14px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.95rem;overflow-x:auto;box-shadow:0 1px 4px rgba(30,43,38,.05)}
+.formula small{display:block;color:var(--ink-dim);font-size:.78rem;margin-top:6px;font-family:var(--body)}
+.solved{font-family:var(--mono);background:var(--panel);border-left:3px solid var(--xl);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.87rem;line-height:1.95;overflow-x:auto;white-space:pre-wrap;box-shadow:0 1px 4px rgba(30,43,38,.05)}
+.solved b{color:var(--xl);font-weight:600}
+.solved i{color:var(--amber);font-style:normal}
+.note{border:1px dashed var(--blue);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim);background:var(--panel)}
+.note::before{content:"✦ EXAM POINT — ";font-family:var(--mono);color:var(--blue);font-size:.75rem;letter-spacing:.12em}
+.trap{border:1px dashed var(--rose);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim);background:var(--panel)}
+.trap::before{content:"⚠ COMMON MISTAKE — ";font-family:var(--mono);color:var(--rose);font-size:.75rem;letter-spacing:.12em}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.9rem;background:var(--panel)}
+th{font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--xl);text-align:left;padding:9px 12px}
+td{padding:9px 12px;border-bottom:1px solid rgba(30,43,38,.09);vertical-align:top}
+tr:nth-child(even) td{background:rgba(30,43,38,.025)}
+.grid{display:grid;gap:16px;margin:18px 0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.dev{background:var(--panel);border:1px solid var(--card-line);border-top:3px solid var(--xl);border-radius:10px;padding:18px 20px;transition:transform .25s,box-shadow .25s}
+.dev:hover{transform:translateY(-5px);box-shadow:0 8px 18px rgba(30,43,38,.12)}
+.dev .icon{font-size:1.6rem;margin-bottom:8px}
+.dev h5{font-family:var(--disp);font-weight:600;font-size:1.02rem;margin-bottom:2px}
+.dev .layer{font-family:var(--mono);font-size:.66rem;color:var(--blue);letter-spacing:.1em;display:block;margin-bottom:8px}
+.dev p{font-size:.88rem;color:var(--ink-dim);margin:0}
+
+/* process pipeline */
+.pipe{display:flex;flex-wrap:wrap;gap:0;justify-content:center;margin:22px 0;counter-reset:pp}
+.pp{background:var(--panel);border:1.5px solid var(--card-line);border-radius:10px;padding:12px 16px;margin:6px;max-width:200px;font-size:.85rem;position:relative;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s,border-color .3s}
+.pp::before{counter-increment:pp;content:counter(pp);position:absolute;top:-11px;left:-6px;background:var(--xl);color:#fff;font-family:var(--mono);font-size:.7rem;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.pp b{font-family:var(--disp);display:block;font-size:.92rem;color:var(--xl);margin-bottom:3px}
+.pp span{color:var(--ink-dim);font-size:.8rem}
+.pp:hover{border-color:var(--xl)}
+.parr{align-self:center;color:var(--xl);font-size:1.1rem;opacity:0;transition:opacity .5s}
+.visible .pp,.visible .parr{opacity:1;transform:none}
+.visible .pp:nth-of-type(3){transition-delay:.12s}.visible .pp:nth-of-type(5){transition-delay:.24s}
+.visible .pp:nth-of-type(7){transition-delay:.36s}.visible .pp:nth-of-type(9){transition-delay:.48s}
+.visible .pp:nth-of-type(11){transition-delay:.6s}
+.visible .parr:nth-of-type(2){transition-delay:.06s}.visible .parr:nth-of-type(4){transition-delay:.18s}
+.visible .parr:nth-of-type(6){transition-delay:.3s}.visible .parr:nth-of-type(8){transition-delay:.42s}
+.visible .parr:nth-of-type(10){transition-delay:.54s}
+
+/* ===== interactive demos ===== */
+.demo{background:var(--panel);border:1.5px solid var(--card-line);border-radius:14px;padding:20px;margin:18px 0;box-shadow:0 2px 8px rgba(30,43,38,.07)}
+.demo .dtitle{font-family:var(--mono);font-size:.73rem;letter-spacing:.14em;color:var(--xl);margin-bottom:12px}
+.demo .dtitle::before{content:"⚡ TRY IT · "}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.btnrow button{font-family:var(--mono);font-size:.76rem;background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:8px;padding:6px 13px;cursor:pointer;transition:.2s}
+.btnrow button:hover{background:rgba(37,99,168,.08)}
+.btnrow button.sel{background:var(--blue);color:#fff}
+.demo input[type=text],.demo input[type=date],.demo select{font-family:var(--mono);font-size:.88rem;padding:8px 12px;border:1.5px solid var(--card-line);border-radius:8px;background:#fdfdfb;color:var(--ink);width:100%;max-width:480px}
+.fxout{font-family:var(--mono);font-size:.88rem;background:#fbfcfa;border:1.5px solid var(--card-line);border-radius:8px;padding:12px 14px;margin-top:10px;line-height:2}
+.fxout .f{color:var(--blue)}
+.fxout .v{color:var(--xl);font-weight:600}
+.fxout .arrow{color:var(--ink-dim)}
+
+/* mini spreadsheet grid */
+.sheet{display:grid;gap:2px;margin:12px 0;font-family:var(--mono);font-size:.82rem}
+.sheet .hc{background:var(--xl-soft);color:var(--xl);padding:6px 4px;text-align:center;border-radius:3px;font-size:.7rem;letter-spacing:.06em}
+.sheet .c{background:#fdfdfb;border:1px solid rgba(30,43,38,.12);padding:7px 4px;text-align:center;border-radius:3px;position:relative;transition:background .5s,color .5s,box-shadow .5s}
+.sheet .c .bar{position:absolute;left:0;top:0;bottom:0;background:rgba(37,99,168,.25);border-radius:2px;width:0;transition:width .7s ease}
+.sheet .c span{position:relative}
+.sheet .c.hl{background:#fff3cd;color:#8a5a00;font-weight:600}
+.sheet .c.top{box-shadow:inset 0 0 0 2px var(--xl);font-weight:600}
+/* demo tables */
+.dt{width:100%;border-collapse:collapse;font-size:.86rem}
+.dt th{cursor:pointer;user-select:none;position:relative}
+.dt th:hover{background:#175c38}
+.dt th .si{font-size:.7rem;margin-left:4px;opacity:.85}
+.dt td{transition:opacity .3s}
+.dt tr.subrow td{background:var(--xl-soft);color:var(--xl);font-weight:600;font-family:var(--mono);font-size:.8rem}
+.dt tr.grand td{background:var(--xl);color:#fff;font-weight:600;font-family:var(--mono)}
+.dt tr.fadeout{opacity:.25}
+
+details.master{background:var(--xl-soft);border:1px dashed var(--xl);border-radius:12px;margin:26px 0 4px;overflow:hidden}
+details.master summary{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;color:var(--xl);padding:13px 20px;cursor:pointer;list-style:none;user-select:none}
+details.master summary::before{content:"▸ "}
+details.master[open] summary::before{content:"▾ "}
+details.master .inner{padding:4px 24px 18px}
+details.master ol{margin-bottom:0}
+details.master li{font-size:.92rem}
+details.master li small{color:var(--ink-dim);display:block}
+
+.fsheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:20px 0}
+.fs{background:var(--panel);border:1px solid var(--card-line);border-radius:10px;padding:14px 18px;font-family:var(--mono);font-size:.83rem;box-shadow:0 1px 4px rgba(30,43,38,.05)}
+.fs b{color:var(--xl);font-weight:600;display:block;font-size:.68rem;letter-spacing:.12em;margin-bottom:6px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+footer{margin-top:70px;padding:34px 0 50px;border-top:2px solid var(--xl);font-family:var(--mono);font-size:.78rem;color:var(--ink-dim);text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal,.pp,.parr{opacity:1!important;transform:none!important}.fxbar .typing{width:34ch!important}}
+@media(max-width:640px){body{font-size:15.5px}.solved{font-size:.79rem}}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="eyebrow">CS1231-1 · Introduction to Data Science · PEC · Unit I</div>
+  <h1>Data Analysis with Excel <span class="thin">— Types · Process · Cleaning · Formatting · Sort · Filter · Subtotals</span></h1>
+  <div class="meta"><span>Hours: <b>15</b></span><span>Ref: <b>Wayne Winston — Excel Data Analysis &amp; Business Modeling (T1/T2)</b></span><span>Format: <b>notes + live interactive demos</b></span></div>
+  <div class="fxbar"><span class="cellref">A1</span><span class="fx">fx</span><span class="typing">=RAW_DATA → CLEAN → ANALYZE → INSIGHT</span></div>
+  <div class="herocap">the entire unit in one formula — every stage below is clickable and animated</div>
+</header>
+
+<nav class="toc wrap">
+  <ol>
+    <li><a href="#s1"><b>A1</b> / What is Data Analysis · The Five Types</a></li>
+    <li><a href="#s2"><b>B1</b> / Excel &amp; Advanced Excel as Analysis Tools</a></li>
+    <li><a href="#s3"><b>C1</b> / The Data Analysis Process</a></li>
+    <li><a href="#s4"><b>D1</b> / Data Cleaning — Text Functions</a></li>
+    <li><a href="#s5"><b>E1</b> / Dates &amp; Times</a></li>
+    <li><a href="#s6"><b>F1</b> / Conditional Formatting</a></li>
+    <li><a href="#s7"><b>G1</b> / Sorting &amp; Filtering</a></li>
+    <li><a href="#s8"><b>H1</b> / Subtotals with Ranges</a></li>
+    <li><a href="#s9"><b>I1</b> / Summary Sheet &amp; Likely Questions</a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ A1 ============ -->
+<section id="s1" class="reveal">
+  <div class="sechead"><span class="secnum">A1</span><h2>What is Data Analysis · The Five Types</h2></div>
+  <p><strong>Data analysis</strong> is the process of inspecting, cleaning, transforming, and modeling data to discover useful information, draw conclusions, and support decision-making. Raw data is noise; analysis turns it into <em>insight</em> — and Excel is the world's most widely used analysis environment because it puts storage (cells), computation (formulas), summarization (PivotTables), and communication (charts) in one grid.</p>
+  <h3>The five types named in the syllabus</h3>
+  <div class="grid g2">
+    <div class="dev"><div class="icon">⛏️</div><h5>Data Mining</h5><span class="layer">FIND HIDDEN PATTERNS IN LARGE DATA</span>
+      <p>Discovering previously unknown patterns, correlations, and anomalies in large datasets using methods at the intersection of statistics, machine learning, and databases. Typical tasks: association rules ("customers who buy X buy Y"), clustering (grouping similar customers), classification, anomaly detection. Excel's contribution: PivotTable exploration, correlation analysis, and add-ins for larger jobs.</p></div>
+    <div class="dev"><div class="icon">📊</div><h5>Business Intelligence (BI)</h5><span class="layer">DATA → DECISIONS FOR THE ENTERPRISE</span>
+      <p>The strategies and technologies that transform raw business data into <em>actionable information</em> for executives: dashboards, KPIs, scorecards, historical + current views of operations. BI answers "what is happening in my business?" Excel's Power Pivot, Power View, and Power BI grew directly out of this need.</p></div>
+    <div class="dev"><div class="icon">📈</div><h5>Statistical Analysis</h5><span class="layer">DESCRIBE + INFER</span>
+      <p>Two halves: <strong>descriptive</strong> — summarize what the data says (mean, median, mode, standard deviation, frequency distributions, charts); <strong>inferential</strong> — use a <em>sample</em> to draw conclusions about a <em>population</em> (estimation, hypothesis tests, regression). Excel: <code>AVERAGE, MEDIAN, STDEV.S, CORREL</code>, the Analysis ToolPak.</p></div>
+    <div class="dev"><div class="icon">🔮</div><h5>Predictive Analytics</h5><span class="layer">USE THE PAST TO FORECAST THE FUTURE</span>
+      <p>Builds statistical/ML models on historical data to predict future outcomes: sales forecasting, credit scoring, churn prediction, demand planning. In Excel: trendlines, <code>FORECAST.LINEAR</code>, <code>TREND</code>, moving averages, regression via the ToolPak. The output is a probability or estimate, not a certainty.</p></div>
+    <div class="dev" style="grid-column:1/-1"><div class="icon">📝</div><h5>Text Analytics</h5><span class="layer">STRUCTURE FROM UNSTRUCTURED TEXT</span>
+      <p>Deriving patterns and meaning from textual sources — reviews, emails, survey comments, social media — via linguistic and statistical techniques: keyword frequency, categorization, sentiment. In Excel this begins with the <strong>text functions of §D1</strong>: extracting fields, standardizing case, splitting and cleaning strings so that unstructured text becomes analyzable columns.</p></div>
+  </div>
+  <div class="note">A guaranteed short/long question: "Explain the types of data analysis." Give the definition + one business example + one Excel feature per type. The one-line separators: mining = <em>unknown patterns</em>, BI = <em>business dashboards</em>, statistical = <em>describe/infer</em>, predictive = <em>forecast</em>, text = <em>unstructured → structured</em>.</div>
+  <details class="master"><summary>MASTER CHECK · A1</summary><div class="inner"><ol>
+    <li>Classify: "flag transactions likely to be fraud next month" vs "dashboard of this quarter's regional sales" vs "group survey comments by sentiment". <small>predictive · BI · text analytics</small></li>
+    <li>Descriptive vs inferential statistics — one example each on student marks data.</li>
+    <li>Why is Excel called a complete analysis environment? Name its four roles.</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ B1 ============ -->
+<section id="s2" class="reveal">
+  <div class="sechead"><span class="secnum">B1</span><h2>Data Analysis with Excel &amp; Advanced Data Analysis</h2></div>
+  <h3>Core (everyday) analysis toolkit</h3>
+  <ul>
+    <li><strong>Formulas &amp; functions</strong> — 450+ built-ins across math (<code>SUM, ROUND</code>), statistics (<code>AVERAGE, COUNTIF, SUMIFS</code>), lookup (<code>VLOOKUP, INDEX/MATCH</code> — detailed in Unit II), text (§D1), and date/time (§E1). Cell references make every result live: change an input, everything downstream recalculates.</li>
+    <li><strong>Sorting, filtering, subtotals</strong> (§G1–H1) — organize and summarize without formulas.</li>
+    <li><strong>Conditional formatting</strong> (§F1) — visual analysis directly in the grid.</li>
+    <li><strong>Charts</strong> — column/bar, line, pie, scatter; the communication stage of the process (§C1).</li>
+    <li><strong>Tables (Ctrl+T)</strong> — structured ranges with auto-expanding formulas, header filters, and banded rows; the professional starting point of any analysis.</li>
+  </ul>
+  <h3>Advanced analysis toolkit</h3>
+  <ul>
+    <li><strong>PivotTables / PivotCharts</strong> — drag-and-drop summarization of thousands of rows by any combination of categories (Unit II deep-dive).</li>
+    <li><strong>What-If analysis</strong> — Goal Seek (find the input for a target output), Data Tables (1/2-variable sensitivity), Scenario Manager (named input sets).</li>
+    <li><strong>Analysis ToolPak</strong> — add-in for regression, histograms, ANOVA, correlation, descriptive statistics batches.</li>
+    <li><strong>Solver</strong> — optimization (maximize/minimize a target under constraints).</li>
+    <li><strong>Power Query (Get &amp; Transform)</strong> — import from files/databases/web, clean and reshape repeatably.</li>
+    <li><strong>Power Pivot &amp; the Data Model</strong> — millions of rows, related tables, DAX measures; <strong>Power View</strong> for interactive report canvases.</li>
+  </ul>
+  <div class="note">"Differentiate data analysis and advanced data analysis in Excel" → basic = formulas + sort/filter/CF/charts on one sheet; advanced = Pivot family, What-If, ToolPak/Solver, Power Query/Pivot handling scale, automation, and modeling. Name two tools each.</div>
+</section>
+
+<!-- ============ C1 ============ -->
+<section id="s3" class="reveal">
+  <div class="sechead"><span class="secnum">C1</span><h2>The Data Analysis Process — Six Stages</h2></div>
+  <p>Analysis is a <em>discipline</em>, not a single act. The stages (each feeding the next, with loops back when problems surface):</p>
+  <div class="pipe anim">
+    <div class="pp"><b>Requirements Specification</b><span>What question? Which data, granularity, format? Who consumes the answer?</span></div>
+    <span class="parr">→</span>
+    <div class="pp"><b>Data Collection</b><span>Gather from sources: files, databases, surveys, web, sensors — with provenance noted</span></div>
+    <span class="parr">→</span>
+    <div class="pp"><b>Data Processing</b><span>Organize into analyzable structure: rows = records, columns = variables; import into Excel/tables</span></div>
+    <span class="parr">→</span>
+    <div class="pp"><b>Data Cleaning</b><span>Fix incomplete, duplicate, inconsistent, wrongly-typed values — usually the longest stage</span></div>
+    <span class="parr">→</span>
+    <div class="pp"><b>Data Analysis</b><span>Apply techniques of §A1: summarize, model, test, visualize, iterate</span></div>
+    <span class="parr">→</span>
+    <div class="pp"><b>Communication</b><span>Report results to the audience: charts, dashboards, tables, recommendations</span></div>
+  </div>
+  <div class="solved"><b>WORKED SCENARIO · college placement analysis</b>
+1 <i>Requirements:</i> "Which skills correlate with higher placement packages for CSE 2025?" — need per-student rows: CGPA, skills, package, company. Consumer: training &amp; placement cell.
+2 <i>Collection:</i> placement-cell register (xlsx) + student survey (Google Form CSV) + company offer letters.
+3 <i>Processing:</i> import both into one workbook; one row per student; consistent column headers.
+4 <i>Cleaning:</i> TRIM stray spaces in names, PROPER-case them, standardize "c++/CPP/Cpp", convert text-numbers to numeric packages, remove duplicate roll numbers, handle blanks.
+5 <i>Analysis:</i> AVERAGEIF package by skill, CORREL(CGPA, package), PivotTable company × branch, scatter chart.
+6 <i>Communication:</i> one-page dashboard: top-5 skills bar chart + key numbers, sent as PDF.
+<i>Every exam answer on "the process" should carry a mini-scenario like this — it converts a definition list into an application answer.</i></div>
+  <div class="trap">Cleaning before requirements is wasted work — you can't know what "clean" means until the question fixes which fields matter and at what granularity. The order of stages carries the marks; don't shuffle it.</div>
+  <details class="master"><summary>MASTER CHECK · C1</summary><div class="inner"><ol>
+    <li>Recite the six stages in order with a one-liner each.</li>
+    <li>Give two concrete "dirty data" defects fixed at stage 4 and name the Excel function for each.</li>
+    <li>Run an online-store "why did June sales drop?" question through all six stages.</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ D1 ============ -->
+<section id="s4" class="reveal">
+  <div class="sechead"><span class="secnum">D1</span><h2>Data Cleaning — Text Functions</h2></div>
+  <p>Real imported data arrives with extra spaces, wrong case, glued-together fields, and invisible characters. Excel's <strong>text functions</strong> are the scalpel set. Master the reference table, then use the live demo.</p>
+  <table>
+    <tr><th>Function</th><th>Syntax</th><th>What it does</th><th>Example → result</th></tr>
+    <tr><td><code>TRIM</code></td><td>TRIM(text)</td><td>Removes leading/trailing spaces + collapses inner runs to single spaces</td><td>TRIM("  a  b ") → "a b"</td></tr>
+    <tr><td><code>CLEAN</code></td><td>CLEAN(text)</td><td>Strips non-printable characters (imported line breaks etc.)</td><td>often paired: TRIM(CLEAN(A1))</td></tr>
+    <tr><td><code>UPPER / LOWER / PROPER</code></td><td>UPPER(text)…</td><td>Case conversion; PROPER capitalizes each word</td><td>PROPER("ravi kumar") → "Ravi Kumar"</td></tr>
+    <tr><td><code>LEFT / RIGHT</code></td><td>LEFT(text,n)</td><td>First / last n characters</td><td>LEFT("NITTE2025",5) → "NITTE"</td></tr>
+    <tr><td><code>MID</code></td><td>MID(text,start,n)</td><td>n characters from position start</td><td>MID("AB-1234-XY",4,4) → "1234"</td></tr>
+    <tr><td><code>LEN</code></td><td>LEN(text)</td><td>Length in characters</td><td>LEN("data") → 4</td></tr>
+    <tr><td><code>FIND / SEARCH</code></td><td>FIND(what,within,[start])</td><td>Position of first occurrence; FIND is case-sensitive, SEARCH isn't &amp; allows wildcards</td><td>FIND("@","a@b.com") → 2</td></tr>
+    <tr><td><code>SUBSTITUTE</code></td><td>SUBSTITUTE(text,old,new,[nth])</td><td>Replace by <em>content</em> (all or nth occurrence)</td><td>SUBSTITUTE("1,234",",","") → "1234"</td></tr>
+    <tr><td><code>REPLACE</code></td><td>REPLACE(text,start,n,new)</td><td>Replace by <em>position</em></td><td>REPLACE("2024-x",6,1,"Q1") → "2024-Q1"</td></tr>
+    <tr><td><code>CONCATENATE / &amp;</code></td><td>A1&amp;" "&amp;B1</td><td>Join strings (modern: TEXTJOIN with a delimiter)</td><td>"Ravi"&amp;" "&amp;"K" → "Ravi K"</td></tr>
+    <tr><td><code>TEXT</code></td><td>TEXT(value,format)</td><td>Number/date → formatted text</td><td>TEXT(0.257,"0.0%") → "25.7%"</td></tr>
+    <tr><td><code>VALUE</code></td><td>VALUE(text)</td><td>Numeric text → real number (fixes numbers-stored-as-text)</td><td>VALUE("42") → 42</td></tr>
+    <tr><td><code>EXACT / REPT / CHAR</code></td><td>—</td><td>Case-sensitive compare · repeat text · character from code (CHAR(10) = line break)</td><td>EXACT("a","A") → FALSE</td></tr>
+  </table>
+
+  <div class="demo" id="textDemo">
+    <div class="dtitle">TEXT FUNCTIONS ON A MESSY CELL — edit A1, click a function, watch formula + result</div>
+    <input type="text" id="txtIn" value="   ravi KUMAR ;  ravi.k@nitte.edu   ">
+    <div class="btnrow" id="txtBtns">
+      <button data-f="TRIM">TRIM</button>
+      <button data-f="CLEAN+TRIM">TRIM(CLEAN())</button>
+      <button data-f="UPPER">UPPER</button>
+      <button data-f="LOWER">LOWER</button>
+      <button data-f="PROPER">PROPER</button>
+      <button data-f="LEN">LEN</button>
+      <button data-f="LEFT">LEFT(…,4)</button>
+      <button data-f="SUBST">SUBSTITUTE(" ","")</button>
+      <button data-f="EMAIL">extract e-mail</button>
+    </div>
+    <div class="fxout" id="txtOut">Click a function…</div>
+  </div>
+
+  <h3>Solved extraction problems — the exam patterns</h3>
+  <div class="solved"><b>P1 · Split "KUMAR, RAVI" into first and last name</b>
+Last  = LEFT(A1, FIND(",",A1)−1)              → "KUMAR"
+First = TRIM(MID(A1, FIND(",",A1)+1, 100))    → "RAVI"
+<i>Pattern: FIND locates the delimiter → LEFT/MID cut around it → TRIM tidies. 100 = "rest of the string" trick.</i>
+
+<b>P2 · Extract the domain from ravi.k@nitte.edu</b>
+= MID(A1, FIND("@",A1)+1, LEN(A1))            → "nitte.edu"
+
+<b>P3 · Fix numbers imported as text with commas: "1,23,450"</b>
+= VALUE(SUBSTITUTE(A1,",",""))                → 123450  (now SUM-able)
+
+<b>P4 · Build an ID: first 3 letters of name + "-" + year</b>
+= UPPER(LEFT(A1,3)) &amp; "-" &amp; TEXT(B1,"0000")   → "RAV-2025"
+
+<b>P5 · Count words in a cell</b>
+= LEN(TRIM(A1)) − LEN(SUBSTITUTE(TRIM(A1)," ","")) + 1
+<i>words = spaces + 1; SUBSTITUTE deletes spaces so the LEN difference counts them.</i></div>
+  <div class="trap">TRIM does not remove non-breaking spaces (CHAR(160)) common in web data — SUBSTITUTE(A1,CHAR(160)," ") first. And SUBSTITUTE ≠ REPLACE: one targets <em>content</em>, the other targets a <em>position</em>. Mixing them up is the most common lost mark in this section.</div>
+  <details class="master"><summary>MASTER CHECK · D1</summary><div class="inner"><ol>
+    <li>Write the formula: initials from "Ravi Kumar" → "R.K." <small>LEFT(A1,1)&amp;"."&amp;MID(A1,FIND(" ",A1)+1,1)&amp;"."</small></li>
+    <li>Why TRIM(CLEAN(x)) and not CLEAN(TRIM(x))? <small>CLEAN may expose new edge spaces (e.g. line-break→gone leaves "a ") — clean first, then trim. Either order usually works; be able to argue it.</small></li>
+    <li>FIND vs SEARCH — two differences. <small>case sensitivity; wildcard support in SEARCH.</small></li>
+    <li>P5's word counter fails on an empty cell — why, and patch it. <small>Returns 1; wrap: IF(TRIM(A1)="",0,…).</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ E1 ============ -->
+<section id="s5" class="reveal">
+  <div class="sechead"><span class="secnum">E1</span><h2>Dates &amp; Times</h2></div>
+  <p>The single idea everything rests on: <strong>Excel stores dates as serial numbers</strong> — day 1 = 1-Jan-1900, and each day adds 1 (so arithmetic on dates is ordinary subtraction). <strong>Times are fractions of a day</strong>: 0.5 = 12:00 noon, 0.25 = 6:00 AM. A cell showing "20-Aug-2026" and one showing 46254 can hold the same value — only the <em>format</em> differs.</p>
+  <table>
+    <tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td><code>TODAY() / NOW()</code></td><td>Current date / date+time (volatile — recalc on every change)</td><td>=TODAY()</td></tr>
+    <tr><td><code>DATE(y,m,d) / TIME(h,m,s)</code></td><td>Build a date/time from parts (safe against regional formats)</td><td>DATE(2026,8,20)</td></tr>
+    <tr><td><code>YEAR / MONTH / DAY</code></td><td>Extract parts of a date</td><td>MONTH(A1) → 8</td></tr>
+    <tr><td><code>HOUR / MINUTE / SECOND</code></td><td>Extract parts of a time</td><td>HOUR(0.75) → 18</td></tr>
+    <tr><td><code>WEEKDAY(date,[type])</code></td><td>Day of week as number (type sets which day = 1)</td><td>with TEXT(A1,"dddd") for the name</td></tr>
+    <tr><td><code>DATEDIF(start,end,unit)</code></td><td>Difference in "Y","M","D","YM","MD","YD" — the age function (hidden but valid)</td><td>DATEDIF(DOB,TODAY(),"Y")</td></tr>
+    <tr><td><code>EOMONTH(date,n)</code></td><td>Last day of the month n months away (0 = this month)</td><td>due-date &amp; billing logic</td></tr>
+    <tr><td><code>NETWORKDAYS(s,e,[hol])</code></td><td>Working days between dates, minus weekends &amp; holiday list</td><td>project effort</td></tr>
+    <tr><td><code>DATEVALUE / TIMEVALUE</code></td><td>Text that <em>looks</em> like a date/time → real serial value</td><td>fixes imported text dates</td></tr>
+    <tr><td><code>TEXT(date,fmt)</code></td><td>Date → formatted text: "dd-mmm-yyyy", "dddd", "hh:mm AM/PM"</td><td>report labels</td></tr>
+  </table>
+
+  <div class="demo" id="dateDemo">
+    <div class="dtitle">LIVE DATE LAB — pick a date of birth; every function recomputes instantly</div>
+    <input type="date" id="dobIn" value="2006-03-15">
+    <div class="fxout" id="dateOut"></div>
+  </div>
+
+  <div class="solved"><b>P6 · Exact age today (years, months, days)</b>
+=DATEDIF(A1,TODAY(),"Y") &amp; "y " &amp; DATEDIF(A1,TODAY(),"YM") &amp; "m " &amp; DATEDIF(A1,TODAY(),"MD") &amp; "d"
+<i>"YM" = months ignoring years; "MD" = days ignoring months &amp; years — the three units chain into an exact age.</i>
+
+<b>P7 · Days remaining to a deadline in F1</b>          =F1 − TODAY()      (plain subtraction — serial numbers!)
+<b>P8 · Fee due on the last day of next month</b>        =EOMONTH(TODAY(),1)
+<b>P9 · Working days of a project, minus listed holidays</b> =NETWORKDAYS(B1,C1,Holidays)
+<b>P10 · Hours worked from in/out times (may cross midnight)</b>
+=MOD(C1−B1,1)*24
+<i>MOD(…,1) wraps negative overnight differences; ×24 converts the day-fraction to hours. Format the result as Number, not Time.</i></div>
+  <div class="trap">A duration shown as time ("26:00") displays wrong unless the format is <code>[h]:mm</code>; and text-dates ("15/03/2006" as text) silently break sorting and subtraction — convert with DATEVALUE, or spot them by their default left-alignment.</div>
+  <details class="master"><summary>MASTER CHECK · E1</summary><div class="inner"><ol>
+    <li>What number is 6:00 PM on day-serial 45000? <small>45000.75</small></li>
+    <li>Formula: name of the weekday your birthday falls on next year. <small>TEXT(DATE(YEAR(TODAY())+1,MONTH(A1),DAY(A1)),"dddd")</small></li>
+    <li>DATEDIF units "YM" vs "MD" — explain with your own DOB.</li>
+    <li>Why does =B1−A1 on two dates just work, with no function at all?</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ F1 ============ -->
+<section id="s6" class="reveal">
+  <div class="sechead"><span class="secnum">F1</span><h2>Conditional Formatting</h2></div>
+  <p><strong>Conditional formatting (CF)</strong> changes a cell's appearance <em>automatically based on its value</em> (or a formula) — analysis you can see without reading a single number. Rules live with the range and re-evaluate on every change. Home → Conditional Formatting.</p>
+  <ul>
+    <li><strong>Highlight Cells Rules</strong> — greater/less than, between, equal to, text contains, a date occurring, duplicate values.</li>
+    <li><strong>Top/Bottom Rules</strong> — top/bottom N or N%, above/below average.</li>
+    <li><strong>Data Bars</strong> — in-cell bar proportional to value: instant bar chart inside the grid.</li>
+    <li><strong>Color Scales</strong> — 2- or 3-color gradient across the range: heat map.</li>
+    <li><strong>Icon Sets</strong> — arrows/traffic lights/flags bucketing values into 3–5 bands.</li>
+    <li><strong>Formula-based rules</strong> — "Use a formula to determine which cells to format": any TRUE/FALSE expression, e.g. highlight whole rows with <code>=$C2&gt;70</code> (note the <em>mixed reference</em>: column locked, row free).</li>
+  </ul>
+  <div class="demo" id="cfDemo">
+    <div class="dtitle">CONDITIONAL FORMATTING SANDBOX — monthly sales (₹ '000); switch rules and watch the same numbers tell different stories</div>
+    <div class="btnrow" id="cfBtns">
+      <button data-r="none" class="sel">No rule</button>
+      <button data-r="hl">Highlight &gt; 70</button>
+      <button data-r="bars">Data bars</button>
+      <button data-r="scale">Color scale</button>
+      <button data-r="top">Top 3</button>
+    </div>
+    <div class="sheet" id="cfSheet" style="grid-template-columns:70px repeat(6,1fr)"></div>
+    <div class="herocap" id="cfCap">no rule — raw numbers force you to read all 24 cells to find anything</div>
+  </div>
+  <div class="solved"><b>P11 · Highlight entire rows of students who failed (marks in column C &lt; 40)</b>
+Select A2:F50 → CF → New Rule → Use a formula → <b>=$C2&lt;40</b> → red fill.
+<i>$C locks the tested column while the rule walks every row; C2 (row relative) makes row 7 test $C7. Absolute-vs-mixed references are the whole trick of formula rules.</i>
+
+<b>P12 · Flag duplicate roll numbers</b>  CF → Highlight Cells → Duplicate Values (or formula =COUNTIF($A$2:$A$100,A2)&gt;1).
+<b>P13 · Heat-map a marks table</b>       select the block → Color Scales → green-yellow-red 3-color scale.</div>
+  <div class="trap">Writing =$C$2&lt;40 (both locked) formats every row by row-2's value alone. In formula rules, lock the column, free the row — read the $ signs aloud before clicking OK.</div>
+  <details class="master"><summary>MASTER CHECK · F1</summary><div class="inner"><ol>
+    <li>Which built-in rule type answers each: "who are my 5 best customers" · "show magnitude in-cell" · "temperature-style overview"? <small>Top/Bottom · Data Bars · Color Scale</small></li>
+    <li>Write the formula rule: highlight weekend dates in A2:A400. <small>=WEEKDAY($A2,2)&gt;5</small></li>
+    <li>What happens to CF when the underlying value changes? Why is that the point?</li>
+  </ol></div></details>
+</section>
+
+<!-- ============ G1 ============ -->
+<section id="s7" class="reveal">
+  <div class="sechead"><span class="secnum">G1</span><h2>Sorting &amp; Filtering</h2></div>
+  <p><strong>Sorting</strong> rearranges rows by one or more keys; <strong>filtering</strong> hides rows that fail criteria (they're hidden, not deleted). Data tab → Sort / Filter.</p>
+  <ul>
+    <li><strong>Single-level sort</strong> — A→Z / Z→A on one column; Excel auto-expands the selection so rows stay intact.</li>
+    <li><strong>Multi-level sort</strong> — Data → Sort → Add Level: e.g. by Dept A→Z, <em>then</em> by Sales largest→smallest. Order of levels = order of tie-breaking.</li>
+    <li><strong>Custom sorts</strong> — by cell/font color, by icon, or by a custom list (Jan, Feb, … instead of alphabetical Apr, Aug…).</li>
+    <li><strong>AutoFilter</strong> — dropdown per header: check-lists, Text/Number/Date Filters (contains, between, above average, this month…), searchable.</li>
+    <li><strong>Advanced Filter</strong> — criteria written in a separate range; supports AND (same criteria row) / OR (different rows) combinations and "copy result to another location" — the tool behind §H1-style reporting and unique-value extraction.</li>
+  </ul>
+  <div class="demo" id="sfDemo">
+    <div class="dtitle">SORT &amp; FILTER SANDBOX — click any column header to sort (again to reverse); filter by department</div>
+    <div class="btnrow">
+      <select id="deptSel"><option value="ALL">Dept: All</option><option>CSE</option><option>ISE</option><option>ECE</option></select>
+    </div>
+    <table class="dt" id="sfTable"><thead><tr>
+      <th data-k="name">Name<span class="si"></span></th>
+      <th data-k="dept">Dept<span class="si"></span></th>
+      <th data-k="sales">Sales ₹k<span class="si"></span></th>
+    </tr></thead><tbody></tbody></table>
+    <div class="herocap" id="sfCap"></div>
+  </div>
+  <div class="trap">Sorting a <em>selection</em> of one column while its neighbors stay put scrambles the records permanently — always let Excel expand the selection (or work inside a Table). Filtering hides rows: a plain SUM still adds the hidden ones — the §H1 SUBTOTAL function exists precisely to fix this.</div>
+  <details class="master"><summary>MASTER CHECK · G1</summary><div class="inner"><ol>
+    <li>Set up (describe the dialog): sort by Branch A→Z, then CGPA high→low, then Name A→Z.</li>
+    <li>AutoFilter vs Advanced Filter — three differences. <small>in-place dropdowns vs criteria range; simple vs full AND/OR logic; no-copy vs copy-to-location.</small></li>
+    <li>Write an Advanced-Filter criteria range for: (Dept="CSE" AND Sales&gt;50) OR (Dept="ECE"). <small>two criteria rows under headers Dept, Sales.</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ H1 ============ -->
+<section id="s8" class="reveal">
+  <div class="sechead"><span class="secnum">H1</span><h2>Subtotals with Ranges</h2></div>
+  <p>The <strong>Subtotal feature</strong> (Data → Outline → Subtotal) inserts summary rows for each group in a sorted range plus a grand total, with collapsible outline levels (1/2/3 buttons). Iron rule: <strong>sort by the grouping column first</strong> — Subtotal breaks a group at every change in that column's value.</p>
+  <ul>
+    <li>Dialog choices: <em>At each change in</em> (the sorted group column) · <em>Use function</em> (Sum, Count, Average, Max, Min…) · <em>Add subtotal to</em> (which columns get the summary). "Remove All" undoes everything.</li>
+    <li>The inserted rows use the <strong>SUBTOTAL function</strong>: <code>SUBTOTAL(function_num, range)</code> — 1=AVERAGE, 2=COUNT, 3=COUNTA, 4=MAX, 5=MIN, <strong>9=SUM</strong>; codes <strong>101–111</strong> additionally ignore manually hidden rows.</li>
+    <li>Two superpowers of SUBTOTAL over plain SUM: it <em>ignores rows hidden by a filter</em> (a live total for whatever is visible), and it <em>ignores other SUBTOTALs</em> in its range — no double counting when nesting.</li>
+  </ul>
+  <div class="demo" id="stDemo">
+    <div class="dtitle">SUBTOTAL SANDBOX — data pre-sorted by Dept; toggle the feature, then filter and watch SUBTOTAL vs SUM disagree</div>
+    <div class="btnrow">
+      <button id="stToggle">Insert subtotals</button>
+      <select id="stFilter"><option value="ALL">Filter: show all</option><option>CSE</option><option>ISE</option></select>
+    </div>
+    <table class="dt" id="stTable"><thead><tr><th>Dept</th><th>Student</th><th>Fee ₹k</th></tr></thead><tbody></tbody></table>
+    <div class="fxout" id="stOut"></div>
+  </div>
+  <div class="solved"><b>P14 · Department-wise fee totals, exam procedure</b>
+1. Sort the range by Dept (A→Z).                       ← without this, one dept yields many fragments
+2. Data → Subtotal → At each change in: Dept · Use function: Sum · Add subtotal to: Fee → OK.
+3. Result: =SUBTOTAL(9, C2:C4) style rows per dept + grand total; outline buttons 1|2|3 at left.
+<b>P15 · Why 9 vs 109?</b>  9 ignores filtered-out rows only; 109 also ignores rows you hid by right-click → Hide. Both ignore nested SUBTOTALs.
+<b>P16 · Visible-only total above a filtered list</b>   =SUBTOTAL(9, C2:C100) — updates live as filters change; =SUM would not.</div>
+  <div class="trap">Running Subtotal on unsorted data is the classic zero-mark answer: you get a subtotal after every value change — dozens of fragments per group. Sort first, always, and say so as step 1.</div>
+  <details class="master"><summary>MASTER CHECK · H1</summary><div class="inner"><ol>
+    <li>Full procedure, from raw data, for branch-wise <em>average</em> CGPA with collapsible outline.</li>
+    <li>SUBTOTAL(9,…) vs SUM — two behavioral differences with a scenario each.</li>
+    <li>What do the 1 / 2 / 3 outline buttons show? <small>grand only · grand+subtotals · everything</small></li>
+    <li>Function codes: 1, 4, 9, 109 → which operations? <small>AVERAGE · MAX · SUM · SUM-ignoring-hidden</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ============ I1 ============ -->
+<section id="s9" class="reveal">
+  <div class="sechead"><span class="secnum">I1</span><h2>Summary Sheet &amp; Likely Questions</h2></div>
+  <div class="fsheet">
+    <div class="fs"><b>FIVE TYPES</b>mining = unknown patterns · BI = dashboards/KPIs<br>statistical = describe/infer · predictive = forecast · text = unstructured→structured</div>
+    <div class="fs"><b>PROCESS (ORDER = MARKS)</b>Requirements → Collection → Processing →<br>Cleaning → Analysis → Communication</div>
+    <div class="fs"><b>TEXT CLEANERS</b>TRIM · CLEAN · UPPER/LOWER/PROPER<br>SUBSTITUTE (content) vs REPLACE (position)</div>
+    <div class="fs"><b>TEXT EXTRACTORS</b>LEFT / RIGHT / MID + FIND/SEARCH + LEN<br>pattern: FIND delimiter → cut → TRIM</div>
+    <div class="fs"><b>DATE MODEL</b>date = serial (1 = 1-Jan-1900) · time = fraction of day<br>subtraction just works · format ≠ value</div>
+    <div class="fs"><b>DATE FUNCTIONS</b>TODAY NOW DATE YEAR MONTH DAY WEEKDAY<br>DATEDIF (Y/M/D/YM/MD) · EOMONTH · NETWORKDAYS</div>
+    <div class="fs"><b>CONDITIONAL FORMATTING</b>highlight · top/bottom · data bars · color scales · icons<br>formula rules: =$C2&gt;70 — lock column, free row</div>
+    <div class="fs"><b>SORT / FILTER</b>multi-level sort = tie-break order · filter hides, not deletes<br>Advanced Filter = criteria range, AND rows / OR rows</div>
+    <div class="fs"><b>SUBTOTAL</b>sort by group column FIRST · SUBTOTAL(9,…)=SUM<br>ignores filtered rows + nested subtotals · 101–111 also ignore hidden</div>
+  </div>
+  <div class="card">
+    <h4>The five near-certain questions of Unit I</h4>
+    <ol style="margin-bottom:0">
+      <li>Explain the types of data analysis with examples. <em>(§A1 — definition + business example + Excel feature each)</em></li>
+      <li>Describe the data analysis process with a scenario. <em>(§C1 — six stages, in order, with the worked pattern)</em></li>
+      <li>Text-function formulas: split/extract/clean given strings. <em>(§D1 — P1–P5 patterns)</em></li>
+      <li>Date arithmetic: age, working days, deadlines; explain the serial-number system. <em>(§E1)</em></li>
+      <li>Procedures: conditional-formatting rule (incl. formula rules), multi-level sort, Advanced Filter, Subtotals. <em>(§F1–H1 — write them as numbered steps)</em></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  CS1231-1 · UNIT I · SOURCE: WAYNE WINSTON — EXCEL DATA ANALYSIS &amp; BUSINESS MODELING (T1/T2)<br>
+  clean first, analyze second, communicate always.
+</footer>
+
+<script>
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}})},{threshold:.1});
+document.querySelectorAll('.reveal,.anim').forEach(el=>io.observe(el));
+
+/* ---------- D1: text functions demo ---------- */
+(function(){
+  const inp=document.getElementById('txtIn'),out=document.getElementById('txtOut');
+  const proper=s=>s.toLowerCase().replace(/(^|[^a-z0-9])([a-z])/g,(m,a,b)=>a+b.toUpperCase());
+  const excelTrim=s=>s.replace(/ +/g,' ').replace(/^ | $/g,'');
+  const F={
+    'TRIM':s=>['=TRIM(A1)',JSON.stringify(excelTrim(s))],
+    'CLEAN+TRIM':s=>['=TRIM(CLEAN(A1))',JSON.stringify(excelTrim(s.replace(/[\x00-\x1f]/g,'')))],
+    'UPPER':s=>['=UPPER(A1)',JSON.stringify(s.toUpperCase())],
+    'LOWER':s=>['=LOWER(A1)',JSON.stringify(s.toLowerCase())],
+    'PROPER':s=>['=PROPER(A1)',JSON.stringify(proper(s))],
+    'LEN':s=>['=LEN(A1)',String(s.length)+'  (spaces count!)'],
+    'LEFT':s=>['=LEFT(A1,4)',JSON.stringify(s.slice(0,4))],
+    'SUBST':s=>['=SUBSTITUTE(A1," ","")',JSON.stringify(s.split(' ').join(''))],
+    'EMAIL':s=>{const t=excelTrim(s);const i=t.indexOf('@');if(i<0)return['=MID(A1,FIND("@",A1)+1,LEN(A1))','#VALUE! — no "@" found'];
+      let st=i,en=i;while(st>0&&!/[\s;,]/.test(t[st-1]))st--;while(en<t.length&&!/[\s;,]/.test(t[en]))en++;
+      return ['=TRIM(MID(A1, FIND("@",A1)−? , ?))  — combine FIND + MID',JSON.stringify(t.slice(st,en))+'  (delimiter-hunting pattern of P1/P2)'];}
+  };
+  document.getElementById('txtBtns').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#txtBtns button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+    const [f,v]=F[b.dataset.f](inp.value);
+    out.innerHTML='<span class="f">'+f+'</span> <span class="arrow">→</span> <span class="v">'+v+'</span>';
+  });
+  inp.addEventListener('input',()=>{const b=document.querySelector('#txtBtns button.sel'); if(b) b.click();});
+})();
+
+/* ---------- E1: date lab ---------- */
+(function(){
+  const inp=document.getElementById('dobIn'),out=document.getElementById('dateOut');
+  const DAYNAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  function render(){
+    const dob=new Date(inp.value+'T00:00:00'); if(isNaN(dob)){out.textContent='pick a date';return;}
+    const today=new Date(); today.setHours(0,0,0,0);
+    const serial=Math.floor((dob-new Date(1899,11,30))/864e5);
+    let y=today.getFullYear()-dob.getFullYear(), m=today.getMonth()-dob.getMonth(), d=today.getDate()-dob.getDate();
+    if(d<0){m--; d+=new Date(today.getFullYear(),today.getMonth(),0).getDate();}
+    if(m<0){y--; m+=12;}
+    const days=Math.round((today-dob)/864e5);
+    const eom=new Date(dob.getFullYear(),dob.getMonth()+1,0);
+    const rows=[
+      ['=A1 (serial number)',serial+'  — days since the 1900 epoch'],
+      ['=YEAR(A1) / MONTH(A1) / DAY(A1)',dob.getFullYear()+' / '+(dob.getMonth()+1)+' / '+dob.getDate()],
+      ['=TEXT(A1,"dddd")',DAYNAMES[dob.getDay()]+'  — you were born on a '+DAYNAMES[dob.getDay()]],
+      ['=DATEDIF(A1,TODAY(),"Y"…"MD")',y+'y '+m+'m '+d+'d  — exact age'],
+      ['=TODAY()−A1',days.toLocaleString()+' days lived (plain subtraction!)'],
+      ['=EOMONTH(A1,0)',eom.getDate()+'-'+eom.toLocaleString('en',{month:'short'})+'-'+eom.getFullYear()+'  — last day of birth month']
+    ];
+    out.innerHTML=rows.map(r=>'<span class="f">'+r[0]+'</span> <span class="arrow">→</span> <span class="v">'+r[1]+'</span>').join('<br>');
+  }
+  inp.addEventListener('input',render); render();
+})();
+
+/* ---------- F1: conditional formatting sandbox ---------- */
+(function(){
+  const data=[[64,71,55,90,47,68],[82,58,73,61,95,52],[45,88,66,77,59,84],[70,49,91,63,56,79]];
+  const rows=['North','South','East','West'], cols=['Jan','Feb','Mar','Apr','May','Jun'];
+  const sheet=document.getElementById('cfSheet');
+  sheet.innerHTML='<div class="hc"></div>'+cols.map(c=>'<div class="hc">'+c+'</div>').join('')+
+    data.map((r,i)=>'<div class="hc">'+rows[i]+'</div>'+r.map(v=>'<div class="c" data-v="'+v+'"><div class="bar"></div><span>'+v+'</span></div>').join('')).join('');
+  const cells=[...sheet.querySelectorAll('.c')], vals=cells.map(c=>+c.dataset.v);
+  const min=Math.min(...vals),max=Math.max(...vals);
+  const top3=[...vals].sort((a,b)=>b-a).slice(0,3);
+  const caps={none:'no rule — raw numbers force you to read all 24 cells to find anything',
+    hl:'Highlight Cells → Greater Than 70: exceptions jump out; everything else fades',
+    bars:'Data Bars: an in-cell bar chart — magnitude readable at a glance, numbers intact',
+    scale:'Color Scale: heat map — patterns across regions AND months appear (East peaks in spring?)',
+    top:'Top/Bottom Rules → Top 3: instantly answers "best three months overall"'};
+  function apply(rule){
+    cells.forEach(c=>{const v=+c.dataset.v;
+      c.classList.remove('hl','top'); c.style.background=''; c.querySelector('.bar').style.width='0';
+      if(rule==='hl'&&v>70)c.classList.add('hl');
+      if(rule==='bars')c.querySelector('.bar').style.width=((v-min)/(max-min)*92+8)+'%';
+      if(rule==='scale'){const t=(v-min)/(max-min);
+        const col=t<.5?[255,235-90*t*2,150-90*t*2]:[255-170*(t-.5)*2,235-100+ (t-.5)*0,120];
+        const g=t<.5?'rgb(252,'+Math.round(210+40*t*2)+',160)':'rgb('+Math.round(250-160*(t-.5)*2)+',235,'+Math.round(160-60*(t-.5)*2)+')';
+        c.style.background='hsl('+Math.round(t*115)+',65%,'+Math.round(88-t*18)+'%)';}
+      if(rule==='top'&&top3.includes(v))c.classList.add('top');
+    });
+    document.getElementById('cfCap').textContent=caps[rule];
+  }
+  document.getElementById('cfBtns').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b)return;
+    document.querySelectorAll('#cfBtns button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+    apply(b.dataset.r);
+  });
+})();
+
+/* ---------- G1: sort & filter sandbox ---------- */
+(function(){
+  const DATA=[{name:'Ananya',dept:'CSE',sales:82},{name:'Bharath',dept:'ISE',sales:64},{name:'Chitra',dept:'ECE',sales:91},
+    {name:'Deepak',dept:'CSE',sales:47},{name:'Esha',dept:'ISE',sales:78},{name:'Farhan',dept:'ECE',sales:55},
+    {name:'Gauri',dept:'CSE',sales:69},{name:'Harsha',dept:'ISE',sales:88}];
+  let rows=[...DATA], key=null, asc=true;
+  const tb=document.querySelector('#sfTable tbody'), sel=document.getElementById('deptSel'), cap=document.getElementById('sfCap');
+  function render(){
+    const f=sel.value;
+    const shown=rows.filter(r=>f==='ALL'||r.dept===f);
+    tb.innerHTML=shown.map(r=>'<tr><td>'+r.name+'</td><td>'+r.dept+'</td><td>'+r.sales+'</td></tr>').join('');
+    document.querySelectorAll('#sfTable th').forEach(th=>th.querySelector('.si').textContent=th.dataset.k===key?(asc?'▲':'▼'):'');
+    cap.textContent=(key?('sorted by '+key+(asc?' ascending':' descending')+' · '):'unsorted · ')+
+      (f==='ALL'?shown.length+' of 8 rows shown':f+' filter: '+shown.length+' of 8 rows shown — the rest are hidden, not deleted');
+  }
+  document.querySelector('#sfTable thead').addEventListener('click',e=>{
+    const th=e.target.closest('th'); if(!th)return;
+    const k=th.dataset.k; asc=(key===k)?!asc:true; key=k;
+    rows.sort((a,b)=>{const x=a[k],y=b[k];return (x>y?1:x<y?-1:0)*(asc?1:-1);});
+    render();
+  });
+  sel.addEventListener('change',render); render();
+})();
+
+/* ---------- H1: subtotal sandbox ---------- */
+(function(){
+  const DATA=[{dept:'CSE',st:'Ananya',fee:120},{dept:'CSE',st:'Deepak',fee:110},{dept:'CSE',st:'Gauri',fee:125},
+              {dept:'ISE',st:'Bharath',fee:115},{dept:'ISE',st:'Esha',fee:118},{dept:'ISE',st:'Harsha',fee:122}];
+  let on=false;
+  const tb=document.querySelector('#stTable tbody'), out=document.getElementById('stOut'),
+        tg=document.getElementById('stToggle'), fs=document.getElementById('stFilter');
+  function render(){
+    const f=fs.value;
+    let html='', grand=0, visSum=0, allSum=DATA.reduce((s,r)=>s+r.fee,0);
+    const groups={};
+    DATA.forEach(r=>{(groups[r.dept]=groups[r.dept]||[]).push(r);});
+    Object.keys(groups).forEach(d=>{
+      let g=0;
+      groups[d].forEach(r=>{
+        const hidden=f!=='ALL'&&r.dept!==f;
+        html+='<tr'+(hidden?' class="fadeout"':'')+'><td>'+r.dept+'</td><td>'+r.st+'</td><td>'+r.fee+'</td></tr>';
+        g+=r.fee; if(!hidden)visSum+=r.fee;
+      });
+      grand+=g;
+      if(on){
+        const gv=f==='ALL'?g:(f===d?g:0);
+        html+='<tr class="subrow"><td colspan="2">'+d+' Total — =SUBTOTAL(9,…)</td><td>'+(f==='ALL'||f===d?g:0)+'</td></tr>';
+      }
+    });
+    if(on) html+='<tr class="grand"><td colspan="2">Grand Total — =SUBTOTAL(9, all)</td><td>'+visSum+'</td></tr>';
+    tb.innerHTML=html;
+    out.innerHTML='<span class="f">=SUM(C:C)</span> <span class="arrow">→</span> <span class="v">'+allSum+'</span> &nbsp;·&nbsp; '+
+      '<span class="f">=SUBTOTAL(9,C:C)</span> <span class="arrow">→</span> <span class="v">'+visSum+'</span>'+
+      (f==='ALL'?'  — equal while nothing is filtered':'  — <b>they disagree!</b> SUBTOTAL counts only visible ('+f+') rows; SUM still adds the faded ones');
+    tg.textContent=on?'Remove subtotals':'Insert subtotals';
+  }
+  tg.addEventListener('click',()=>{on=!on;render();});
+  fs.addEventListener('change',render); render();
+})();
+</script>
+</body>
+</html>

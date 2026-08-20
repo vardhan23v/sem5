@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit I · Mastery Notes — Computer Networks | CS3001-1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ BLUEPRINT TOKEN SYSTEM ============ */
+:root{
+  --paper:#0d2240;
+  --paper-deep:#081830;
+  --ink:#e9f1fb;
+  --ink-dim:#9db4d1;
+  --grid:rgba(233,241,251,.05);
+  --amber:#ffb454;
+  --cyan:#6fd3e7;
+  --rose:#ff7a8a;
+  --green:#7ee2a8;
+  --card:rgba(233,241,251,.045);
+  --card-line:rgba(233,241,251,.14);
+  --mono:'IBM Plex Mono',monospace;
+  --disp:'Space Grotesk',sans-serif;
+  --body:'Public Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--ink);font-family:var(--body);line-height:1.65;font-size:16.5px;
+}
+::selection{background:var(--amber);color:#081830}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+/* ============ HERO ============ */
+header{padding:72px 0 40px;border-bottom:1px dashed var(--card-line)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.22em;color:var(--amber);text-transform:uppercase}
+h1{font-family:var(--disp);font-size:clamp(2rem,5vw,3.3rem);font-weight:700;line-height:1.1;margin:.5rem 0 .8rem}
+h1 .thin{color:var(--ink-dim);font-weight:400}
+.meta{font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);display:flex;gap:1.6em;flex-wrap:wrap}
+.meta b{color:var(--cyan);font-weight:500}
+.linkviz{margin:38px 0 6px;position:relative;height:96px}
+.station{position:absolute;top:14px;width:66px;height:66px;border:1.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72rem;background:var(--paper-deep)}
+.station.a{left:0}.station.b{right:0}
+.wire{position:absolute;left:70px;right:70px;top:46px;border-top:1.5px dashed var(--ink-dim)}
+.pkt{position:absolute;top:38px;left:70px;width:34px;height:18px;background:var(--amber);border-radius:3px;box-shadow:0 0 14px rgba(255,180,84,.55);animation:fly 3.4s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;color:#081830;font-weight:600}
+@keyframes fly{0%{left:70px;opacity:0}8%{opacity:1}46%{left:calc(100% - 108px);opacity:1}50%{opacity:0}54%{opacity:0}56%{left:calc(100% - 108px);opacity:1;background:var(--cyan);box-shadow:0 0 14px rgba(111,211,231,.55)}96%{left:70px;opacity:1;background:var(--cyan)}100%{left:70px;opacity:0}}
+.linklabel{position:absolute;left:0;right:0;top:76px;text-align:center;font-family:var(--mono);font-size:.72rem;color:var(--ink-dim)}
+
+/* ============ TOC ============ */
+nav.toc{padding:26px 0;border-bottom:1px dashed var(--card-line)}
+nav.toc ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;counter-reset:t}
+nav.toc a{color:var(--ink-dim);text-decoration:none;font-size:.9rem;font-family:var(--mono);counter-increment:t;display:block;padding:3px 0;transition:color .2s,transform .2s}
+nav.toc a::before{content:counter(t,decimal-leading-zero)" / ";color:var(--amber)}
+nav.toc a:hover{color:var(--ink);transform:translateX(4px)}
+
+/* ============ SECTIONS ============ */
+section{padding:64px 0 20px}
+.sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
+.secnum{font-family:var(--mono);color:var(--amber);font-size:.95rem}
+h2{font-family:var(--disp);font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700}
+h3{font-family:var(--disp);font-size:1.18rem;font-weight:500;color:var(--cyan);margin:30px 0 10px}
+p{margin:0 0 14px}
+p.dim,li.dim{color:var(--ink-dim)}
+strong{color:var(--amber);font-weight:600}
+em{color:var(--cyan);font-style:normal}
+code{font-family:var(--mono);font-size:.88em;background:rgba(111,211,231,.12);padding:1px 6px;border-radius:4px;color:var(--cyan)}
+ul,ol{margin:0 0 16px 1.3em}
+li{margin-bottom:7px}
+.card{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:22px 24px;margin:18px 0}
+.card h4{font-family:var(--mono);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+.formula{font-family:var(--mono);background:var(--paper-deep);border-left:3px solid var(--amber);padding:14px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:1rem;overflow-x:auto}
+.formula small{display:block;color:var(--ink-dim);font-size:.78rem;margin-top:6px;font-family:var(--body)}
+.solved{font-family:var(--mono);background:var(--paper-deep);border-left:3px solid var(--green);padding:14px 20px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.88rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap}
+.solved b{color:var(--green);font-weight:600}
+.note{border:1px dashed var(--cyan);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim)}
+.note::before{content:"✦ EXAM POINT — ";font-family:var(--mono);color:var(--cyan);font-size:.75rem;letter-spacing:.12em}
+.trap{border:1px dashed var(--rose);border-radius:10px;padding:12px 18px;margin:16px 0;font-size:.92rem;color:var(--ink-dim)}
+.trap::before{content:"⚠ COMMON MISTAKE — ";font-family:var(--mono);color:var(--rose);font-size:.75rem;letter-spacing:.12em}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+th{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--card-line)}
+td{padding:10px 12px;border-bottom:1px solid rgba(233,241,251,.08);vertical-align:top}
+tr:hover td{background:rgba(233,241,251,.03)}
+.grid{display:grid;gap:16px;margin:18px 0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.dev{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:18px 20px;transition:transform .25s,border-color .25s}
+.dev:hover{transform:translateY(-5px);border-color:var(--amber)}
+.dev .icon{font-size:1.7rem;margin-bottom:8px}
+.dev h5{font-family:var(--disp);font-size:1.05rem;margin-bottom:2px}
+.dev .layer{font-family:var(--mono);font-size:.68rem;color:var(--cyan);letter-spacing:.1em;display:block;margin-bottom:8px}
+.dev p{font-size:.88rem;color:var(--ink-dim);margin:0}
+
+/* layer stacks */
+.stackrow{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;margin:24px 0}
+.stack{flex:1;min-width:250px;max-width:330px}
+.stack .title{font-family:var(--mono);text-align:center;font-size:.78rem;letter-spacing:.15em;color:var(--ink-dim);margin-bottom:10px}
+.lyr{border:1.5px solid var(--card-line);border-radius:8px;padding:10px 14px;margin-bottom:7px;font-family:var(--mono);font-size:.85rem;display:flex;justify-content:space-between;align-items:center;background:var(--paper-deep);opacity:0;transform:translateX(-24px);transition:opacity .5s,transform .5s,border-color .25s,background .25s;cursor:default;flex-wrap:wrap}
+.stack.right .lyr{transform:translateX(24px)}
+.visible .lyr{opacity:1;transform:translateX(0)}
+.lyr:hover{border-color:var(--amber);background:rgba(255,180,84,.08)}
+.lyr .n{color:var(--amber);font-size:.72rem}
+.lyr small{display:block;font-family:var(--body);color:var(--ink-dim);font-size:.72rem;width:100%}
+.visible .lyr:nth-child(2){transition-delay:.05s}.visible .lyr:nth-child(3){transition-delay:.1s}
+.visible .lyr:nth-child(4){transition-delay:.15s}.visible .lyr:nth-child(5){transition-delay:.2s}
+.visible .lyr:nth-child(6){transition-delay:.25s}.visible .lyr:nth-child(7){transition-delay:.3s}
+.visible .lyr:nth-child(8){transition-delay:.35s}
+
+/* encapsulation viz */
+.encap{background:var(--paper-deep);border:1px solid var(--card-line);border-radius:12px;padding:20px;margin:18px 0;overflow-x:auto}
+.encap .row{display:flex;align-items:center;gap:0;margin:8px 0;justify-content:center;opacity:0;transform:translateY(10px);transition:opacity .55s,transform .55s}
+.visible .encap .row{opacity:1;transform:none}
+.visible .encap .row:nth-child(2){transition-delay:.2s}
+.visible .encap .row:nth-child(3){transition-delay:.4s}
+.visible .encap .row:nth-child(4){transition-delay:.6s}
+.encap .lbl{font-family:var(--mono);font-size:.68rem;color:var(--ink-dim);width:110px;flex-shrink:0;text-align:right;padding-right:12px}
+.encap .seg{font-family:var(--mono);font-size:.68rem;padding:6px 10px;border:1.5px solid;border-radius:4px;margin-left:-1.5px;white-space:nowrap}
+.encap .msg{border-color:var(--ink);color:var(--ink)}
+.encap .th{border-color:var(--green);color:var(--green)}
+.encap .ih{border-color:var(--cyan);color:var(--cyan)}
+.encap .fh{border-color:var(--amber);color:var(--amber)}
+
+/* data flow */
+.flow3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:18px 0}
+.flowbox{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:16px 18px;text-align:center}
+.flowbox h5{font-family:var(--disp);margin-bottom:10px;font-size:1rem}
+.flowline{position:relative;height:34px;margin:8px 10px}
+.flowline .end{position:absolute;top:4px;width:26px;height:26px;border:1.5px solid var(--ink);border-radius:6px;font-family:var(--mono);font-size:.65rem;display:flex;align-items:center;justify-content:center;background:var(--paper-deep)}
+.flowline .end.l{left:0}.flowline .end.r{right:0}
+.dot{position:absolute;top:12px;width:10px;height:10px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px rgba(255,180,84,.6)}
+.dot.f{animation:dotf 2.2s linear infinite}
+@keyframes dotf{0%{left:30px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% - 40px);opacity:0}}
+.dot.h1{animation:doth1 4.4s linear infinite}
+@keyframes doth1{0%{left:30px;opacity:0}5%{opacity:1}45%{left:calc(100% - 40px);opacity:1}50%{opacity:0}100%{opacity:0}}
+.dot.h2{background:var(--cyan);box-shadow:0 0 8px rgba(111,211,231,.6);animation:doth2 4.4s linear infinite}
+@keyframes doth2{0%,50%{left:calc(100% - 40px);opacity:0}55%{opacity:1}95%{left:30px;opacity:1}100%{opacity:0}}
+.dot.d1{animation:dotd1 2.2s linear infinite}
+@keyframes dotd1{0%{left:30px;top:8px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% - 40px);top:8px;opacity:0}}
+.dot.d2{background:var(--cyan);box-shadow:0 0 8px rgba(111,211,231,.6);animation:dotd2 2.2s linear infinite}
+@keyframes dotd2{0%{left:calc(100% - 40px);top:18px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:30px;top:18px;opacity:0}}
+.flowbox p{font-size:.83rem;color:var(--ink-dim);margin:6px 0 0}
+
+/* waveforms */
+.wave{background:var(--paper-deep);border:1px solid var(--card-line);border-radius:12px;padding:18px 20px 8px;margin:16px 0}
+.wave h5{font-family:var(--disp);font-size:1rem;margin-bottom:2px}
+.wave .rule{font-family:var(--mono);font-size:.75rem;color:var(--ink-dim);margin-bottom:8px}
+.wave svg{width:100%;height:auto;display:block}
+.wave .bits text{font-family:var(--mono);font-size:13px;fill:var(--amber)}
+.wave .gridl{stroke:rgba(233,241,251,.1);stroke-width:1;stroke-dasharray:3 4}
+.wave .zero{stroke:rgba(233,241,251,.22);stroke-width:1}
+.trace{fill:none;stroke:var(--cyan);stroke-width:2.5;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;filter:drop-shadow(0 0 4px rgba(111,211,231,.4))}
+.visible .trace{animation:draw 2.4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* ARP viz */
+.arpviz{position:relative;height:150px;margin:20px 0;background:var(--paper-deep);border:1px solid var(--card-line);border-radius:12px;overflow:hidden}
+.host{position:absolute;top:38px;width:70px;height:52px;border:1.5px solid var(--ink);border-radius:8px;background:var(--paper);font-family:var(--mono);font-size:.62rem;text-align:center;padding-top:6px;line-height:1.5;z-index:2}
+.host b{color:var(--cyan);font-weight:500}
+.ring{position:absolute;left:75px;top:64px;width:12px;height:12px;border:2px solid var(--amber);border-radius:50%;opacity:0;animation:ring 4s ease-out infinite}
+.ring.r2{animation-delay:.35s}.ring.r3{animation-delay:.7s}
+@keyframes ring{0%{transform:scale(1);opacity:0}5%{opacity:.9}45%{transform:scale(16);opacity:0}100%{opacity:0}}
+.arppkt{position:absolute;top:56px;height:16px;border-radius:3px;font-family:var(--mono);font-size:.56rem;color:#081830;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 6px;white-space:nowrap;opacity:0}
+.arppkt.req{background:var(--amber);left:110px;animation:arpreq 4s linear infinite}
+@keyframes arpreq{0%{left:110px;opacity:0}6%{opacity:1}42%{left:calc(78% - 60px);opacity:1}46%{opacity:0}100%{opacity:0}}
+.arppkt.rep{background:var(--cyan);animation:arprep 4s linear infinite}
+@keyframes arprep{0%,52%{left:calc(78% - 60px);opacity:0}56%{opacity:1}94%{left:110px;opacity:1}100%{opacity:0}}
+.arpcap{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.68rem;color:var(--ink-dim)}
+
+/* CRC */
+.crc{font-family:var(--mono);font-size:1rem;line-height:1.9;background:var(--paper-deep);border:1px solid var(--card-line);border-radius:12px;padding:20px 26px;margin:16px 0;overflow-x:auto;white-space:pre}
+.crc .q{color:var(--amber)}.crc .x{color:var(--rose)}.crc .r{color:var(--cyan);font-weight:600}
+
+/* CSMA/CD flowchart */
+.fchart{display:flex;flex-direction:column;align-items:center;gap:0;margin:20px 0;font-family:var(--mono);font-size:.8rem}
+.fc{border:1.5px solid var(--card-line);background:var(--paper-deep);border-radius:8px;padding:10px 18px;text-align:center;max-width:340px;opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s}
+.fc.dec{border-color:var(--cyan);border-radius:999px;color:var(--cyan)}
+.fc.bad{border-color:var(--rose);color:var(--rose)}
+.fc.good{border-color:var(--green);color:var(--green)}
+.fa{color:var(--ink-dim);padding:2px 0;opacity:0;transition:opacity .5s}
+.fa b{color:var(--amber);font-weight:500}
+.visible .fc,.visible .fa{opacity:1;transform:none}
+.visible .fc:nth-of-type(1){transition-delay:0s}.visible .fc:nth-of-type(2){transition-delay:.15s}
+.visible .fc:nth-of-type(3){transition-delay:.3s}.visible .fc:nth-of-type(4){transition-delay:.45s}
+.visible .fc:nth-of-type(5){transition-delay:.6s}.visible .fc:nth-of-type(6){transition-delay:.75s}
+
+/* mastery self-test */
+details.master{background:rgba(126,226,168,.05);border:1px dashed var(--green);border-radius:12px;margin:26px 0 4px;overflow:hidden}
+details.master summary{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;color:var(--green);padding:13px 20px;cursor:pointer;list-style:none;user-select:none}
+details.master summary::before{content:"▸ ";transition:.2s}
+details.master[open] summary::before{content:"▾ "}
+details.master .inner{padding:4px 24px 18px}
+details.master ol{margin-bottom:0}
+details.master li{font-size:.92rem;color:var(--ink)}
+details.master li small{color:var(--ink-dim);display:block}
+
+/* formula sheet */
+.fsheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:20px 0}
+.fs{background:var(--paper-deep);border:1px solid var(--card-line);border-radius:10px;padding:14px 18px;font-family:var(--mono);font-size:.85rem}
+.fs b{color:var(--amber);font-weight:500;display:block;font-size:.7rem;letter-spacing:.12em;margin-bottom:6px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+footer{margin-top:70px;padding:34px 0 50px;border-top:1px dashed var(--card-line);font-family:var(--mono);font-size:.78rem;color:var(--ink-dim);text-align:center}
+.badge{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;border:1px solid var(--cyan);color:var(--cyan);border-radius:999px;padding:2px 10px;margin:0 4px 4px 0}
+.badge.warn{border-color:var(--rose);color:var(--rose)}
+.badge.ok{border-color:var(--amber);color:var(--amber)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal,.lyr,.fc,.fa,.encap .row{opacity:1!important;transform:none!important}.trace{stroke-dashoffset:0!important}}
+@media(max-width:640px){body{font-size:15.5px}.crc{font-size:.82rem}}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="eyebrow">CS3001-1 · Computer Network &amp; Communication · Mastery Edition</div>
+  <h1>Unit I <span class="thin">— Introduction, Network Models, Physical &amp; Data-Link Layer</span></h1>
+  <div class="meta"><span>Hours: <b>15</b></span><span>Ref: <b>Forouzan (T1)</b></span><span>NOW WITH: <b>solved numericals · self-tests · traps · formula sheet</b></span></div>
+  <div class="linkviz">
+    <div class="station a">HOST A</div>
+    <div class="wire"></div>
+    <div class="pkt">▓▓</div>
+    <div class="station b">HOST B</div>
+    <div class="linklabel">frame → link → frame &nbsp;·&nbsp; the whole unit in one picture</div>
+  </div>
+</header>
+
+<nav class="toc wrap">
+  <ol>
+    <li><a href="#s1">Data Communications</a></li>
+    <li><a href="#s2">Networks &amp; Network Types</a></li>
+    <li><a href="#s3">Connection-Oriented vs Connectionless</a></li>
+    <li><a href="#s4">Network Devices</a></li>
+    <li><a href="#s5">Network Models · Encapsulation</a></li>
+    <li><a href="#s6">Digital Signals &amp; Impairment</a></li>
+    <li><a href="#s7">Data-Rate Limits &amp; Performance</a></li>
+    <li><a href="#s8">Line Coding (Unipolar &amp; Polar)</a></li>
+    <li><a href="#s9">Transmission Media (Guided)</a></li>
+    <li><a href="#s10">Switching: Packet Switching</a></li>
+    <li><a href="#s11">Link-Layer Addressing &amp; ARP</a></li>
+    <li><a href="#s12">Block Coding &amp; CRC</a></li>
+    <li><a href="#s13">MAC: CSMA &amp; CSMA/CD</a></li>
+    <li><a href="#s14">Formula Sheet — Last-Night Revision</a></li>
+  </ol>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= 1 ================= -->
+<section id="s1" class="reveal">
+  <div class="sechead"><span class="secnum">01</span><h2>Data Communications</h2></div>
+  <p><strong>Data communications</strong> is the exchange of data between two devices via some form of <em>transmission medium</em> (wire, cable, air), governed by rules called <strong>protocols</strong>. <em>Data</em> = information in an agreed form between the parties; effectiveness depends on four characteristics:</p>
+  <ul>
+    <li><strong>Delivery</strong> — data must reach the correct destination, and only the intended device/user.</li>
+    <li><strong>Accuracy</strong> — delivered without alteration; corrupted data is unusable.</li>
+    <li><strong>Timeliness</strong> — arrives in time to be useful (audio/video → "real-time" delivery, in production order, without significant delay).</li>
+    <li><strong>Jitter</strong> — variation in packet arrival times; uneven delays ruin streaming even if <em>average</em> delay is fine (e.g. video packets alternating 30 ms/40 ms gaps).</li>
+  </ul>
+  <div class="card">
+    <h4>Five components of a data communication system</h4>
+    <ol>
+      <li><strong>Message</strong> — the information (text, numbers, images, audio, video).</li>
+      <li><strong>Sender</strong> — device that sends (computer, phone, camera).</li>
+      <li><strong>Receiver</strong> — device that receives.</li>
+      <li><strong>Transmission medium</strong> — physical path (twisted-pair, coax, fiber, radio waves).</li>
+      <li><strong>Protocol</strong> — the rules; without it devices may be <em>connected</em> but cannot <em>communicate</em> — like two people speaking different languages. A protocol defines <em>what</em> is communicated, <em>how</em>, and <em>when</em> (syntax, semantics, timing).</li>
+    </ol>
+  </div>
+  <h3>Data representation</h3>
+  <p class="dim">Text (Unicode/ASCII bit patterns) · Numbers (binary, not ASCII — for direct arithmetic) · Images (pixel matrix; RGB/YCM color coding or grayscale) · Audio (continuous by nature) · Video (picture sequence).</p>
+  <h3>Data flow (direction of transmission)</h3>
+  <div class="flow3">
+    <div class="flowbox">
+      <h5>Simplex</h5>
+      <div class="flowline"><span class="end l">S</span><span class="end r">R</span><span class="dot f"></span></div>
+      <p>One-way only. Full channel capacity in one direction. <em>Keyboard → CPU, TV broadcast.</em></p>
+    </div>
+    <div class="flowbox">
+      <h5>Half-Duplex</h5>
+      <div class="flowline"><span class="end l">A</span><span class="end r">B</span><span class="dot h1"></span><span class="dot h2"></span></div>
+      <p>Both transmit, but <em>not simultaneously</em> — the link alternates. Full capacity is available to whichever side is sending. <em>Walkie-talkies, CB radio.</em></p>
+    </div>
+    <div class="flowbox">
+      <h5>Full-Duplex</h5>
+      <div class="flowline"><span class="end l">A</span><span class="end r">B</span><span class="dot d1"></span><span class="dot d2"></span></div>
+      <p>Both transmit and receive <em>at once</em> — two physical paths, or capacity split between directions. <em>Telephone network.</em></p>
+    </div>
+  </div>
+  <details class="master"><summary>MASTER CHECK · 01 — answer before opening the next section</summary><div class="inner"><ol>
+    <li>Name the 5 components and say in one line why "protocol" is the one that makes it <em>communication</em>.</li>
+    <li>Distinguish timeliness from jitter with a video-streaming example.</li>
+    <li>Classify: keyboard→monitor path, telephone call, walkie-talkie. <small>(simplex · full-duplex · half-duplex)</small></li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 2 ================= -->
+<section id="s2" class="reveal">
+  <div class="sechead"><span class="secnum">02</span><h2>Networks &amp; Network Types</h2></div>
+  <p>A <strong>network</strong> is the interconnection of a set of devices capable of communication — <em>hosts / end systems</em> (computers, phones, servers) and <em>connecting devices</em> (routers, switches, modems) — joined by wired or wireless <em>links</em>.</p>
+  <h3>Network criteria</h3>
+  <ul>
+    <li><strong>Performance</strong> — measured by <em>throughput</em> and <em>delay</em>; we want more of the first, less of the second, and they often trade off (heavier traffic → higher throughput of the network overall but longer queues → more delay).</li>
+    <li><strong>Reliability</strong> — failure frequency, recovery time, robustness in catastrophe.</li>
+    <li><strong>Security</strong> — protection against unauthorized access and damage; policies for recovery from breaches and data loss.</li>
+  </ul>
+  <h3>LAN — Local Area Network</h3>
+  <ul>
+    <li>Privately owned; a single office, building, or campus. Each host has an address unique within the LAN.</li>
+    <li>Evolution: early LANs = one <em>common cable</em>, every packet broadcast to all (received by all, kept by the addressee, dropped by others). Today a <strong>switch</strong> forwards each packet only to its destination port → several pairs communicate <em>simultaneously</em> with no collisions between them.</li>
+    <li>Typical rates 100 Mbps–10 Gbps.</li>
+  </ul>
+  <h3>WAN — Wide Area Network</h3>
+  <ul>
+    <li>Spans towns → the world; normally built and run by <em>communication companies</em> and leased by users.</li>
+    <li><strong>Point-to-point WAN</strong> — two connecting devices joined by a medium (cable/air), e.g. a leased line between two routers of one company.</li>
+    <li><strong>Switched WAN</strong> — more than two ends; a mesh of switches — the backbone of global communication today.</li>
+    <li>Core contrast: a LAN interconnects <em>hosts</em>; a WAN interconnects <em>connecting devices</em>.</li>
+  </ul>
+  <h3>Internetwork → the Internet</h3>
+  <p>Connecting ≥2 networks makes an <strong>internetwork (internet)</strong>: e.g. two office LANs + a point-to-point WAN between them (router at each side). A host on one LAN reaches a host on the other through LAN→WAN→LAN, routers choosing the path. The <strong>Internet</strong> (capital-I) is the specific global internetwork: <em>backbones</em> (large ISPs) connected at <em>peering points</em>, <em>provider networks</em> paying backbones, <em>customer networks</em> at the edge paying providers — all speaking TCP/IP.</p>
+  <div class="note">Define LAN vs WAN via "hosts vs connecting devices" + one example of each WAN type — a standing 4–5 mark question.</div>
+  <details class="master"><summary>MASTER CHECK · 02</summary><div class="inner"><ol>
+    <li>Why does a switched LAN allow simultaneous communication where a common-cable LAN didn't?</li>
+    <li>Sketch (mentally) an internetwork: 2 LANs + 1 point-to-point WAN. Where do the routers sit?</li>
+    <li>Backbone, provider network, customer network — who pays whom?</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 3 ================= -->
+<section id="s3" class="reveal">
+  <div class="sechead"><span class="secnum">03</span><h2>Connection-Oriented vs Connectionless Service</h2></div>
+  <div class="grid g2">
+    <div class="dev">
+      <div class="icon">📞</div><h5>Connection-Oriented</h5>
+      <span class="layer">"TELEPHONE MODEL" · TCP, virtual-circuit networks</span>
+      <p>Three phases: <strong>setup → data transfer → teardown</strong>. A logical connection (state/path) exists first; packets follow it and arrive <em>in order</em>; delivery can be acknowledged → reliability. Cost: setup latency + per-connection state in the network.</p>
+    </div>
+    <div class="dev">
+      <div class="icon">✉️</div><h5>Connectionless</h5>
+      <span class="layer">"POSTAL MODEL" · UDP, IP, datagram networks</span>
+      <p>No setup. Each packet is <strong>independent</strong>: full destination address inside, possibly different routes, possible reordering/loss/delay. Low overhead and instant start; reliability, if needed, is layered on top (e.g. TCP over IP).</p>
+    </div>
+  </div>
+  <table>
+    <tr><th>Aspect</th><th>Connection-oriented</th><th>Connectionless</th></tr>
+    <tr><td>Setup phase</td><td>Required</td><td>None</td></tr>
+    <tr><td>Ordering</td><td>Preserved</td><td>Not guaranteed</td></tr>
+    <tr><td>Path</td><td>Same for all packets</td><td>May differ per packet</td></tr>
+    <tr><td>Network state</td><td>Per connection</td><td>None</td></tr>
+    <tr><td>Reliability</td><td>Typically acknowledged</td><td>Best-effort</td></tr>
+    <tr><td>Examples</td><td>TCP, virtual circuits</td><td>UDP, IP, datagrams</td></tr>
+  </table>
+  <div class="trap">"Connection-oriented" ≠ "physical circuit". TCP is connection-oriented <em>over</em> connectionless IP — the connection is logical, maintained only at the two end hosts.</div>
+  <details class="master"><summary>MASTER CHECK · 03</summary><div class="inner"><ol>
+    <li>Map: phone call and posted letters → which model, and why exactly?</li>
+    <li>Why can a connectionless network deliver packets of one message out of order?</li>
+    <li>Explain the trap above in your own words.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 4 ================= -->
+<section id="s4" class="reveal">
+  <div class="sechead"><span class="secnum">04</span><h2>Network Devices</h2></div>
+  <div class="grid g4">
+    <div class="dev"><div class="icon">〰️</div><h5>Modem</h5><span class="layer">MOdulator + DEModulator</span>
+      <p>Converts <strong>digital data ↔ analog signals</strong> so computer data can cross analog media (telephone line, cable TV plant). Sender modulates, receiver demodulates. DSL modems split voice/data bands on the same line; cable modems share the CATV coax.</p></div>
+    <div class="dev"><div class="icon">🔀</div><h5>Hub</h5><span class="layer">PHYSICAL LAYER (L1)</span>
+      <p>Multiport <strong>repeater</strong>: regenerates the signal and <em>floods it out every port</em>. No addressing, no filtering → one big collision domain, wasted bandwidth, zero privacy. Obsolete; replaced by switches.</p></div>
+    <div class="dev"><div class="icon">🔁</div><h5>Switch</h5><span class="layer">DATA-LINK LAYER (L2)</span>
+      <p>Learns source MACs into a <em>switching table</em>, then performs <strong>filtering + forwarding</strong>: frame goes only to the destination's port. Each port = its own collision domain; multiple pairs talk at once; unknown destinations are flooded until learned.</p></div>
+    <div class="dev"><div class="icon">🧭</div><h5>Router</h5><span class="layer">NETWORK LAYER (L3)</span>
+      <p>Joins <strong>different networks</strong>. Routes by <em>IP address</em> + routing table (best next hop). Has an IP + MAC <em>per interface</em>; rewrites link-layer addresses hop by hop; blocks broadcasts (separates broadcast domains).</p></div>
+  </div>
+  <table>
+    <tr><th>Property</th><th>Hub</th><th>Switch</th><th>Router</th></tr>
+    <tr><td>Layer</td><td>1 — signals</td><td>2 — frames/MAC</td><td>3 — packets/IP</td></tr>
+    <tr><td>Forwarding decision</td><td>None (flood)</td><td>MAC table</td><td>Routing table</td></tr>
+    <tr><td>Collision domains</td><td>1 shared</td><td>1 per port</td><td>1 per port</td></tr>
+    <tr><td>Broadcast domains</td><td>1</td><td>1</td><td>1 per interface</td></tr>
+    <tr><td>Connects</td><td>Hosts (same LAN)</td><td>Hosts (same LAN)</td><td>Different networks</td></tr>
+  </table>
+  <details class="master"><summary>MASTER CHECK · 04</summary><div class="inner"><ol>
+    <li>A frame arrives at a switch for a MAC not in its table — what happens?</li>
+    <li>Why does a router need both an IP and a MAC per interface?</li>
+    <li>Which device stops a broadcast storm from spreading, and why?</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 5 ================= -->
+<section id="s5" class="reveal">
+  <div class="sechead"><span class="secnum">05</span><h2>Network Models — TCP/IP, OSI &amp; Encapsulation</h2></div>
+  <p>Layering splits communication into cooperating layers: each offers <em>services</em> upward, uses services below, and logically converses with its <em>peer</em> on the other machine. Principles: each layer performs a distinct, well-defined function; layer boundaries minimize information flow across interfaces; a layer can be re-implemented without disturbing neighbors (<strong>modularity</strong>).</p>
+
+  <div class="stackrow">
+    <div class="stack anim">
+      <div class="title">OSI MODEL (ISO) — 7 LAYERS</div>
+      <div class="lyr"><span>Application</span><span class="n">L7</span><small>Network services to user: file transfer, mail, remote login, directory services</small></div>
+      <div class="lyr"><span>Presentation</span><span class="n">L6</span><small>Syntax &amp; semantics: translation between encodings, encryption/decryption, compression</small></div>
+      <div class="lyr"><span>Session</span><span class="n">L5</span><small>Dialog control (half/full-duplex turns), synchronization checkpoints for long transfers</small></div>
+      <div class="lyr"><span>Transport</span><span class="n">L4</span><small>Process-to-process delivery: port addressing, segmentation &amp; reassembly, connection/flow/error control</small></div>
+      <div class="lyr"><span>Network</span><span class="n">L3</span><small>Source-host → destination-host: logical (IP) addressing, routing across networks</small></div>
+      <div class="lyr"><span>Data Link</span><span class="n">L2</span><small>Hop-to-hop frames: framing, physical (MAC) addressing, flow/error/access control</small></div>
+      <div class="lyr"><span>Physical</span><span class="n">L1</span><small>Bit stream on the medium: encoding, data rate, bit synchronization, line configuration, topology</small></div>
+    </div>
+    <div class="stack right anim">
+      <div class="title">TCP/IP SUITE — 5 LAYERS</div>
+      <div class="lyr"><span>Application</span><span class="n">HTTP FTP SMTP DNS</span><small>Absorbs OSI L5–L7; unit = message; process ↔ process semantics via sockets</small></div>
+      <div class="lyr"><span>Transport</span><span class="n">TCP · UDP · SCTP</span><small>Unit = segment (TCP) / user datagram (UDP); ports address the process</small></div>
+      <div class="lyr"><span>Network (Internet)</span><span class="n">IP · ICMP · IGMP</span><small>Unit = datagram; IP addresses; routing host-to-host, best-effort</small></div>
+      <div class="lyr"><span>Data Link</span><span class="n">Ethernet · Wi-Fi</span><small>Unit = frame; MAC addresses; hop-to-hop across one link</small></div>
+      <div class="lyr"><span>Physical</span><span class="n">bits → signals</span><small>Transmission of individual bits over the medium</small></div>
+    </div>
+  </div>
+
+  <h3>Encapsulation / decapsulation</h3>
+  <p>Going down the sender's stack, each layer wraps the unit from above with its own header (link layer also adds a trailer). Routers decapsulate <em>up to L3 only</em>, route, then re-encapsulate with new link-layer addresses:</p>
+  <div class="encap">
+    <div class="row"><span class="lbl">APPLICATION</span><span class="seg msg">MESSAGE</span></div>
+    <div class="row"><span class="lbl">TRANSPORT</span><span class="seg th">TCP/UDP HDR</span><span class="seg msg">MESSAGE</span></div>
+    <div class="row"><span class="lbl">NETWORK</span><span class="seg ih">IP HDR</span><span class="seg th">TCP/UDP HDR</span><span class="seg msg">MESSAGE</span></div>
+    <div class="row"><span class="lbl">DATA LINK</span><span class="seg fh">FRAME HDR</span><span class="seg ih">IP HDR</span><span class="seg th">TCP/UDP HDR</span><span class="seg msg">MESSAGE</span><span class="seg fh">TRAILER</span></div>
+  </div>
+
+  <h3>Addressing at four levels</h3>
+  <table>
+    <tr><th>Layer</th><th>Address</th><th>Identifies</th><th>Scope / lifetime along a path</th></tr>
+    <tr><td>Application</td><td>Names (e.g. site/mail name)</td><td>The service/user</td><td>End-to-end</td></tr>
+    <tr><td>Transport</td><td>Port number</td><td>The <em>process</em> on the host</td><td>End-to-end, constant</td></tr>
+    <tr><td>Network</td><td>IP address</td><td>The <em>host</em> (connection to the internet)</td><td>End-to-end, constant*</td></tr>
+    <tr><td>Data link</td><td>MAC address</td><td>The <em>interface on one link</em></td><td>Changes every hop</td></tr>
+  </table>
+  <p class="dim" style="font-size:.85rem">*Barring NAT — outside this unit's scope.</p>
+
+  <h3>OSI vs TCP/IP — and why OSI never replaced it</h3>
+  <table>
+    <tr><th>Point</th><th>OSI</th><th>TCP/IP</th></tr>
+    <tr><td>Layers</td><td>7; Session &amp; Presentation explicit</td><td>5; their duties inside Application</td></tr>
+    <tr><td>Nature</td><td>Reference model, protocol-independent</td><td>Protocol suite the Internet actually runs</td></tr>
+    <tr><td>Order of birth</td><td>Model first, protocols intended later</td><td>Protocols first; model described them</td></tr>
+    <tr><td>Fate</td><td>Appeared when TCP/IP was already deployed; migration cost, complexity, some layers underspecified or duplicated performance-poor implementations → never adopted</td><td>Free with UNIX, proven, entrenched</td></tr>
+  </table>
+  <div class="note">The full 8/10-mark answer: both stacks drawn side by side + 2 functions per layer + encapsulation diagram + the four addressing levels. All four pieces are on this page.</div>
+  <details class="master"><summary>MASTER CHECK · 05</summary><div class="inner"><ol>
+    <li>Recite the 7 OSI layers top-down and bottom-up. <small>Mnemonic (down): All People Seem To Need Data Processing.</small></li>
+    <li>Which headers does a <em>router</em> examine? Which does it rewrite?</li>
+    <li>Which two addresses stay constant end-to-end, which changes each hop, and what does each identify?</li>
+    <li>Give two concrete reasons OSI failed to replace TCP/IP.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 6 ================= -->
+<section id="s6" class="reveal">
+  <div class="sechead"><span class="secnum">06</span><h2>Physical Layer — Digital Signals &amp; Transmission Impairment</h2></div>
+  <h3>Digital signals</h3>
+  <p>Data is encoded using a discrete number of voltage <strong>levels L</strong>; each level carries <code>log₂ L</code> bits.</p>
+  <div class="formula">bits per level = log₂ L &nbsp;&nbsp;·&nbsp;&nbsp; 8 levels → 3 bits/level
+    <small>If L isn't a power of 2, take ⌈log₂L⌉. Example: L = 4 → 2 bits per level.</small></div>
+  <ul>
+    <li><strong>Bit rate N</strong> — bits per second (bps).</li>
+    <li><strong>Bit length</strong> — distance one bit occupies on the medium: <code>bit length = propagation speed × bit duration</code> (the wire-analog of wavelength).</li>
+    <li>A digital signal is a <em>composite analog signal</em> with theoretically infinite bandwidth; a real channel passes only part of it, so shape degrades — hence encoding rules and rate limits.</li>
+    <li>Transmission: <strong>baseband</strong> — digital signal sent as-is over a low-pass channel (dedicated medium: LANs); <strong>broadband</strong> — digital data modulated onto an analog carrier for a band-pass channel (modems).</li>
+  </ul>
+  <div class="solved"><b>SOLVED ·</b> A signal must send 6 Mbps and the hardware supports 8 levels. Required signal rate (baud)?
+S = N / log₂L = 6,000,000 / 3 = <b>2 Mbaud</b>. (Signal rate = level changes/sec; bit rate = signal rate × bits per level.)</div>
+
+  <h3>Transmission impairment — why received ≠ sent</h3>
+  <div class="grid g2">
+    <div class="dev"><div class="icon">📉</div><h5>Attenuation</h5><span class="layer">LOSS OF ENERGY</span>
+      <p>Energy lost overcoming medium resistance (becomes heat); fixed with <strong>amplifiers/repeaters</strong>. Measured in <strong>decibels</strong>, which conveniently <em>add along a path</em>: <code>dB = 10 log₁₀(P₂/P₁)</code> (negative = loss). Also usable with voltage: 20 log₁₀(V₂/V₁).</p></div>
+    <div class="dev"><div class="icon">🌀</div><h5>Distortion</h5><span class="layer">CHANGE OF SHAPE</span>
+      <p>Frequency components of a composite signal propagate at <em>different velocities</em> → arrive with unequal phase shifts → the composite's shape changes. Worst for wideband signals.</p></div>
+    <div class="dev"><div class="icon">📻</div><h5>Noise</h5><span class="layer">UNWANTED SIGNAL ADDED</span>
+      <p><strong>Thermal</strong> — random electron motion, unavoidable; <strong>induced</strong> — motors/appliances as sending antennas, the medium as receiving antenna; <strong>crosstalk</strong> — coupling between adjacent wires; <strong>impulse</strong> — spikes (lightning, power switching).</p></div>
+    <div class="dev"><div class="icon">⚖️</div><h5>SNR</h5><span class="layer">SIGNAL-TO-NOISE RATIO</span>
+      <p><code>SNR = P_signal / P_noise</code> (average powers); <code>SNR_dB = 10 log₁₀ SNR</code>. High SNR → signal less corrupted; SNR bounds capacity (→ Shannon, §07).</p></div>
+  </div>
+  <div class="solved"><b>SOLVED ·</b> A signal passes segment 1 (−3 dB), an amplifier (+7 dB), segment 2 (−3 dB). Net effect?
+dB values add: −3 + 7 − 3 = <b>+1 dB</b> → slight overall gain. (This additivity is exactly why engineers use dB.)
+
+<b>SOLVED ·</b> Signal 10 mW, noise 1 μW → SNR = 10⁻²/10⁻⁶ = 10,000 → SNR_dB = 10·log₁₀10⁴ = <b>40 dB</b>.</div>
+  <details class="master"><summary>MASTER CHECK · 06</summary><div class="inner"><ol>
+    <li>Compute: signal power halves over a link. Loss in dB? <small>(10·log₁₀0.5 ≈ −3 dB — memorize: −3 dB ⇔ half power)</small></li>
+    <li>Which impairment is fixed by a repeater, and which one can't be "amplified away"? Why?</li>
+    <li>Name all four noise types with one source each.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 7 ================= -->
+<section id="s7" class="reveal">
+  <div class="sechead"><span class="secnum">07</span><h2>Data-Rate Limits &amp; Network Performance</h2></div>
+  <p>Data rate depends on three factors: available <strong>bandwidth</strong>, usable <strong>signal levels</strong>, and channel <strong>noise</strong>.</p>
+  <h3>Nyquist — noiseless channel</h3>
+  <div class="formula">C = 2 × B × log₂ L &nbsp;(bps)
+    <small>B in Hz, L = levels. Doubling levels adds only +B bps (log!) — and the receiver must still tell levels apart, so noise caps L in practice. Nyquist is a design formula, not a law of nature for noisy links.</small></div>
+  <h3>Shannon — noisy channel</h3>
+  <div class="formula">C = B × log₂ (1 + SNR) &nbsp;(bps)
+    <small>Independent of levels/encoding — the hard ceiling. With SNR = 0 (pure noise), C = 0 regardless of bandwidth.</small></div>
+  <div class="solved"><b>SOLVED ·</b> Telephone line: B = 3000 Hz, SNR_dB = 35.
+SNR = 10^(35/10) = 3162.  C = 3000 × log₂(3163) ≈ 3000 × 11.62 ≈ <b>34.86 kbps</b>.
+
+<b>SOLVED · (the "use both" pattern)</b> B = 1 MHz, SNR = 63.
+Shannon: C = 10⁶ × log₂64 = <b>6 Mbps</b> (ceiling).
+Choose a safe target, say 4 Mbps → Nyquist: 4×10⁶ = 2×10⁶×log₂L → log₂L = 2 → <b>L = 4 levels</b>.</div>
+  <h3>Performance metrics</h3>
+  <ul>
+    <li><strong>Bandwidth</strong> — two linked meanings: Hz (frequency range a channel passes) and bps (link speed). More Hz generally buys more bps.</li>
+    <li><strong>Throughput</strong> — the <em>measured</em> rate through a point; always ≤ nominal bandwidth (a 1 Mbps link carrying 12,000 × 10,000-bit frames/min ⇒ throughput = 2 Mbps? No — 12,000×10,000/60 = 2 Mbps exceeds capacity, so real throughput saturates at link rate; typical exam version: 12,000 frames/min → 12,000×10,000/60 = 2 Mbps demand on a 10 Mbps link ⇒ throughput 2 Mbps).</li>
+    <li><strong>Latency</strong> — time for a <em>complete message</em> to arrive from first bit sent:</li>
+  </ul>
+  <div class="formula">Latency = Propagation + Transmission + Queuing + Processing
+    <small>Propagation = distance ÷ propagation speed (per-bit travel). Transmission = message size ÷ bandwidth (time to push all bits onto the wire). Queuing = buffer waits at devices (grows with load). Processing = per-node handling.</small></div>
+  <div class="solved"><b>SOLVED ·</b> 2.5 kB message, 12,000 km link, propagation speed 2.4×10⁸ m/s, bandwidth 1 Gbps.
+Propagation = 1.2×10⁷ / 2.4×10⁸ = <b>50 ms</b>.
+Transmission = 20,000 bits / 10⁹ bps = <b>0.02 ms</b>.
+Latency ≈ 50.02 ms → propagation-dominated (short message, fat pipe). For a huge file on a slow link, transmission dominates instead — say which term dominates and why: easy marks.</div>
+  <ul>
+    <li><strong>Bandwidth–Delay Product</strong> — <code>BW × delay</code> = bits that "fill the pipe" (in flight). A 5 Mbps × 20 ms link holds 100,000 bits; to use full capacity with acknowledgment protocols, the sender's window must cover <em>2 × BDP</em> (out-and-back).</li>
+    <li><strong>Jitter</strong> — delay variation between packets; the enemy of real-time media.</li>
+  </ul>
+  <div class="trap">Don't mix the two delay terms. Propagation depends on <em>distance</em> only; transmission depends on <em>message size and bandwidth</em> only. Increasing bandwidth does nothing to propagation delay.</div>
+  <details class="master"><summary>MASTER CHECK · 07</summary><div class="inner"><ol>
+    <li>State both capacity formulas from memory, with every symbol defined.</li>
+    <li>B = 20 kHz, SNR_dB = 40. Capacity? <small>(SNR = 10⁴ → C = 20,000×log₂10001 ≈ 265.6 kbps)</small></li>
+    <li>Why must a sliding-window protocol cover 2×BDP, not 1×?</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 8 ================= -->
+<section id="s8" class="reveal">
+  <div class="sechead"><span class="secnum">08</span><h2>Line Coding — Unipolar &amp; Polar Schemes</h2></div>
+  <p><strong>Line coding</strong> converts a bit sequence into a digital signal. Design goals: minimal bandwidth, <em>no DC component</em> (transformers/couplers block near-zero frequencies; residual DC also wastes power), <em>self-synchronization</em> (transitions let the receiver recover the clock — a mismatched clock misreads bit boundaries), error-detection ability, noise immunity, low complexity. Every waveform below encodes the same stream <code>0 1 0 0 1 1 1 0</code>.</p>
+
+  <div class="wave anim">
+    <h5>Unipolar NRZ</h5>
+    <div class="rule">1 → +V · 0 → 0 V · NRZ = level held for the full bit interval</div>
+    <svg viewBox="0 0 500 120">
+      <g class="bits"><text x="25" y="14">0</text><text x="85" y="14">1</text><text x="145" y="14">0</text><text x="205" y="14">0</text><text x="265" y="14">1</text><text x="325" y="14">1</text><text x="385" y="14">1</text><text x="445" y="14">0</text></g>
+      <g><line class="gridl" x1="70" y1="20" x2="70" y2="100"/><line class="gridl" x1="130" y1="20" x2="130" y2="100"/><line class="gridl" x1="190" y1="20" x2="190" y2="100"/><line class="gridl" x1="250" y1="20" x2="250" y2="100"/><line class="gridl" x1="310" y1="20" x2="310" y2="100"/><line class="gridl" x1="370" y1="20" x2="370" y2="100"/><line class="gridl" x1="430" y1="20" x2="430" y2="100"/></g>
+      <path class="trace" transform="translate(10,10)" d="M0,80 H60 V20 H120 V80 H240 V20 H420 V80 H480"/>
+    </svg>
+    <p class="dim" style="font-size:.85rem">Power concentrated near f = 0 → strong <strong>DC component</strong>; long same-bit runs → no transitions → sync loss. Costly and obsolete.</p>
+  </div>
+
+  <div class="wave anim">
+    <h5>Polar NRZ-L (Level)</h5>
+    <div class="rule">0 → +V · 1 → −V · the level itself is the bit</div>
+    <svg viewBox="0 0 500 120">
+      <g class="bits"><text x="25" y="14">0</text><text x="85" y="14">1</text><text x="145" y="14">0</text><text x="205" y="14">0</text><text x="265" y="14">1</text><text x="325" y="14">1</text><text x="385" y="14">1</text><text x="445" y="14">0</text></g>
+      <line class="zero" x1="10" y1="60" x2="490" y2="60"/>
+      <path class="trace" transform="translate(10,10)" d="M0,20 H60 V80 H120 V20 H240 V80 H420 V20 H480"/>
+    </svg>
+    <p class="dim" style="font-size:.85rem">Average bandwidth B ≈ N/2 (best of the family). Problems: same-bit runs freeze the line (sync); a polarity swap inverts <em>every</em> bit; DC creeps in when 0s and 1s aren't balanced.</p>
+  </div>
+
+  <div class="wave anim">
+    <h5>Polar NRZ-I (Invert)</h5>
+    <div class="rule">1 → transition at bit start · 0 → none · the change is the bit</div>
+    <svg viewBox="0 0 500 120">
+      <g class="bits"><text x="25" y="14">0</text><text x="85" y="14">1</text><text x="145" y="14">0</text><text x="205" y="14">0</text><text x="265" y="14">1</text><text x="325" y="14">1</text><text x="385" y="14">1</text><text x="445" y="14">0</text></g>
+      <line class="zero" x1="10" y1="60" x2="490" y2="60"/>
+      <path class="trace" transform="translate(10,10)" d="M0,20 H60 V80 H240 V20 H300 V80 H360 V20 H480"/>
+    </svg>
+    <p class="dim" style="font-size:.85rem">Differential → polarity-swap immune; every <code>1</code> re-syncs the clock. Remaining weakness: long runs of <code>0</code>s (fixed in practice by scrambling/4B5B — beyond this unit).</p>
+  </div>
+
+  <div class="wave anim">
+    <h5>Polar RZ (Return-to-Zero)</h5>
+    <div class="rule">1 → +V then 0 · 0 → −V then 0 · returns to zero every mid-bit · three levels</div>
+    <svg viewBox="0 0 500 120">
+      <g class="bits"><text x="25" y="14">0</text><text x="85" y="14">1</text><text x="145" y="14">0</text><text x="205" y="14">0</text><text x="265" y="14">1</text><text x="325" y="14">1</text><text x="385" y="14">1</text><text x="445" y="14">0</text></g>
+      <line class="zero" x1="10" y1="60" x2="490" y2="60"/>
+      <path class="trace" transform="translate(10,10)" d="M0,80 H30 V50 H60 V20 H90 V50 H120 V80 H150 V50 H180 V80 H210 V50 H240 V20 H270 V50 H300 V20 H330 V50 H360 V20 H390 V50 H420 V80 H450 V50 H480"/>
+    </svg>
+    <p class="dim" style="font-size:.85rem">Guaranteed per-bit transition solves sync — at the price of <strong>double bandwidth</strong> and 3 voltage levels (more complexity, more error-proneness). Superseded by Manchester.</p>
+  </div>
+
+  <div class="wave anim">
+    <h5>Manchester</h5>
+    <div class="rule">mandatory mid-bit transition = clock + data · 0 → high-to-low · 1 → low-to-high (IEEE 802.3 convention)</div>
+    <svg viewBox="0 0 500 120">
+      <g class="bits"><text x="25" y="14">0</text><text x="85" y="14">1</text><text x="145" y="14">0</text><text x="205" y="14">0</text><text x="265" y="14">1</text><text x="325" y="14">1</text><text x="385" y="14">1</text><text x="445" y="14">0</text></g>
+      <line class="zero" x1="10" y1="60" x2="490" y2="60"/>
+      <path class="trace" transform="translate(10,10)" d="M0,20 H30 V80 H90 V20 H150 V80 H180 V20 H210 V80 H270 V20 H300 V80 H330 V20 H360 V80 H390 V20 H450 V80 H480"/>
+    </svg>
+    <p class="dim" style="font-size:.85rem">RZ's sync + polar's two levels; <strong>zero DC</strong> (each bit averages 0). Cost: minimum bandwidth = 2 × NRZ. Used by classic <strong>Ethernet (10BASE-T)</strong>.</p>
+  </div>
+
+  <div class="wave anim">
+    <h5>Differential Manchester</h5>
+    <div class="rule">mid-bit transition always (clock) · 0 → extra transition at bit start · 1 → none at start</div>
+    <svg viewBox="0 0 500 120">
+      <g class="bits"><text x="25" y="14">0</text><text x="85" y="14">1</text><text x="145" y="14">0</text><text x="205" y="14">0</text><text x="265" y="14">1</text><text x="325" y="14">1</text><text x="385" y="14">1</text><text x="445" y="14">0</text></g>
+      <line class="zero" x1="10" y1="60" x2="490" y2="60"/>
+      <path class="trace" transform="translate(10,10)" d="M0,80 H30 V20 H90 V80 H120 V20 H150 V80 H180 V20 H210 V80 H270 V20 H330 V80 H390 V20 H420 V80 H450 V20 H480"/>
+    </svg>
+    <p class="dim" style="font-size:.85rem">Bit = presence/absence of the <em>start</em> transition → polarity-immune like NRZ-I, self-clocking like Manchester. Used by <strong>Token Ring</strong>.</p>
+  </div>
+
+  <h3>One-glance comparison</h3>
+  <table>
+    <tr><th>Scheme</th><th>Levels</th><th>DC component</th><th>Self-sync</th><th>Min bandwidth</th><th>Polarity-swap safe</th><th>Used in</th></tr>
+    <tr><td>Unipolar NRZ</td><td>2 (0,+V)</td><td>Severe</td><td>No</td><td>≈ N/2</td><td>—</td><td>Obsolete</td></tr>
+    <tr><td>Polar NRZ-L</td><td>2 (±V)</td><td>Possible</td><td>No (same-bit runs)</td><td>≈ N/2</td><td>No</td><td>RS-232 style links</td></tr>
+    <tr><td>Polar NRZ-I</td><td>2 (±V)</td><td>Possible</td><td>Partial (only on 1s)</td><td>≈ N/2</td><td>Yes</td><td>With 4B5B: Fast Ethernet/FDDI</td></tr>
+    <tr><td>Polar RZ</td><td>3</td><td>No</td><td>Yes (every bit)</td><td>≈ N</td><td>No</td><td>Superseded</td></tr>
+    <tr><td>Manchester</td><td>2</td><td>None</td><td>Yes (every bit)</td><td>≈ N</td><td>No</td><td>10 Mbps Ethernet</td></tr>
+    <tr><td>Diff. Manchester</td><td>2</td><td>None</td><td>Yes (every bit)</td><td>≈ N</td><td>Yes</td><td>Token Ring</td></tr>
+  </table>
+  <div class="note">The line-coding question is nearly guaranteed: draw all six for a given stream, <em>state your 0/1 convention</em>, then compare on DC, sync, bandwidth. Practice with <code>10110001</code> until you can do it in under four minutes.</div>
+  <details class="master"><summary>MASTER CHECK · 08</summary><div class="inner"><ol>
+    <li>Draw all six schemes for <code>1 0 1 1 0 0 0 1</code> from memory, then verify against the rules above.</li>
+    <li>Why is a DC component harmful, physically?</li>
+    <li>Which two schemes survive an accidental wire-pair swap, and what do they share?</li>
+    <li>Why does self-synchronization cost bandwidth?</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 9 ================= -->
+<section id="s9" class="reveal">
+  <div class="sechead"><span class="secnum">09</span><h2>Transmission Media — Guided</h2></div>
+  <p><strong>Guided media</strong> provide a physical conduit directing the signal (vs unguided = free space/wireless). Metallic media (twisted-pair, coax) carry <em>electric current</em>; optical fiber carries <em>light</em>.</p>
+  <div class="grid g2">
+    <div class="dev"><div class="icon">🧬</div><h5>Twisted-Pair Cable</h5><span class="layer">METALLIC · CHEAPEST · MOST COMMON</span>
+      <p>Two insulated copper conductors twisted together. Interference and crosstalk hit <em>both</em> wires almost equally, so the receiver — which reads the <em>difference</em> — cancels the noise; more twists per unit length = better cancellation. <strong>UTP</strong>: unshielded, categories Cat-1…Cat-7 (rising data rate), <strong>RJ-45</strong> connector; used in telephone local loops and LANs. <strong>STP</strong>: metal foil/braid shield per pair — better noise immunity, but bulkier, costlier (mainly IBM/Token-Ring legacy).</p></div>
+    <div class="dev"><div class="icon">🎯</div><h5>Coaxial Cable</h5><span class="layer">METALLIC · HIGHER FREQUENCY RANGE</span>
+      <p>Layered: central solid/stranded core → insulating sheath → outer braided/foil conductor (shield <em>and</em> return path) → jacket. Carries higher frequencies than TP but with <em>higher attenuation</em> → needs frequent repeaters. Standardized by <strong>RG ratings</strong>: RG-59 (cable TV), RG-58 (thin Ethernet), RG-11 (thick Ethernet); <strong>BNC</strong> connectors (plain/T/terminator). Uses: analog+digital telephone trunks (historic), CATV, traditional Ethernet.</p></div>
+    <div class="dev" style="grid-column:1/-1"><div class="icon">💡</div><h5>Fiber-Optic Cable</h5><span class="layer">GLASS/PLASTIC · LIGHT · TOTAL INTERNAL REFLECTION</span>
+      <p>A dense glass <em>core</em> inside a less-dense <em>cladding</em>; light striking the boundary beyond the <strong>critical angle</strong> reflects back inside — the beam is trapped and guided. <strong>Propagation modes:</strong> <em>multimode step-index</em> — many rays bounce at abrupt density change, path lengths differ → pulse spreading/distortion; <em>multimode graded-index</em> — density falls gradually from center, rays curve → far less spreading; <em>single-mode</em> — tiny core + focused laser, essentially one horizontal beam → negligible spreading, longest reach, highest rates. Cabling: core/cladding sizes quoted in μm (e.g. 50/125); connectors SC/ST/MT-RJ; sources LED (multimode) or laser (single-mode).<br>
+      <span class="badge ok">enormous bandwidth (WDM)</span><span class="badge ok">very low attenuation → repeaters ~50 km apart</span><span class="badge ok">immune to EMI</span><span class="badge ok">corrosion-resistant</span><span class="badge ok">light weight</span><span class="badge ok">hard to tap</span><span class="badge warn">installation needs expertise</span><span class="badge warn">unidirectional per fiber (pairs needed)</span><span class="badge warn">costly cable + interfaces</span></p></div>
+  </div>
+  <details class="master"><summary>MASTER CHECK · 09</summary><div class="inner"><ol>
+    <li>Explain <em>why</em> twisting cancels noise (the "difference" argument), not just that it does.</li>
+    <li>Match RG-58, RG-59, RG-11 to their applications.</li>
+    <li>Order the three fiber modes by pulse-spreading, and say what physically causes the spreading.</li>
+    <li>Give 3 advantages + 3 disadvantages of fiber over copper.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 10 ================= -->
+<section id="s10" class="reveal">
+  <div class="sechead"><span class="secnum">10</span><h2>Switching — Packet Switching</h2></div>
+  <p>A switched network moves data through a mesh of <strong>switches</strong>. Circuit switching (telephony) reserves a dedicated path for the whole session — wasteful for bursty data. <strong>Packet switching</strong> splits the message into <em>packets</em>; each switch does <strong>store-and-forward</strong> (receive fully → verify → forward), and resources are granted <em>on demand</em>. Two flavors:</p>
+  <h3>Datagram approach — connectionless</h3>
+  <ul>
+    <li>Each packet is independent, carries the <strong>full destination address</strong>; switches consult a <em>routing/forwarding table keyed by destination</em>.</li>
+    <li>Packets of one message can take different paths → possible reordering; buffers full → drops. No setup/teardown. Efficiency high for bursty traffic; delay per packet = transmission + propagation + waits at each switch.</li>
+    <li>This is the Internet's network layer: <strong>IP is a datagram network</strong>.</li>
+  </ul>
+  <h3>Virtual-circuit approach — connection-oriented</h3>
+  <ul>
+    <li><strong>Setup</strong>: a request travels the chosen path; each switch installs an entry (incoming port+VCI → outgoing port+VCI); an acknowledgment flows back assigning VCIs.</li>
+    <li><strong>Data transfer</strong>: packets carry a small <strong>VCI label</strong>, swapped at every switch per its table; all packets ride the <em>same path, in order</em>.</li>
+    <li><strong>Teardown</strong>: both ends signal; switches erase the entries. Resources can be reserved at setup (predictable delay) or on demand.</li>
+    <li>Implemented in the data-link layer of WANs (Frame Relay, ATM); the label-swap idea lives on in MPLS.</li>
+  </ul>
+  <table>
+    <tr><th></th><th>Datagram</th><th>Virtual circuit</th></tr>
+    <tr><td>Setup / teardown</td><td>None</td><td>Both required</td></tr>
+    <tr><td>Address carried</td><td>Full destination</td><td>Short VCI (local to each link)</td></tr>
+    <tr><td>Path</td><td>Per packet, may differ</td><td>One path for the connection</td></tr>
+    <tr><td>Order</td><td>Not guaranteed</td><td>Preserved</td></tr>
+    <tr><td>Switch state</td><td>Routing table only</td><td>Per-connection entries</td></tr>
+    <tr><td>Delay profile</td><td>Varies per packet</td><td>One-time setup cost, then uniform</td></tr>
+  </table>
+  <div class="trap">VCI is <em>not</em> an address of the destination — it's a per-link label that changes at every switch. Saying "the VCI identifies the destination host" is a marks-losing sentence.</div>
+  <details class="master"><summary>MASTER CHECK · 10</summary><div class="inner"><ol>
+    <li>Walk a packet through 3 switches in each model: what does each switch look up, and what changes in the packet?</li>
+    <li>Why is packet switching better than circuit switching for bursty computer traffic?</li>
+    <li>Where does delay come from in a datagram network? List all four contributors per hop.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 11 ================= -->
+<section id="s11" class="reveal">
+  <div class="sechead"><span class="secnum">11</span><h2>Data-Link Layer — Introduction &amp; Link-Layer Addressing (up to ARP)</h2></div>
+  <p>A host-to-host path = a chain of <strong>nodes</strong> (hosts + routers) and <strong>links</strong> (the LANs/WANs between). The data-link layer delivers <strong>frames hop-to-hop</strong> across each link. Services: <strong>framing</strong> (encapsulate the datagram between header and trailer), <em>flow control</em> (pace a fast sender for a slow receiver), <em>error control</em> (detect/correct or discard-and-let-upper-layers-resend), <em>congestion control</em> (link-scope). Links: <strong>point-to-point</strong> (dedicated) vs <strong>broadcast</strong> (shared → needs §13). Sublayers: <strong>DLC</strong> (data-link control, common to all links) + <strong>MAC</strong> (media access, only for shared links).</p>
+  <h3>Why a second address type?</h3>
+  <p>IP addresses define host-to-host delivery at internet scope; they cannot steer a frame across one physical link. So the frame has its own addressing. As a datagram crosses the internet: <strong>IP source/destination never change; frame MAC source/destination are rewritten at every hop</strong> (each router strips the frame, routes the datagram, and builds a new frame for the next link).</p>
+  <ul>
+    <li><strong>MAC address</strong> — 48 bits = 6 bytes in hex, e.g. <code>4A:30:10:21:10:1A</code>, assigned to the NIC.</li>
+    <li><strong>Unicast</strong> — one recipient. Rule: <em>LSB (least-significant bit) of the first byte = 0</em> ⇔ second hex digit ∈ {0,2,4,6,8,A,C,E}.</li>
+    <li><strong>Multicast</strong> — a group. <em>LSB of first byte = 1</em> ⇔ second hex digit ∈ {1,3,5,7,9,B,D,F}. Check the bit, not memorized examples: <code>A3:…</code> and <code>47:…</code> (0x47 = 0100 0111₂) are both multicast.</li>
+    <li><strong>Broadcast</strong> — everyone on the link: <code>FF:FF:FF:FF:FF:FF</code> (a special multicast).</li>
+  </ul>
+  <h3>ARP — Address Resolution Protocol</h3>
+  <p>The network layer hands down the datagram plus the <em>next-hop IP</em> (its own forwarding decision). ARP supplies the missing piece — the next hop's MAC:</p>
+  <ol>
+    <li>Sender <strong>broadcasts an ARP request</strong> ("who has IP N? tell me your MAC") — frame destination FF:FF:FF:FF:FF:FF, so every node on the link processes it.</li>
+    <li>Only the IP's owner answers with a <strong>unicast ARP reply</strong> carrying its MAC (it can unicast — the requester's MAC was in the request).</li>
+    <li>Sender caches the mapping (ARP cache, with timeout) and unicasts frames from then on.</li>
+  </ol>
+  <div class="arpviz">
+    <div class="host" style="left:12px"><b>HOST A</b><br>needs MAC<br>of 10.0.0.5</div>
+    <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+    <div class="host" style="right:12px"><b>HOST B</b><br>IP 10.0.0.5<br>MAC …:1A</div>
+    <div class="arppkt req">ARP REQUEST · BROADCAST</div>
+    <div class="arppkt rep">ARP REPLY · UNICAST (my MAC)</div>
+    <div class="arpcap">request goes to everyone → only the target answers, privately</div>
+  </div>
+  <div class="card">
+    <h4>ARP packet format — fields to name in an exam</h4>
+    <table style="margin:0">
+      <tr><th>Field</th><th>Value / meaning</th></tr>
+      <tr><td>Hardware type</td><td>Link technology; 1 = Ethernet</td></tr>
+      <tr><td>Protocol type</td><td>Network protocol; 0x0800 = IPv4</td></tr>
+      <tr><td>HW len / Proto len</td><td>6 (MAC bytes) / 4 (IPv4 bytes)</td></tr>
+      <tr><td>Operation</td><td>1 = request, 2 = reply</td></tr>
+      <tr><td>Sender HW &amp; proto addr</td><td>Requester's MAC + IP</td></tr>
+      <tr><td>Target HW &amp; proto addr</td><td>Target IP; MAC field empty in a request, filled in the reply</td></tr>
+    </table>
+    <p class="dim" style="font-size:.85rem;margin:10px 0 0">The ARP packet is encapsulated <em>directly in a link-layer frame</em> (type field of the frame marks it as ARP).</p>
+  </div>
+  <div class="note">The 3-hop question (host→R1→R2→host): ARP runs <strong>once per link = 3 times</strong>; MACs change per hop, IPs constant. Justify multicast/unicast MACs via the <em>LSB of the first byte</em>, never by pattern-matching examples.</div>
+  <details class="master"><summary>MASTER CHECK · 11</summary><div class="inner"><ol>
+    <li>Why is the ARP request broadcast but the reply unicast?</li>
+    <li>Classify by the LSB rule: <code>4A:…</code>, <code>47:…</code>, <code>A2:…</code>, <code>FF:FF:FF:FF:FF:FF</code>. <small>(uni · multi · uni · broadcast)</small></li>
+    <li>At hop 2 of a 3-hop path, write down all four addresses in the frame/datagram and mark which changed since hop 1.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 12 ================= -->
+<section id="s12" class="reveal">
+  <div class="sechead"><span class="secnum">12</span><h2>Error Detection &amp; Correction — Block Coding, Parity, CRC</h2></div>
+  <h3>Errors &amp; the core idea</h3>
+  <ul>
+    <li><strong>Single-bit error</strong> — exactly one bit flips. <strong>Burst error</strong> — ≥2 bits flip; length = first-to-last corrupted position (bits between may be intact). Bursts dominate in practice: noise lasts longer than one bit time, and the faster the link, the more bits one noise event clobbers.</li>
+    <li><strong>Redundancy</strong> is the only weapon: sender appends bits computed from the data; receiver recomputes and compares. <em>Detection</em>: "damaged or not?" (then discard/rerequest). <em>Correction</em>: also locate the flipped bits — exponentially harder (in an 8-bit unit, a single error has 8 possible positions; two errors, 28).</li>
+  </ul>
+  <h3>Block coding</h3>
+  <ul>
+    <li>Divide the message into <strong>datawords</strong> of <code>k</code> bits; add <code>r</code> redundant bits → <strong>codewords</strong> of <code>n = k + r</code> bits.</li>
+    <li>Valid codewords: <code>2ᵏ</code> out of <code>2ⁿ</code> possible words. Receiver sees an invalid word ⇒ error. An error that maps one valid codeword onto another valid one is <em>undetectable</em>.</li>
+    <li><strong>Hamming distance</strong> d(x,y) = number of differing positions = number of 1s in <code>x ⊕ y</code>. <strong>d<sub>min</sub></strong> = minimum distance over all valid pairs — the code's whole power is in this number.</li>
+  </ul>
+  <div class="formula">Detect ≤ s errors ⇔ d<sub>min</sub> = s + 1 &nbsp;·&nbsp; Correct ≤ t errors ⇔ d<sub>min</sub> = 2t + 1
+    <small>d<sub>min</sub> = 5 → detect 4 <em>or</em> correct 2 (one capability at a time, not both maxima together).</small></div>
+  <p><strong>Parity-check code</strong> — simplest block code, <code>n = k+1</code>: the extra bit makes total 1s even. <code>d<sub>min</sub> = 2</code> → detects every <em>odd</em> number of errors, misses even counts. Receiver computes the <strong>syndrome</strong> (checker output over all n bits): 0 → accept dataword, 1 → discard.</p>
+  <div class="solved"><b>SOLVED ·</b> d(10101, 11110)? XOR = 01011 → three 1s → <b>d = 3</b>.
+<b>SOLVED ·</b> A code must correct 3 errors. Required d_min = 2·3+1 = <b>7</b>.</div>
+  <h3>Cyclic Redundancy Check (CRC)</h3>
+  <p>A cyclic code (any rotation of a codeword is a codeword), the standard of LANs/WANs, computed by modulo-2 (XOR, no carries) division:</p>
+  <ol>
+    <li>Append <code>n−k</code> zeros to the dataword.</li>
+    <li>XOR-divide by the agreed <strong>generator</strong> (n−k+1 bits, MSB=1). Rule per step: leftmost bit 1 → subtract (XOR) the divisor; leftmost bit 0 → XOR all-zeros; then bring the next bit down.</li>
+    <li><strong>Remainder (n−k bits) = the CRC</strong>; it replaces the appended zeros → codeword.</li>
+    <li>Receiver divides the received word by the same generator: <strong>remainder 0 → accept, else discard</strong>.</li>
+  </ol>
+  <div class="card">
+    <h4>Worked example — dataword 1001, divisor 1011 (k = 4, n = 7)</h4>
+<div class="crc">            <span class="q">1 0 1 0</span>            ← quotient (discarded)
+      ┌─────────────────
+1011  │ 1 0 0 1 0 0 0      ← 1001 + three 0s
+        <span class="x">1 0 1 1</span> ↓          leftmost 1 → XOR divisor
+        ───────
+        0 0 1 0 0          leftmost 0 → XOR 0000
+          <span class="x">0 0 0 0</span> ↓
+          ───────
+          0 1 0 0 0        leftmost 0 → XOR 0000
+            <span class="x">0 0 0 0</span> ↓
+            ───────
+            1 0 0 0        leftmost 1 → XOR divisor
+              <span class="x">1 0 1 1</span>
+              ───────
+              <span class="r">0 1 1</span>        remainder = CRC = <span class="r">110</span>
+
+Codeword = <span class="r">1 0 0 1 1 1 0</span>   (check: 1001110 ÷ 1011 → remainder 000 ✓)</div>
+  </div>
+  <h3>Polynomial view &amp; generator quality</h3>
+  <ul>
+    <li>Bits ↔ polynomial: 1011 = <code>x³ + x + 1</code>; degree = position of leftmost 1 = number of CRC bits.</li>
+    <li>A good generator g(x): has ≥2 terms · coefficient of x⁰ is 1 (detects <em>all single-bit</em> errors) · does not divide xᵗ+1 for t up to frame length (catches isolated double errors) · contains factor <code>x+1</code> (catches all <em>odd-count</em> errors) · degree r ⇒ detects all <strong>burst errors of length ≤ r</strong>, and bursts of length r+1 with probability 1−(½)^(r−1).</li>
+    <li>Standards: <strong>CRC-8</strong> (ATM header), <strong>CRC-16</strong>/<strong>CRC-CCITT</strong> (HDLC), <strong>CRC-32</strong> (Ethernet, Wi-Fi).</li>
+  </ul>
+  <div class="trap">In XOR division there is no borrowing and no "greater than" comparison — the only test is the <em>leftmost bit</em>. Students who long-divide decimally lose the entire numerical.</div>
+  <details class="master"><summary>MASTER CHECK · 12</summary><div class="inner"><ol>
+    <li>Compute CRC for dataword <code>1101</code>, divisor <code>1011</code> from memory. <small>(remainder 100 → codeword 1101100)</small></li>
+    <li>Receiver gets <code>1001111</code> with divisor 1011 — accept or reject? <small>(divide: nonzero remainder → reject)</small></li>
+    <li>d<sub>min</sub>=4: detection and correction capabilities? <small>(detect 3, or correct 1)</small></li>
+    <li>Why does even parity miss a 2-bit error? Show with an example.</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 13 ================= -->
+<section id="s13" class="reveal">
+  <div class="sechead"><span class="secnum">13</span><h2>Media Access Control — CSMA &amp; CSMA/CD</h2></div>
+  <p>On a <strong>broadcast link</strong>, simultaneous transmissions <strong>collide</strong> and destroy each other; a MAC protocol arbitrates access. CSMA is a <em>random-access</em> method: no master, no schedule; each station decides using the medium's state.</p>
+  <h3>CSMA — Carrier Sense Multiple Access</h3>
+  <ul>
+    <li>Principle: <strong>"sense before transmit"</strong> — listen; transmit only if idle. Cuts collision probability sharply, can't reach zero.</li>
+    <li>Why not zero: <strong>propagation delay</strong>. Station B may sense "idle" while A's first bit is still in flight toward it. <em>Vulnerable time = T<sub>p</sub></em> (one end-to-end propagation time): a collision is possible only if another station starts within this window.</li>
+  </ul>
+  <div class="card">
+    <h4>Persistence methods — behavior around a busy channel</h4>
+    <table style="margin:0">
+      <tr><th>Method</th><th>When busy</th><th>When idle</th><th>Collisions</th><th>Channel waste</th></tr>
+      <tr><td><strong>1-persistent</strong></td><td>Keep sensing continuously</td><td>Transmit immediately (p = 1)</td><td>Highest — waiting stations all fire at once</td><td>Lowest</td></tr>
+      <tr><td><strong>Non-persistent</strong></td><td>Wait a random time, sense again</td><td>Transmit</td><td>Lowest</td><td>Highest — line may sit idle</td></tr>
+      <tr><td><strong>p-persistent</strong> (slotted)</td><td>—</td><td>Transmit with prob. p, else defer one slot and repeat; if busy meanwhile, restart as after collision</td><td colspan="2">Tunable compromise between the two</td></tr>
+    </table>
+    <p class="dim" style="font-size:.85rem;margin:10px 0 0">Ethernet uses 1-persistent — simple, and its collision <em>detection</em> makes the extra collisions cheap.</p>
+  </div>
+  <h3>CSMA/CD — add Collision Detection (classic Ethernet)</h3>
+  <div class="fchart anim">
+    <div class="fc">START · K = 0<br>apply persistence method, sense channel</div>
+    <div class="fa">↓ channel idle</div>
+    <div class="fc">TRANSMIT <b>and keep listening</b> simultaneously</div>
+    <div class="fa">↓</div>
+    <div class="fc dec">collision detected before frame ends?</div>
+    <div class="fa"><b>NO →</b> transmission complete ✓ &nbsp;·&nbsp; <b>YES ↓</b></div>
+    <div class="fc bad">ABORT immediately + send JAM signal<br>(inform everyone; don't waste the channel)</div>
+    <div class="fa">↓ K = K + 1 &nbsp;·&nbsp; K &gt; 15 → give up, report failure</div>
+    <div class="fc">BINARY EXPONENTIAL BACKOFF<br>wait R × slot-time, R random in [0, 2^K − 1]<br>(cap K at 10 for the range) → sense again</div>
+  </div>
+  <div class="formula">Minimum frame condition: T<sub>fr</sub> ≥ 2 T<sub>p</sub> &nbsp;⇒&nbsp; min frame size = bandwidth × 2T<sub>p</sub>
+    <small>Worst case: A's bit almost reaches far-end B (time T_p) when B transmits; the collision takes another T_p to travel back. A must still be transmitting when it arrives — else A would believe the frame succeeded. Hence frame time ≥ round trip.</small></div>
+  <div class="solved"><b>SOLVED ·</b> Classic Ethernet: 10 Mbps, worst 2T_p = 51.2 μs.
+Min frame = 10⁷ × 51.2×10⁻⁶ = 512 bits = <b>64 bytes</b> — exactly Ethernet's minimum frame.
+
+<b>SOLVED ·</b> 1 km bus, propagation 2×10⁸ m/s, 100 Mbps.
+T_p = 10³/2×10⁸ = 5 μs → min frame = 10⁸ × 10 μs = <b>1000 bits</b>. Note how a faster network needs a <em>bigger</em> minimum frame — one reason CSMA/CD didn't scale to gigabit shared media.</div>
+  <ul>
+    <li><strong>Energy levels</strong> a station distinguishes: <em>zero</em> (idle) · <em>normal</em> (one sender) · <em>abnormal</em> (~double — collision). Detection = monitoring energy/voltage while sending.</li>
+    <li>CSMA/CD vs plain ALOHA-family: sensing + early abort → far higher throughput at moderate load. Modern <em>switched full-duplex</em> Ethernet has no shared medium → no collisions → CSMA/CD retired in practice, canonical in exams.</li>
+  </ul>
+  <div class="trap">Backoff waits are multiples of the <em>slot time</em> (= 2T_p), not arbitrary microseconds; and the jam signal is sent by the station that <em>detects</em> the collision — its purpose is to guarantee everyone else notices.</div>
+  <details class="master"><summary>MASTER CHECK · 13</summary><div class="inner"><ol>
+    <li>Derive T_fr ≥ 2T_p with the worst-case story (A and far-end B), unaided.</li>
+    <li>Redraw the CSMA/CD flowchart from memory.</li>
+    <li>Rank the three persistence methods by collision probability and by wasted idle time.</li>
+    <li>Why does doubling the bit rate (same cable) double the minimum frame size?</li>
+  </ol></div></details>
+</section>
+
+<!-- ================= 14 ================= -->
+<section id="s14" class="reveal">
+  <div class="sechead"><span class="secnum">14</span><h2>Formula Sheet — Last-Night Revision</h2></div>
+  <div class="fsheet">
+    <div class="fs"><b>SIGNAL LEVELS</b>bits/level = log₂ L<br>signal rate S = N / log₂ L (baud)</div>
+    <div class="fs"><b>DECIBEL</b>dB = 10 log₁₀(P₂/P₁)<br>−3 dB ⇔ half power · dBs add along a path</div>
+    <div class="fs"><b>SNR</b>SNR = P_signal / P_noise<br>SNR_dB = 10 log₁₀ SNR</div>
+    <div class="fs"><b>NYQUIST (noiseless)</b>C = 2 B log₂ L</div>
+    <div class="fs"><b>SHANNON (noisy)</b>C = B log₂(1 + SNR)</div>
+    <div class="fs"><b>LATENCY</b>= prop + trans + queue + proc<br>prop = dist ÷ speed · trans = size ÷ BW</div>
+    <div class="fs"><b>BDP</b>bits in flight = BW × delay<br>window for full use = 2 × BDP</div>
+    <div class="fs"><b>BLOCK CODES</b>n = k + r · valid = 2ᵏ of 2ⁿ<br>detect s ⇒ d_min = s+1 · correct t ⇒ d_min = 2t+1</div>
+    <div class="fs"><b>CRC</b>append (n−k) zeros → XOR-divide by generator → remainder = CRC<br>degree-r generator detects all bursts ≤ r</div>
+    <div class="fs"><b>MAC ADDRESS</b>48 bits · LSB of 1st byte: 0 = unicast, 1 = multicast · all-Fs = broadcast</div>
+    <div class="fs"><b>CSMA/CD</b>vulnerable time = T_p<br>T_fr ≥ 2T_p ⇒ min frame = BW × 2T_p<br>backoff R ∈ [0, 2ᴷ−1] slots · K_max 15</div>
+    <div class="fs"><b>ETHERNET CONSTANT</b>10 Mbps · 51.2 μs · 512 bits · 64 bytes — one story, four numbers</div>
+  </div>
+  <div class="card">
+    <h4>The five near-certain questions of Unit I</h4>
+    <ol style="margin-bottom:0">
+      <li>OSI vs TCP/IP: both stacks + 2 functions/layer + encapsulation + 4 addressing levels. <em>(§05)</em></li>
+      <li>Six line-coding waveforms for a given stream + comparison table. <em>(§08)</em></li>
+      <li>Nyquist/Shannon numerical, often the "use both" pattern. <em>(§07)</em></li>
+      <li>CRC division numerical + generator-polynomial properties. <em>(§12)</em></li>
+      <li>CSMA/CD: derive T_fr ≥ 2T_p, minimum-frame numerical, flowchart, persistence methods. <em>(§13)</em></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  UNIT I · MASTERY EDITION · SOURCE: FOROUZAN — DATA COMMUNICATIONS &amp; NETWORKING (T1)<br>
+  every MASTER CHECK answered without peeking = the unit is yours.
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} });
+},{threshold:.1});
+document.querySelectorAll('.reveal,.anim,.stack').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
