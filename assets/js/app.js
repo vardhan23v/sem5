@@ -13,7 +13,8 @@ var SUBJECTS = [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
             { name: "CNC Lab Manual.pdf", path: "CNC/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" },
-            { name: "Computer Networks — Unit 1", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" }
+            { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
+            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" }
         ]
     },
     {
@@ -23,7 +24,10 @@ var SUBJECTS = [
         files: [
             { name: "OS Unit 1.pdf", path: "OS/OS UNIT 1.pdf", size: "10.5 MB" },
             { name: "OS Unit 2.pdf", path: "OS/OS UNIT 2.pdf", size: "16.8 MB" },
-            { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB" }
+            { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB" },
+            { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
+            { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
+            { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" }
         ]
     },
     {
@@ -32,7 +36,9 @@ var SUBJECTS = [
         color: "#a855f7",
         files: [
             { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC/TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB" },
-            { name: "TOC Unit 1 — Automata (HTML)", path: "TOC/unit1-theory-of-computation.html", size: "33 KB" }
+            { name: "TOC Unit 1 — Automata (HTML)", path: "TOC/unit1-theory-of-computation.html", size: "33 KB" },
+            { name: "Unit 1 — Automata Solved & Animated (HTML)", path: "TOC/CS3103-1_Unit1_TOC_Notes.html", size: "48 KB" },
+            { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB" }
         ]
     },
     {
@@ -40,8 +46,9 @@ var SUBJECTS = [
         fullName: "Introduction to Data Science",
         color: "#10b981",
         files: [
-            { name: "Data Science — Master Notes", path: "Data Science/data-science-master-notes.html", size: "57 KB" },
-            { name: "Data Analysis — Detailed Notes", path: "Data Science/unit1-detailed-notes.html", size: "52 KB" }
+            { name: "Data Science — Master Notes (HTML)", path: "Data Science/data-science-master-notes.html", size: "57 KB" },
+            { name: "Data Analysis — Detailed Notes (HTML)", path: "Data Science/unit1-detailed-notes.html", size: "52 KB" },
+            { name: "Unit 1 — Data Analysis with Excel (HTML)", path: "Data Science/CS1231-1_Unit1_DataScience_Notes.html", size: "56 KB" }
         ]
     }
 ];
@@ -62,12 +69,14 @@ function getFileType(path) {
     var ext = path.split('.').pop().toLowerCase();
     if (ext === 'pdf') return 'pdf';
     if (ext === 'html') return 'html';
+    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp') return 'img';
     return 'pdf';
 }
 
 function getFileLabel(path) {
     var ext = path.split('.').pop().toLowerCase();
     if (ext === 'html') return 'HTML';
+    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp') return 'IMG';
     return 'PDF';
 }
 
@@ -90,6 +99,7 @@ var pageInfoBot = document.getElementById('pageInfoBot');
 var zoomLevelEl = document.getElementById('zoomLevel');
 var quickSubjects = document.getElementById('quickSubjects');
 var noteViewer = document.getElementById('noteViewer');
+var imageViewer = document.getElementById('imageViewer');
 
 // ===== Initialize =====
 function init() {
@@ -108,6 +118,8 @@ function countPdfs() {
     var count = 0;
     SUBJECTS.forEach(function(s) { count += s.files.length; });
     totalPdfsEl.textContent = count;
+    var subjectsEl = document.getElementById('totalSubjects');
+    if (subjectsEl) subjectsEl.textContent = SUBJECTS.length;
 }
 
 // ===== Build Sidebar =====
@@ -202,6 +214,12 @@ function openFile(encodedPath, name) {
         bottomBar.style.display = 'none';
         zoomControls.forEach(function(e) { e.style.display = 'none'; });
         openHtmlFile(path);
+    } else if (currentFileType === 'img') {
+        pageControls.forEach(function(b) { b.style.display = 'none'; });
+        pageInfoEls.forEach(function(e) { e.style.display = 'none'; });
+        bottomBar.style.display = 'none';
+        zoomControls.forEach(function(e) { e.style.display = 'none'; });
+        openImageFile(path);
     }
 }
 
@@ -209,8 +227,19 @@ function hideAllViewers() {
     pdfCanvas.style.display = 'none';
     pdfCanvas2.style.display = 'none';
     noteViewer.style.display = 'none';
+    imageViewer.style.display = 'none';
     pagesWrapper.style.display = 'none';
     loadingSpinner.classList.remove('visible');
+}
+
+function openImageFile(path) {
+    loadingSpinner.classList.remove('visible');
+    pagesWrapper.style.display = 'none';
+    noteViewer.style.display = 'none';
+    pdfCanvas.style.display = 'none';
+    pdfCanvas2.style.display = 'none';
+    imageViewer.style.display = 'flex';
+    imageViewer.src = path;
 }
 
 function openHtmlFile(path) {
@@ -404,6 +433,7 @@ function goBack() {
     loadingSpinner.innerHTML = '<div class="spinner"></div><p>Loading document...</p>';
     loadingSpinner.classList.remove('visible');
     noteViewer.src = '';
+    imageViewer.src = '';
     document.querySelectorAll('.file-item').forEach(function(el) { el.classList.remove('active'); });
 }
 
