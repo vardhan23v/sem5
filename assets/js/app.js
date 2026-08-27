@@ -214,12 +214,12 @@ function fileItemHTML(file, color) {
     var starIcon = isFavorite ? '★' : '☆';
     var starColor = isFavorite ? color : 'var(--text-muted)';
     
-    return '<div class="file-item" data-path="' + file.path + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + escapeHtml(file.name) + '\')">' +
+    return '<div class="file-item" data-path="' + escapeHtml(file.path) + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')">' +
         '<div class="file-icon" style="background: ' + color + '22; color: ' + color + '">' + label + '</div>' +
         '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
         '<span class="file-size">' + (file.size || '') + '</span>' +
         '<button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite(\'' + encodeURIComponent(file.path) + '\')" title="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '" style="color: ' + starColor + '">' + starIcon + '</button>' +
-        '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + escapeHtml(file.name) + '\')" title="Download">' +
+        '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')" title="Download">' +
         '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
         '</button>' +
         '</div>';
@@ -333,8 +333,9 @@ function showNotification(message, type) {
 }
 
 // ===== Open File =====
-function openFile(encodedPath, name) {
+function openFile(encodedPath, encodedName) {
     var path = decodeURIComponent(encodedPath);
+    var name = decodeURIComponent(encodedName);
     currentPdf = path;
     currentPage = 1;
     zoomScale = 1.0;
@@ -591,10 +592,11 @@ function toggleTwoPageMode() {
 }
 
 // ===== Download =====
-function downloadPdf(encodedPath, name) {
+function downloadPdf(encodedPath, encodedName) {
     var path = decodeURIComponent(encodedPath);
+    var name = encodedName ? decodeURIComponent(encodedName) : '';
     var a = document.createElement('a');
-    a.href = path;
+    a.href = encodeURI(path);
     a.download = name || path.split('/').pop();
     document.body.appendChild(a);
     a.click();
@@ -761,17 +763,15 @@ function attachEvents() {
     pdfCanvasContainer.addEventListener('wheel', function(e) {
         if (e.ctrlKey || e.metaKey) {
             e.preventDefault();
+            if (!pdfDoc) return;
             var delta = -e.deltaY * 0.01;
             var newScale = zoomScale * (1 + delta);
             var rect = pdfCanvasContainer.getBoundingClientRect();
             var originX = e.clientX - rect.left;
             var originY = e.clientY - rect.top;
 
-            zoomScale = Math.max(0.25, Math.min(5.0, newScale));
-            zoomLevelEl.textContent = Math.round(zoomScale * 100) + '%';
-
             clearTimeout(zoomTimeout);
-            zoomTimeout = setTimeout(function() { renderCurrentView(); }, 80);
+            zoomTimeout = setTimeout(function() { applyZoom(newScale, originX, originY); }, 80);
         }
     }, { passive: false });
 
@@ -849,7 +849,7 @@ function attachEvents() {
             case 'Escape': 
                 if (document.getElementById('shortcutsModal').classList.contains('show')) {
                     closeShortcutsModal();
-                } else if (pdfDoc || currentFileType === 'html') {
+                } else if (currentPdf) {
                     goBack();
                 }
                 break;
