@@ -13,7 +13,9 @@ var SUBJECTS = [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
             { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
-            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" }
+            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" },
+            { name: "Unit 1 Chapter 1 (PPT)", path: "CNC/ppts/UNIT-1 Chap-1.pptx", size: "7.6 MB" },
+            { name: "Unit 1 Chapter 2 (PPT)", path: "CNC/ppts/UNIT-1 Chap-2.pptx", size: "3.4 MB" }
         ]
     },
     {
@@ -26,7 +28,13 @@ var SUBJECTS = [
             { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB" },
             { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
             { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
-            { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" }
+            { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" },
+            { name: "Ch 1 — Operating System Structure (PPT)", path: "OS/ppts/CH_1_OPERATING SYSTEM STRUCTURE.pptx", size: "2.2 MB" },
+            { name: "Ch 2 — Process Management (PPT)", path: "OS/ppts/CH_2_PROCESS MANAGEMENT.pptx", size: "2.6 MB" },
+            { name: "Ch 3 — Threads (PPT)", path: "OS/ppts/CH3_THREADS.pptx", size: "1.9 MB" },
+            { name: "Ch 4 — CPU Scheduling (PPT)", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB" },
+            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" },
+            { name: "Assignment Document", path: "OS/ppts/nnm24cs251.docx", size: "8.7 KB" }
         ]
     },
     {
@@ -51,10 +59,20 @@ var SUBJECTS = [
         ]
     },
     {
+        name: "UHV",
+        fullName: "Universal Human Values",
+        color: "#ec4899",
+        files: [
+            { name: "MCQ — Unit 1 Questions.pdf", path: "UHV/MCQ_UHV_1.pdf", size: "46 KB" },
+            { name: "Unit 1 — Descriptive Q&A.docx", path: "UHV/UHV_Unit I - Descriptive Question and Answer.docx", size: "570 KB" }
+        ]
+    },
+    {
         name: "Lab Manuals",
-        fullName: "Lab Manuals",
+        fullName: "Lab Manuals & Syllabus",
         color: "#eab308",
         files: [
+            { name: "PC++ Syllabus.pdf", path: "PC++_SYLLABUS.pdf", size: "107 KB" },
             { name: "CNC Lab Manual.pdf", path: "Lab Manuals/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" },
             { name: "OS Lab Manual.pdf", path: "Lab Manuals/OS_LAB_MANUAL.pdf", size: "959 KB" },
             { name: "C++ Lab Manual.pdf", path: "Lab Manuals/C++_LAB_MANUAL.pdf", size: "313 KB" },
@@ -80,6 +98,8 @@ function getFileType(path) {
     if (ext === 'pdf') return 'pdf';
     if (ext === 'html') return 'html';
     if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp') return 'img';
+    if (ext === 'pptx' || ext === 'ppt') return 'download';
+    if (ext === 'docx' || ext === 'doc') return 'docx';
     return 'pdf';
 }
 
@@ -87,6 +107,8 @@ function getFileLabel(path) {
     var ext = path.split('.').pop().toLowerCase();
     if (ext === 'html') return 'HTML';
     if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp') return 'IMG';
+    if (ext === 'pptx' || ext === 'ppt') return 'PPT';
+    if (ext === 'docx' || ext === 'doc') return 'DOC';
     return 'PDF';
 }
 
@@ -230,6 +252,11 @@ function openFile(encodedPath, name) {
         bottomBar.style.display = 'none';
         zoomControls.forEach(function(e) { e.style.display = 'none'; });
         openImageFile(path);
+    } else if (currentFileType === 'download' || currentFileType === 'docx') {
+        // For PPTX/DOCX files, trigger download instead of trying to display
+        downloadPdf(encodedPath, name);
+        goBack();
+        return;
     }
 }
 
