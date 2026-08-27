@@ -13,9 +13,7 @@ var SUBJECTS = [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
             { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
-            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" },
-            { name: "Unit 1 Chapter 1 (PPT)", path: "CNC/ppts/UNIT-1 Chap-1.pptx", size: "7.6 MB" },
-            { name: "Unit 1 Chapter 2 (PPT)", path: "CNC/ppts/UNIT-1 Chap-2.pptx", size: "3.4 MB" }
+            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" }
         ]
     },
     {
@@ -29,12 +27,21 @@ var SUBJECTS = [
             { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
             { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
             { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" },
-            { name: "Ch 1 — Operating System Structure (PPT)", path: "OS/ppts/CH_1_OPERATING SYSTEM STRUCTURE.pptx", size: "2.2 MB" },
-            { name: "Ch 2 — Process Management (PPT)", path: "OS/ppts/CH_2_PROCESS MANAGEMENT.pptx", size: "2.6 MB" },
-            { name: "Ch 3 — Threads (PPT)", path: "OS/ppts/CH3_THREADS.pptx", size: "1.9 MB" },
-            { name: "Ch 4 — CPU Scheduling (PPT)", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB" },
             { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" },
             { name: "Assignment Document", path: "OS/ppts/nnm24cs251.docx", size: "8.7 KB" }
+        ]
+    },
+    {
+        name: "PPTs",
+        fullName: "Lecture Presentations",
+        color: "#f43f5e",
+        files: [
+            { name: "CNC — Unit 1 Chapter 1", path: "CNC/ppts/UNIT-1 Chap-1.pptx", size: "7.6 MB" },
+            { name: "CNC — Unit 1 Chapter 2", path: "CNC/ppts/UNIT-1 Chap-2.pptx", size: "3.4 MB" },
+            { name: "OS — Ch 1 Operating System Structure", path: "OS/ppts/CH_1_OPERATING SYSTEM STRUCTURE.pptx", size: "2.2 MB" },
+            { name: "OS — Ch 2 Process Management", path: "OS/ppts/CH_2_PROCESS MANAGEMENT.pptx", size: "2.6 MB" },
+            { name: "OS — Ch 3 Threads", path: "OS/ppts/CH3_THREADS.pptx", size: "1.9 MB" },
+            { name: "OS — Ch 4 CPU Scheduling", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB" }
         ]
     },
     {
@@ -128,7 +135,7 @@ function getFileType(path) {
     if (ext === 'pdf') return 'pdf';
     if (ext === 'html') return 'html';
     if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'webp') return 'img';
-    if (ext === 'pptx' || ext === 'ppt') return 'download';
+    if (ext === 'pptx' || ext === 'ppt') return 'ppt';
     if (ext === 'docx' || ext === 'doc') return 'docx';
     return 'pdf';
 }
@@ -356,6 +363,7 @@ function openFile(encodedPath, encodedName) {
 
     welcomeScreen.style.display = 'none';
     pdfViewer.style.display = 'flex';
+    document.body.classList.add('viewer-open');
     viewerTitle.textContent = name;
     zoomLevelEl.textContent = '100%';
     closeSidebar();
@@ -385,6 +393,12 @@ function openFile(encodedPath, encodedName) {
         bottomBar.style.display = 'none';
         zoomControls.forEach(function(e) { e.style.display = 'none'; });
         openImageFile(path);
+    } else if (currentFileType === 'ppt') {
+        pageControls.forEach(function(b) { b.style.display = 'none'; });
+        pageInfoEls.forEach(function(e) { e.style.display = 'none'; });
+        bottomBar.style.display = 'none';
+        zoomControls.forEach(function(e) { e.style.display = 'none'; });
+        openPptFile(path, name);
     } else if (currentFileType === 'download' || currentFileType === 'docx') {
         // For PPTX/DOCX files, trigger download instead of trying to display
         downloadPdf(encodedPath, name);
@@ -400,6 +414,8 @@ function hideAllViewers() {
     imageViewer.style.display = 'none';
     pagesWrapper.style.display = 'none';
     loadingSpinner.classList.remove('visible');
+    var fallback = document.getElementById('pptFallback');
+    if (fallback) fallback.style.display = 'none';
 }
 
 function openImageFile(path) {
@@ -419,6 +435,41 @@ function openHtmlFile(path) {
     pdfCanvas2.style.display = 'none';
     noteViewer.style.display = 'block';
     noteViewer.src = path;
+}
+
+// ===== PPT Viewer (Microsoft Office Online embed) =====
+function isPublicHost() {
+    var h = window.location.hostname;
+    return h && h !== 'localhost' && h !== '127.0.0.1' && h.indexOf('192.168.') !== 0 && window.location.protocol !== 'file:';
+}
+
+function openPptFile(path, name) {
+    loadingSpinner.classList.remove('visible');
+    pagesWrapper.style.display = 'none';
+    pdfCanvas.style.display = 'none';
+    pdfCanvas2.style.display = 'none';
+    imageViewer.style.display = 'none';
+
+    var fallback = document.getElementById('pptFallback');
+
+    if (isPublicHost()) {
+        // Office Online can only fetch publicly reachable URLs
+        var base = window.location.href.replace(/[^/]*$/, '');
+        var fileUrl = base + path.split('/').map(encodeURIComponent).join('/');
+        noteViewer.style.display = 'block';
+        noteViewer.src = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fileUrl);
+        if (fallback) fallback.style.display = 'none';
+    } else {
+        // Local preview: the embed service can't reach this host — offer download
+        noteViewer.style.display = 'none';
+        if (fallback) {
+            fallback.style.display = 'flex';
+            var btn = document.getElementById('pptFallbackDownload');
+            if (btn) {
+                btn.onclick = function() { downloadPdf(encodeURIComponent(path), encodeURIComponent(name)); };
+            }
+        }
+    }
 }
 
 async function openPdfFile(path) {
@@ -617,6 +668,7 @@ function toggleFullscreen() {
 function goBack() {
     pdfViewer.style.display = 'none';
     welcomeScreen.style.display = 'flex';
+    document.body.classList.remove('viewer-open');
     pdfDoc = null;
     currentPdf = null;
     currentFileType = 'pdf';

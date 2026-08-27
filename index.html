@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=3">
+    <link rel="stylesheet" href="assets/css/style.css?v=4">
 </head>
 <body>
 
@@ -169,6 +169,15 @@
                     <canvas id="pdfCanvas2" style="display:none;"></canvas>
                 </div>
                 <iframe id="noteViewer" class="note-iframe" style="display:none;" allowfullscreen></iframe>
+                <div id="pptFallback" class="ppt-fallback" style="display:none;">
+                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <h3>Presentation preview needs the live site</h3>
+                    <p>PowerPoint previews use Microsoft's online viewer, which can't reach a local server. Open this on the deployed site, or download the file instead.</p>
+                    <button id="pptFallbackDownload" class="ppt-download-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download PPT
+                    </button>
+                </div>
                 <img id="imageViewer" class="image-viewer" alt="Note image" style="display:none;">
             </div>
 
@@ -235,6 +244,6 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
-    <script src="assets/js/app.js?v=5"></script>
+    <script src="assets/js/app.js?v=6"></script>
 </body>
 </html>

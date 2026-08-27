@@ -912,6 +912,52 @@ body {
     inset: 0;
 }
 
+/* PPT Fallback (local preview) */
+.ppt-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    padding: 40px 24px;
+    margin: auto;
+    max-width: 420px;
+}
+
+.ppt-fallback h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.ppt-fallback p {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+
+.ppt-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    margin-top: 6px;
+    border: 1px solid rgba(244, 63, 94, 0.4);
+    border-radius: var(--radius-md);
+    background: rgba(244, 63, 94, 0.12);
+    color: #f43f5e;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.ppt-download-btn:hover {
+    background: rgba(244, 63, 94, 0.2);
+}
+
 /* Image Viewer */
 .image-viewer {
     max-width: 100%;
@@ -1307,6 +1353,42 @@ body {
 
     .shortcut-item span {
         font-size: 0.82rem;
+    }
+
+    /* Hide the floating menu button while reading — it overlaps the viewer topbar */
+    body.viewer-open .mobile-toggle {
+        display: none;
+    }
+
+    /* Keep the welcome content clear of the floating menu button */
+    .welcome-screen {
+        padding-top: 68px;
+    }
+
+    /* Respect notches / home indicator */
+    .sidebar {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .viewer-bottombar {
+        height: calc(52px + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* Comfortable touch targets in the file list */
+    .file-item {
+        min-height: 48px;
+    }
+
+    .btn-dl,
+    .btn-favorite {
+        width: 34px;
+        height: 34px;
+    }
+
+    /* PPT embed fills the screen on mobile */
+    .ppt-fallback {
+        padding: 24px 16px;
     }
 }
 
