@@ -92,6 +92,36 @@ var pendingRender = null;
 var twoPageMode = false;
 var currentFileType = 'pdf';
 
+// ===== New Features State =====
+var favorites = [];
+var recentFiles = [];
+var readingProgress = {};
+var darkMode = true;
+
+// Load saved data from localStorage
+function loadUserData() {
+    try {
+        favorites = JSON.parse(localStorage.getItem('notevault_favorites') || '[]');
+        recentFiles = JSON.parse(localStorage.getItem('notevault_recent') || '[]');
+        readingProgress = JSON.parse(localStorage.getItem('notevault_progress') || '{}');
+        darkMode = localStorage.getItem('notevault_theme') !== 'light';
+    } catch (e) {
+        console.error('Error loading user data:', e);
+    }
+}
+
+// Save data to localStorage
+function saveUserData() {
+    try {
+        localStorage.setItem('notevault_favorites', JSON.stringify(favorites));
+        localStorage.setItem('notevault_recent', JSON.stringify(recentFiles.slice(0, 10)));
+        localStorage.setItem('notevault_progress', JSON.stringify(readingProgress));
+        localStorage.setItem('notevault_theme', darkMode ? 'dark' : 'light');
+    } catch (e) {
+        console.error('Error saving user data:', e);
+    }
+}
+
 // ===== File Type Detection =====
 function getFileType(path) {
     var ext = path.split('.').pop().toLowerCase();
@@ -136,11 +166,14 @@ var imageViewer = document.getElementById('imageViewer');
 // ===== Initialize =====
 function init() {
     try {
+        loadUserData();
         buildSidebar();
         buildQuickSubjects();
         countPdfs();
         attachEvents();
         addMobileToggle();
+        updateFavoritesUI();
+        updateRecentFilesUI();
     } catch (err) {
         console.error("Initialization failed:", err);
     }
@@ -177,10 +210,15 @@ function buildSidebar() {
 
 function fileItemHTML(file, color) {
     var label = getFileLabel(file.path);
+    var isFavorite = favorites.indexOf(file.path) !== -1;
+    var starIcon = isFavorite ? '★' : '☆';
+    var starColor = isFavorite ? color : 'var(--text-muted)';
+    
     return '<div class="file-item" data-path="' + file.path + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + escapeHtml(file.name) + '\')">' +
         '<div class="file-icon" style="background: ' + color + '22; color: ' + color + '">' + label + '</div>' +
         '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
         '<span class="file-size">' + (file.size || '') + '</span>' +
+        '<button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite(\'' + encodeURIComponent(file.path) + '\')" title="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '" style="color: ' + starColor + '">' + starIcon + '</button>' +
         '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + escapeHtml(file.name) + '\')" title="Download">' +
         '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
         '</button>' +
@@ -209,6 +247,91 @@ function expandSubject(name) {
     }
 }
 
+// ===== Favorites System =====
+function toggleFavorite(encodedPath) {
+    var path = decodeURIComponent(encodedPath);
+    var index = favorites.indexOf(path);
+    
+    if (index === -1) {
+        favorites.push(path);
+        showNotification('Added to favorites', 'success');
+    } else {
+        favorites.splice(index, 1);
+        showNotification('Removed from favorites', 'info');
+    }
+    
+    saveUserData();
+    buildSidebar();
+    updateFavoritesUI();
+}
+
+function updateFavoritesUI() {
+    // Update favorite stars in sidebar
+    document.querySelectorAll('.file-item').forEach(function(item) {
+        var path = item.getAttribute('data-path');
+        var btn = item.querySelector('.btn-favorite');
+        if (btn) {
+            var isFavorite = favorites.indexOf(path) !== -1;
+            btn.textContent = isFavorite ? '★' : '☆';
+            btn.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+        }
+    });
+}
+
+// ===== Recent Files =====
+function addToRecent(path, name) {
+    // Remove if already exists
+    recentFiles = recentFiles.filter(function(f) { return f.path !== path; });
+    
+    // Add to beginning
+    recentFiles.unshift({ path: path, name: name, timestamp: Date.now() });
+    
+    // Keep only last 10
+    recentFiles = recentFiles.slice(0, 10);
+    
+    saveUserData();
+    updateRecentFilesUI();
+}
+
+function updateRecentFilesUI() {
+    // This will be called to update any recent files display
+    // For now, we'll add it to the welcome screen
+}
+
+// ===== Reading Progress =====
+function saveReadingProgress(path, page, total) {
+    readingProgress[path] = {
+        page: page,
+        total: total,
+        timestamp: Date.now(),
+        percentage: Math.round((page / total) * 100)
+    };
+    saveUserData();
+}
+
+function getReadingProgress(path) {
+    return readingProgress[path] || null;
+}
+
+// ===== Notification System =====
+function showNotification(message, type) {
+    var notification = document.createElement('div');
+    notification.className = 'notification notification-' + (type || 'info');
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(function() {
+        notification.classList.add('show');
+    }, 10);
+    
+    setTimeout(function() {
+        notification.classList.remove('show');
+        setTimeout(function() {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 2500);
+}
+
 // ===== Open File =====
 function openFile(encodedPath, name) {
     var path = decodeURIComponent(encodedPath);
@@ -216,6 +339,15 @@ function openFile(encodedPath, name) {
     currentPage = 1;
     zoomScale = 1.0;
     currentFileType = getFileType(path);
+
+    // Add to recent files
+    addToRecent(path, name);
+
+    // Check for saved progress
+    var progress = getReadingProgress(path);
+    if (progress && currentFileType === 'pdf') {
+        currentPage = progress.page;
+    }
 
     document.querySelectorAll('.file-item').forEach(function(el) { el.classList.remove('active'); });
     var activeItem = document.querySelector('.file-item[data-path="' + CSS.escape(path) + '"]');
@@ -407,6 +539,11 @@ function updatePageInfo() {
     }
     pageInfo.textContent = text;
     pageInfoBot.textContent = text;
+    
+    // Save reading progress
+    if (currentPdf && totalPages > 0) {
+        saveReadingProgress(currentPdf, currentPage, totalPages);
+    }
 }
 
 // ===== Zoom (cursor-centered via scroll/pinch) =====
@@ -487,6 +624,21 @@ function goBack() {
     noteViewer.src = '';
     imageViewer.src = '';
     document.querySelectorAll('.file-item').forEach(function(el) { el.classList.remove('active'); });
+}
+
+// ===== Keyboard Shortcuts Modal =====
+function openShortcutsModal() {
+    var modal = document.getElementById('shortcutsModal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+function closeShortcutsModal() {
+    var modal = document.getElementById('shortcutsModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
 }
 
 // ===== Search =====
@@ -588,6 +740,7 @@ function attachEvents() {
     document.getElementById('btnNextPageBot').addEventListener('click', nextPage);
     document.getElementById('btnPrevPageBot').addEventListener('click', prevPage);
     document.getElementById('btnShare').addEventListener('click', shareSite);
+    document.getElementById('btnShortcuts').addEventListener('click', openShortcutsModal);
     document.getElementById('sidebarToggle').addEventListener('click', function() {
         sidebar.classList.toggle('open');
         sidebarOverlay.classList.toggle('visible');
@@ -595,6 +748,13 @@ function attachEvents() {
 
     searchInput.addEventListener('input', function(e) { filterFiles(e.target.value); });
     sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close modal on background click
+    document.getElementById('shortcutsModal').addEventListener('click', function(e) {
+        if (e.target.id === 'shortcutsModal') {
+            closeShortcutsModal();
+        }
+    });
 
     // ===== Scroll/Pinch Zoom (like Preview.app) =====
     var zoomTimeout = null;
@@ -686,7 +846,17 @@ function attachEvents() {
             case 'ArrowLeft': case 'ArrowUp': if (pdfDoc) { e.preventDefault(); prevPage(); } break;
             case '+': case '=': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomIn(); } break;
             case '-': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomOut(); } break;
-            case 'Escape': if (pdfDoc || currentFileType === 'html') goBack(); break;
+            case 'Escape': 
+                if (document.getElementById('shortcutsModal').classList.contains('show')) {
+                    closeShortcutsModal();
+                } else if (pdfDoc || currentFileType === 'html') {
+                    goBack();
+                }
+                break;
+            case '?':
+                e.preventDefault();
+                openShortcutsModal();
+                break;
         }
     });
 
