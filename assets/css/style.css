@@ -75,6 +75,10 @@ body {
     min-height: 100vh;
     overflow: hidden;
     display: flex;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 /* ===== Ambient Background ===== */
@@ -655,10 +659,21 @@ body {
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.1) transparent;
     cursor: grab;
+    -webkit-overflow-scrolling: touch;
 }
 
 .pdf-canvas-container:active {
     cursor: grabbing;
+}
+
+@media (max-width: 768px) {
+    .pdf-canvas-container {
+        cursor: default;
+    }
+
+    .pdf-canvas-container:active {
+        cursor: default;
+    }
 }
 
 .pdf-canvas-container::-webkit-scrollbar {
@@ -810,12 +825,19 @@ body {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+    :root {
+        --topbar-height: 56px;
+    }
+
     .sidebar {
         transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
     }
 
     .sidebar.open {
         transform: translateX(0);
+        box-shadow: var(--shadow-lg);
     }
 
     .sidebar-toggle {
@@ -833,11 +855,11 @@ body {
     /* Floating toggle button for mobile */
     .mobile-toggle {
         position: fixed;
-        top: 14px;
-        left: 14px;
+        top: 12px;
+        left: 12px;
         z-index: 80;
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
         border-radius: var(--radius-md);
         background: var(--bg-glass);
         backdrop-filter: blur(20px);
@@ -848,33 +870,126 @@ body {
         justify-content: center;
         cursor: pointer;
         transition: var(--transition-fast);
+        box-shadow: var(--shadow-md);
     }
 
-    .mobile-toggle:hover {
+    .mobile-toggle:active {
+        transform: scale(0.95);
         background: var(--bg-card-hover);
     }
 
-    .viewer-controls {
-        gap: 2px;
+    .sidebar-header {
+        padding: 16px 16px 12px;
     }
 
-    .control-divider {
-        display: none;
+    .logo-icon {
+        width: 40px;
+        height: 40px;
     }
 
-    .zoom-level,
-    .page-info {
-        min-width: 40px;
+    .logo-title {
+        font-size: 1.05rem;
+    }
+
+    .logo-subtitle {
         font-size: 0.7rem;
+    }
+
+    .search-container {
+        padding: 12px 16px 10px;
+    }
+
+    .search-input {
+        padding: 11px 14px 11px 38px;
+        font-size: 0.88rem;
+    }
+
+    .stats-bar {
+        padding: 6px 16px 12px;
+        gap: 20px;
+    }
+
+    .stat-number {
+        font-size: 1.15rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+
+    .subject-list {
+        padding: 4px 10px 10px;
+    }
+
+    .subject-header {
+        padding: 11px 12px;
+    }
+
+    .subject-name {
+        font-size: 0.85rem;
+    }
+
+    .file-item {
+        padding: 10px 12px 10px 34px;
+        margin: 2px 0;
+    }
+
+    .file-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 0.68rem;
+    }
+
+    .file-name {
+        font-size: 0.82rem;
+    }
+
+    .file-size {
+        font-size: 0.68rem;
+    }
+
+    .btn-dl {
+        width: 28px;
+        height: 28px;
+    }
+
+    .viewer-topbar {
+        padding: 0 10px;
+        gap: 6px;
+        height: 56px;
+    }
+
+    .btn-back {
+        padding: 8px 10px;
+        min-width: 40px;
     }
 
     .btn-back span {
         display: none;
     }
 
-    .viewer-topbar {
-        padding: 0 12px;
-        gap: 8px;
+    .viewer-title {
+        font-size: 0.8rem;
+        max-width: 140px;
+    }
+
+    .viewer-controls {
+        gap: 1px;
+    }
+
+    .control-divider {
+        display: none;
+    }
+
+    .btn-control {
+        width: 38px;
+        height: 38px;
+    }
+
+    .zoom-level,
+    .page-info {
+        min-width: 42px;
+        font-size: 0.72rem;
     }
 
     #btnTwoPage,
@@ -882,32 +997,174 @@ body {
         display: none !important;
     }
 
-    .viewer-title {
-        font-size: 0.75rem;
-        max-width: 120px;
+    .pdf-canvas-container {
+        padding: 12px 8px;
     }
 
-    .pdf-canvas-container {
-        padding: 8px;
+    .pages-wrapper {
+        gap: 16px;
+    }
+
+    .pages-wrapper canvas {
+        max-width: 100%;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    .viewer-bottombar {
+        height: 52px;
+        gap: 10px;
     }
 
     .welcome-screen {
-        padding: 16px;
+        padding: 20px 16px;
     }
 
     .welcome-card {
         padding: 0;
     }
 
+    .welcome-icon svg {
+        width: 56px;
+        height: 56px;
+    }
+
     .welcome-title {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .welcome-text {
+        font-size: 0.92rem;
+        margin-bottom: 28px;
+        line-height: 1.55;
+    }
+
+    .quick-subjects {
+        gap: 8px;
+    }
+
+    .quick-btn {
+        padding: 10px 16px;
+        font-size: 0.75rem;
+    }
+
+    .loading-spinner {
+        padding-top: 80px;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+    }
+
+    .loading-spinner p {
+        font-size: 0.82rem;
     }
 }
 
 @media (max-width: 480px) {
+    .sidebar {
+        width: 90vw;
+    }
+
+    .mobile-toggle {
+        top: 10px;
+        left: 10px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .viewer-topbar {
+        padding: 0 8px;
+        gap: 4px;
+    }
+
+    .viewer-title {
+        font-size: 0.75rem;
+        max-width: 100px;
+    }
+
+    .btn-control {
+        width: 36px;
+        height: 36px;
+    }
+
+    .btn-back {
+        padding: 7px 9px;
+    }
+
+    .zoom-level,
+    .page-info {
+        min-width: 38px;
+        font-size: 0.7rem;
+    }
+
+    .pdf-canvas-container {
+        padding: 10px 6px;
+    }
+
+    .welcome-icon svg {
+        width: 52px;
+        height: 52px;
+    }
+
+    .welcome-title {
+        font-size: 1.35rem;
+    }
+
+    .welcome-text {
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
     .quick-btn {
-        padding: 8px 14px;
+        padding: 9px 14px;
         font-size: 0.72rem;
+    }
+
+    .stats-bar {
+        gap: 16px;
+    }
+
+    .stat-number {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .mobile-toggle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .viewer-topbar {
+        gap: 2px;
+    }
+
+    .viewer-title {
+        font-size: 0.72rem;
+        max-width: 80px;
+    }
+
+    .btn-control {
+        width: 34px;
+        height: 34px;
+    }
+
+    .zoom-level,
+    .page-info {
+        min-width: 36px;
+        font-size: 0.68rem;
+    }
+
+    .welcome-title {
+        font-size: 1.25rem;
+    }
+
+    .quick-btn {
+        padding: 8px 12px;
+        font-size: 0.7rem;
     }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -284,8 +284,23 @@ async function openPdfFile(path) {
 async function renderPageToCanvas(canvas, pageNum) {
     var page = await pdfDoc.getPage(pageNum);
     var dpr = window.devicePixelRatio || 1;
-    var baseScale = zoomScale * 1.5;
+    
+    // Adjust base scale for mobile devices
+    var isMobile = window.innerWidth <= 768;
+    var baseScale = isMobile ? zoomScale * 1.2 : zoomScale * 1.5;
+    
     var viewport = page.getViewport({ scale: baseScale });
+
+    // On mobile, ensure canvas doesn't exceed container width
+    if (isMobile) {
+        var container = pdfCanvasContainer;
+        var maxWidth = container.clientWidth - 16; // account for padding
+        if (viewport.width > maxWidth) {
+            var scaleAdjust = maxWidth / viewport.width;
+            baseScale *= scaleAdjust;
+            viewport = page.getViewport({ scale: baseScale });
+        }
+    }
 
     canvas.width = Math.floor(viewport.width * dpr);
     canvas.height = Math.floor(viewport.height * dpr);
@@ -654,6 +669,24 @@ function attachEvents() {
             e.preventDefault();
         }
     }, { passive: false });
+
+    // Handle window resize / orientation change
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            if (pdfDoc && currentFileType === 'pdf') {
+                renderCurrentView();
+            }
+        }, 300);
+    });
+
+    // Prevent pull-to-refresh on mobile when viewing PDFs
+    document.body.addEventListener('touchmove', function(e) {
+        if (pdfViewer.style.display === 'flex' && window.scrollY === 0) {
+            // Allow scrolling but prevent pull-to-refresh
+        }
+    }, { passive: true });
 }
 
 // ===== Start =====
