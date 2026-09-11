@@ -252,6 +252,12 @@ function expandSubject(name) {
     if (group) {
         document.querySelectorAll('.subject-group').forEach(function(g) { g.classList.remove('expanded'); });
         group.classList.add('expanded');
+        // On mobile the sidebar is off-canvas — open it so the click actually
+        // takes the user to that subject's files.
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('visible');
+        }
         group.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
