@@ -160,6 +160,24 @@ var SUBJECT_ICONS = {
     "default": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
 };
 
+// ===== Subject tonal colors (Material 3: container / on-container) =====
+var SUBJECT_TONES = {
+    "CNC": ["#ffdcc9", "#8f3b00"],
+    "OS": ["#d8e6ff", "#1a4a8f"],
+    "TOC": ["#ecdfff", "#5a2a9e"],
+    "Data Science": ["#d4f7e8", "#1a6b4a"],
+    "UHV": ["#ffdcec", "#8f2a63"],
+    "PPTs": ["#d3f2f7", "#165e6b"],
+    "Lab Manuals": ["#ffe0dd", "#8f2e24"],
+    "ESD": ["#d2f4f4", "#073b3b"],
+    "SCR": ["#ffe9c2", "#7a5300"]
+};
+
+function subjectTone(name) {
+    var t = SUBJECT_TONES[name] || ["#e4e0ff", "#3b2e9e"];
+    return { fill: t[0], tint: t[1] };
+}
+
 // ===== New Features State =====
 var favorites = [];
 var recentFiles = [];
@@ -270,17 +288,18 @@ function buildSidebar() {
     SUBJECTS.forEach(function(subject, idx) {
         var totalFiles = subject.files.length;
         var expandedClass = idx === 0 ? ' expanded' : '';
+        var tone = subjectTone(subject.name);
         html += '<div class="subject-group' + expandedClass + '" data-subject="' + subject.name + '">';
         html += '  <div class="subject-header" onclick="toggleSubject(this)">';
-        html += '    <span class="subject-dot" style="color: ' + subject.color + '; background: ' + subject.color + '"></span>';
+        html += '    <span class="subject-dot" style="--subject-fill: ' + tone.fill + '; --subject-tint: ' + tone.tint + '"></span>';
         html += '    <span class="subject-name">' + subject.name + '</span>';
-        html += '    <span class="subject-count">' + totalFiles + '</span>';
+        html += '    <span class="subject-count" style="--subject-fill: ' + tone.fill + '; --subject-tint: ' + tone.tint + '">' + totalFiles + '</span>';
         html += '    <svg class="subject-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
         html += '  </div>';
         html += '  <div class="subject-files">';
         if (subject.important && subject.important.length) {
             html += '    <div class="important-section">';
-            html += '      <div class="important-label" style="color: ' + subject.color + '">Important Topics</div>';
+            html += '      <div class="important-label" style="color: ' + tone.tint + '">Important Topics</div>';
             html += '      <div class="important-grid">';
             html += subject.important.map(function(imp, i) {
                 return '<div class="important-item" title="' + escapeHtml(imp.name) + '" onclick="openFile(\'' + encodeURIComponent(imp.path) + '\', \'' + encodeURIComponent(imp.name) + '\')">' +
@@ -291,24 +310,24 @@ function buildSidebar() {
             html += '      </div>';
             html += '    </div>';
         }
-        html += subject.files.map(function(f) { return fileItemHTML(f, subject.color); }).join('');
+        html += subject.files.map(function(f) { return fileItemHTML(f, tone); }).join('');
         html += '  </div>';
         html += '</div>';
     });
     subjectList.innerHTML = html;
 }
 
-function fileItemHTML(file, color) {
+function fileItemHTML(file, tone) {
     var label = getFileLabel(file.path);
     var isFavorite = favorites.indexOf(file.path) !== -1;
     var starIcon = isFavorite ? '★' : '☆';
-    var starColor = isFavorite ? color : 'var(--text-muted)';
+    var starColor = isFavorite ? tone.tint : 'var(--md-on-surface-variant)';
     var prog = readingProgress[file.path];
     var progBar = (prog && prog.total > 0) ?
         '<span class="file-progress"><span class="file-progress-fill" style="width:' + Math.min(100, Math.max(3, prog.percentage || 0)) + '%"></span></span>' : '';
 
     return '<div class="file-item" data-path="' + escapeHtml(file.path) + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')">' +
-        '<div class="file-icon" style="background: ' + color + '22; color: ' + color + '">' + label + '</div>' +
+        '<div class="file-icon" style="--subject-fill: ' + tone.fill + '; --subject-tint: ' + tone.tint + '">' + label + '</div>' +
         '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
         '<span class="file-size">' + (file.size || '') + '</span>' +
         '<button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite(\'' + encodeURIComponent(file.path) + '\')" title="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '" style="color: ' + starColor + '">' + starIcon + '</button>' +
@@ -327,7 +346,8 @@ function buildSubjectCards() {
     if (!subjectCards) return;
     subjectCards.innerHTML = SUBJECTS.map(function(s, i) {
         var icon = SUBJECT_ICONS[s.name] || SUBJECT_ICONS['default'];
-        return '<button class="subject-card" style="--card-color:' + s.color + '; animation-delay:' + (i * 60) + 'ms" onclick="expandSubject(\'' + s.name + '\')">' +
+        var tone = subjectTone(s.name);
+        return '<button class="subject-card" style="--subject-fill:' + tone.fill + '; --subject-tint:' + tone.tint + '; animation-delay:' + (i * 60) + 'ms" onclick="expandSubject(\'' + s.name + '\')">' +
             '<span class="subject-card-icon">' + icon + '</span>' +
             '<span class="subject-card-info">' +
             '<span class="subject-card-name">' + escapeHtml(s.name) + '</span>' +
@@ -347,13 +367,10 @@ function expandSubject(name) {
     if (group) {
         document.querySelectorAll('.subject-group').forEach(function(g) { g.classList.remove('expanded'); });
         group.classList.add('expanded');
-        // On mobile the sidebar is off-canvas — open it so the click actually
-        // takes the user to that subject's files.
-        if (window.innerWidth <= 768) {
-            sidebar.classList.add('open');
-            sidebarOverlay.classList.add('visible');
-        }
-        group.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Open the sheet (desktop rail opens the right sheet; mobile opens the bottom sheet)
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        setTimeout(function() { group.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 260);
     }
 }
 
@@ -469,8 +486,8 @@ function openFile(encodedPath, encodedName) {
     pdfViewer.style.display = 'flex';
     document.body.classList.add('viewer-open');
     viewerTitle.textContent = name;
-    zoomLevelEl.textContent = '100%';
     closeSidebar();
+    zoomLevelEl.textContent = '100%';
 
     hideAllViewers();
 
@@ -952,10 +969,9 @@ function addMobileToggle() {
 }
 
 function closeSidebar() {
-    if (window.innerWidth <= 768) {
-        sidebar.classList.remove('open');
-        sidebarOverlay.classList.remove('visible');
-    }
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('visible');
+    document.querySelectorAll('.bottom-nav-btn, .rail-btn, .rail-fab').forEach(function(b) { b.classList.remove('active'); });
 }
 
 // ===== Share =====
@@ -978,7 +994,7 @@ function copyToClipboard(text) {
 }
 
 function setNavActive(btn) {
-    document.querySelectorAll('.bottom-nav-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.bottom-nav-btn, .rail-btn, .rail-fab').forEach(function(b) { b.classList.remove('active'); });
     if (btn) btn.classList.add('active');
 }
 
@@ -1026,6 +1042,33 @@ function attachEvents() {
         sidebar.classList.add('open');
         sidebarOverlay.classList.add('visible');
         setNavActive(navSubjects);
+    });
+
+    // Navigation rail (desktop)
+    var railHome = document.getElementById('railHome');
+    if (railHome) railHome.addEventListener('click', function() {
+        if (currentPdf) goBack();
+        closeSidebar();
+        setNavActive(railHome);
+    });
+    var railSearch = document.getElementById('railSearch');
+    if (railSearch) railSearch.addEventListener('click', function() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        setTimeout(function() { searchInput.focus(); }, 350);
+        setNavActive(railSearch);
+    });
+    var railSubjects = document.getElementById('railSubjects');
+    if (railSubjects) railSubjects.addEventListener('click', function() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        setNavActive(railSubjects);
+    });
+    var railFab = document.getElementById('railFab');
+    if (railFab) railFab.addEventListener('click', function() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        setNavActive(railFab);
     });
 
     document.getElementById('sidebarToggle').addEventListener('click', function() {
