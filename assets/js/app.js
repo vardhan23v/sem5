@@ -106,6 +106,7 @@ var SUBJECTS = [
         fullName: "Introduction to Data Science",
         color: "#10b981",
         files: [
+            { name: "IDS Unit 1.pdf", path: "Data Science/IDS UNIT 1.pdf", size: "8.1 MB" },
             { name: "Data Science — Master Notes (HTML)", path: "Data Science/data-science-master-notes.html", size: "57 KB" },
             { name: "Data Analysis — Detailed Notes (HTML)", path: "Data Science/unit1-detailed-notes.html", size: "52 KB" },
             { name: "Unit 1 — Data Analysis with Excel (HTML)", path: "Data Science/CS1231-1_Unit1_DataScience_Notes.html", size: "56 KB" }

@@ -1,9 +1,9 @@
-const CACHE_NAME = 'notevault-shell-v1';
+const CACHE_NAME = 'notevault-shell-v2';
 const APP_SHELL = [
   './',
   './index.html',
-  './assets/css/style.css?v=8',
-  './assets/js/app.js?v=11',
+  './assets/css/style.css?v=9',
+  './assets/js/app.js?v=13',
   './favicon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png'
