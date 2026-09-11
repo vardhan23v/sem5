@@ -13,7 +13,9 @@ var SUBJECTS = [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
             { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
-            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" }
+            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" },
+            { name: "Unit 1 MCQs.pdf", path: "CNC/mcqs/Unit 1 MCQs.pdf", size: "116 KB" },
+            { name: "Unit 1 MCQs — 30 Questions (Clean).pdf", path: "CNC/mcqs/CS3001-1_CNC_UNIT 1_MCQs-30 (clean).pdf", size: "156 KB" }
         ]
     },
     {
@@ -27,8 +29,7 @@ var SUBJECTS = [
             { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
             { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
             { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" },
-            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" },
-            { name: "Assignment Document", path: "OS/ppts/nnm24cs251.docx", size: "8.7 KB" }
+            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" }
         ]
     },
     {
@@ -41,7 +42,8 @@ var SUBJECTS = [
             { name: "OS — Ch 1 Operating System Structure", path: "OS/ppts/CH_1_OPERATING SYSTEM STRUCTURE.pptx", size: "2.2 MB" },
             { name: "OS — Ch 2 Process Management", path: "OS/ppts/CH_2_PROCESS MANAGEMENT.pptx", size: "2.6 MB" },
             { name: "OS — Ch 3 Threads", path: "OS/ppts/CH3_THREADS.pptx", size: "1.9 MB" },
-            { name: "OS — Ch 4 CPU Scheduling", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB" }
+            { name: "OS — Ch 4 CPU Scheduling", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB" },
+            { name: "Data Science — IDS Unit 1", path: "Data Science/ppts/IDS Unit-1(1).pptx", size: "2.6 MB" }
         ]
     },
     {
@@ -477,7 +479,9 @@ async function openPdfFile(path) {
     pagesWrapper.style.display = 'none';
     noteViewer.style.display = 'none';
     try {
-        var loadingTask = pdfjsLib.getDocument(path);
+        // Fetch only the chunks needed for the current page when the server
+        // supports range requests (GitHub Pages does) — big PDFs open much faster.
+        var loadingTask = pdfjsLib.getDocument({ url: path, disableAutoFetch: true });
         pdfDoc = await loadingTask.promise;
         totalPages = pdfDoc.numPages;
         updatePageInfo();
@@ -494,7 +498,7 @@ async function openPdfFile(path) {
 // ===== HiDPI Canvas Rendering =====
 async function renderPageToCanvas(canvas, pageNum) {
     var page = await pdfDoc.getPage(pageNum);
-    var dpr = window.devicePixelRatio || 1;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
     
     // Adjust base scale for mobile devices
     var isMobile = window.innerWidth <= 768;
