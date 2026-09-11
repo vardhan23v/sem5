@@ -9,6 +9,12 @@ var SUBJECTS = [
         name: "CNC",
         fullName: "Computer Networks & Communication",
         color: "#f97316",
+        important: [
+            { name: "Important Topic 1", path: "CNC/important/IMG-20250913-WA0002.jpg" },
+            { name: "Important Topic 2", path: "CNC/important/IMG-20250913-WA0008.jpg" },
+            { name: "Important Topic 3", path: "CNC/important/IMG-20250913-WA0012.jpg" },
+            { name: "Important Topic 4", path: "CNC/important/IMG-20250913-WA0016.jpg" }
+        ],
         files: [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
@@ -22,6 +28,12 @@ var SUBJECTS = [
         name: "OS",
         fullName: "Operating Systems",
         color: "#3b82f6",
+        important: [
+            { name: "Important Topic 1", path: "OS/important/IMG-20250913-WA0006.jpg" },
+            { name: "Important Topic 2", path: "OS/important/IMG-20250913-WA0020.jpg" },
+            { name: "Important Topic 3", path: "OS/important/WhatsApp Image 2026-09-11 at 13.05.24 (1).jpeg" },
+            { name: "Important Topic 4", path: "OS/important/WhatsApp Image 2026-09-11 at 13.05.24.jpeg" }
+        ],
         files: [
             { name: "OS Unit 1.pdf", path: "OS/OS UNIT 1.pdf", size: "10.5 MB" },
             { name: "OS Unit 2.pdf", path: "OS/OS UNIT 2.pdf", size: "16.8 MB" },
@@ -29,7 +41,15 @@ var SUBJECTS = [
             { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
             { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
             { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" },
-            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" }
+            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" },
+            { name: "Unit 2 — Ch 5 Process Synchronization.pdf", path: "OS/Unit-2/CH5_PROCESS SYNCHRONIZATION.pdf", size: "685 KB" },
+            { name: "Unit 2 — Ch 6 Deadlocks.pdf", path: "OS/Unit-2/CH6_DEADLOCKS.pdf", size: "426 KB" },
+            { name: "Unit 2 — Ch 7 Main Memory.pdf", path: "OS/Unit-2/CH7_MAIN MEMORY.pdf", size: "1.9 MB" },
+            { name: "Unit 2 — MCQs.pdf", path: "OS/Unit-2/OS_MCQS_UNIT2 .pdf", size: "138 KB" },
+            { name: "Unit 3 — Ch 9 File System Concept.pdf", path: "OS/Unit-3/CH9_FILE SYSTEM CONCEPT.pdf", size: "110 KB" },
+            { name: "Unit 3 — Ch 10 File System Structure.pdf", path: "OS/Unit-3/CH10_FILE SYSTEM STRUCTURE.pdf", size: "534 KB" },
+            { name: "Unit 3 — Ch 11 Disk Scheduling.pdf", path: "OS/Unit-3/CH11_DISK SCHEDULING.pdf", size: "645 KB" },
+            { name: "Unit 3 — MCQs.pdf", path: "OS/Unit-3/OS_MCQ_UNIT3.pdf", size: "133 KB" }
         ]
     },
     {
@@ -50,11 +70,35 @@ var SUBJECTS = [
         name: "TOC",
         fullName: "Theory of Computation",
         color: "#a855f7",
+        important: [
+            { name: "Important Topic 1", path: "TOC/important/IMG-20250913-WA0010.jpg" },
+            { name: "Important Topic 2", path: "TOC/important/IMG-20250913-WA0018.jpg" }
+        ],
         files: [
             { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC/TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB" },
             { name: "TOC Unit 1 — Automata (HTML)", path: "TOC/unit1-theory-of-computation.html", size: "33 KB" },
             { name: "Unit 1 — Automata Solved & Animated (HTML)", path: "TOC/CS3103-1_Unit1_TOC_Notes.html", size: "48 KB" },
-            { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB" }
+            { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB" },
+            { name: "TOC — MSE 1 Question Paper.pdf", path: "TOC/TOC MSE1.pdf", size: "18.8 MB" },
+            { name: "TOC — MCQs (Word)", path: "TOC/Toc_MCQs.docx", size: "1.4 MB" }
+        ]
+    },
+    {
+        name: "ESD",
+        fullName: "Employability & Social Development",
+        color: "#14b8a6",
+        files: [
+            { name: "ESD — Unit 1.pdf", path: "ESD/ESD Unit 1.pdf", size: "139 KB" }
+        ]
+    },
+    {
+        name: "SCR",
+        fullName: "Social Connect Responsibility",
+        color: "#f59e0b",
+        files: [
+            { name: "SCR — Unit I.pdf", path: "SCR/SCR_Unit I.pdf", size: "838 KB" },
+            { name: "SCR — Unit II.pdf", path: "SCR/SCR_Unit II.pdf", size: "605 KB" },
+            { name: "SCR — Unit III.pdf", path: "SCR/SCR_Unit III.pdf", size: "297 KB" }
         ]
     },
     {
@@ -109,6 +153,8 @@ var SUBJECT_ICONS = {
     "TOC": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
     "Data Science": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>',
     "UHV": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    "ESD": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="2" y1="11" x2="22" y2="11"/></svg>',
+    "SCR": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     "PPTs": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
     "Lab Manuals": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.5V2"/><path d="M8.5 2h7"/><line x1="7" y1="15" x2="17" y2="15"/></svg>',
     "default": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
@@ -232,6 +278,19 @@ function buildSidebar() {
         html += '    <svg class="subject-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>';
         html += '  </div>';
         html += '  <div class="subject-files">';
+        if (subject.important && subject.important.length) {
+            html += '    <div class="important-section">';
+            html += '      <div class="important-label" style="color: ' + subject.color + '">Important Topics</div>';
+            html += '      <div class="important-grid">';
+            html += subject.important.map(function(imp, i) {
+                return '<div class="important-item" title="' + escapeHtml(imp.name) + '" onclick="openFile(\'' + encodeURIComponent(imp.path) + '\', \'' + encodeURIComponent(imp.name) + '\')">' +
+                    '<img class="important-thumb" loading="lazy" src="' + escapeHtml(imp.path) + '" alt="' + escapeHtml(imp.name) + '" onerror="this.style.display=\'none\'">' +
+                    '<span class="important-index">' + (i + 1) + '</span>' +
+                    '</div>';
+            }).join('');
+            html += '      </div>';
+            html += '    </div>';
+        }
         html += subject.files.map(function(f) { return fileItemHTML(f, subject.color); }).join('');
         html += '  </div>';
         html += '</div>';
