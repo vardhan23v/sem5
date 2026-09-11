@@ -106,6 +106,45 @@
     --transition-slow: var(--md-motion-slow);
 }
 
+/* ----- Dark theme (Material 3 dark scheme) ----- */
+[data-theme="dark"] {
+    --md-surface: #131218;
+    --md-surface-1: #1b1a21;
+    --md-surface-2: #201f27;
+    --md-surface-container: #1e1d25;
+    --md-surface-container-high: #28272f;
+    --md-surface-container-highest: #34333c;
+
+    --md-on-surface: #e6e0e9;
+    --md-on-surface-variant: #cac4d0;
+    --md-outline: #938f99;
+    --md-outline-variant: #49454f;
+
+    --md-primary: #cfc4ff;
+    --md-on-primary: #381e72;
+    --md-primary-container: #4f378b;
+    --md-on-primary-container: #e6e0ff;
+
+    --md-secondary: #d3bce8;
+    --md-on-secondary: #38294a;
+    --md-secondary-container: #4f3f62;
+    --md-on-secondary-container: #eadcff;
+
+    --md-tertiary: #9fd3d3;
+    --md-on-tertiary: #003737;
+    --md-tertiary-container: #195455;
+    --md-on-tertiary-container: #a9f0f0;
+
+    --md-error: #ffb4ab;
+    --md-error-container: #93000a;
+    --md-on-error-container: #ffdad6;
+
+    /* Deeper shadows for dark surfaces */
+    --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.40), 0 1px 3px 1px rgba(0, 0, 0, 0.32);
+    --md-elevation-2: 0 2px 6px 1px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.40);
+    --md-elevation-3: 0 8px 16px 2px rgba(0, 0, 0, 0.55), 0 3px 6px rgba(0, 0, 0, 0.45);
+}
+
 html {
     font-size: 16px;
     scroll-behavior: smooth;
@@ -143,6 +182,54 @@ h1, h2, h3 {
 }
 
 .orb { display: none; }
+
+/* ===== Theme toggle ===== */
+.theme-toggle {
+    position: relative;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle-float {
+    position: fixed;
+    top: calc(14px + env(safe-area-inset-top));
+    right: 16px;
+    z-index: 130;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--md-shape-full);
+    background: var(--md-surface-container-high);
+    color: var(--md-on-surface-variant);
+    box-shadow: var(--md-elevation-2);
+    transition: background var(--md-motion-fast), color var(--md-motion-fast), box-shadow var(--md-motion-fast), transform var(--md-motion-fast);
+}
+
+.theme-toggle-float:hover {
+    background: var(--md-surface-container-highest);
+    color: var(--md-on-surface);
+    box-shadow: var(--md-elevation-3);
+}
+
+.theme-toggle-float:active { transform: scale(0.94); }
+
+.theme-toggle .icon-sun { display: none; }
+
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+body.viewer-open .theme-toggle-float { display: none; }
+
+@media (max-width: 899px) {
+    .theme-toggle-float {
+        top: calc(12px + env(safe-area-inset-top));
+        right: 12px;
+        width: 46px;
+        height: 46px;
+    }
+}
 
 /* ===== Navigation Rail (desktop) ===== */
 .nav-rail {
@@ -1641,4 +1728,32 @@ h1, h2, h3 {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* ===== Dark theme component fixes ===== */
+[data-theme="dark"] .rail-btn:hover,
+[data-theme="dark"] .rail-btn:active,
+[data-theme="dark"] .sidebar-toggle:hover,
+[data-theme="dark"] .subject-header:hover,
+[data-theme="dark"] .file-item:hover,
+[data-theme="dark"] .btn-dl:hover,
+[data-theme="dark"] .btn-favorite:hover,
+[data-theme="dark"] .btn-control:hover,
+[data-theme="dark"] .btn-control:active,
+[data-theme="dark"] .modal-close:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="dark"] .welcome-badge,
+[data-theme="dark"] .stat-chip {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .thumb-item,
+[data-theme="dark"] .thumb-item canvas {
+    background: var(--md-surface-container-high);
+}
+
+[data-theme="dark"] .important-label {
+    color: var(--md-secondary) !important;
 }
