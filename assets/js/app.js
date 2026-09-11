@@ -184,6 +184,7 @@ var favorites = [];
 var recentFiles = [];
 var readingProgress = {};
 var darkMode = true;
+var currentTheme = 'light';
 
 // Load saved data from localStorage
 function loadUserData() {
@@ -191,7 +192,9 @@ function loadUserData() {
         favorites = JSON.parse(localStorage.getItem('notevault_favorites') || '[]');
         recentFiles = JSON.parse(localStorage.getItem('notevault_recent') || '[]');
         readingProgress = JSON.parse(localStorage.getItem('notevault_progress') || '{}');
-        darkMode = localStorage.getItem('notevault_theme') !== 'light';
+        currentTheme = localStorage.getItem('notevault_theme') || 'light';
+        darkMode = currentTheme === 'dark';
+        applyTheme(currentTheme);
     } catch (e) {
         console.error('Error loading user data:', e);
     }
@@ -203,9 +206,29 @@ function saveUserData() {
         localStorage.setItem('notevault_favorites', JSON.stringify(favorites));
         localStorage.setItem('notevault_recent', JSON.stringify(recentFiles.slice(0, 10)));
         localStorage.setItem('notevault_progress', JSON.stringify(readingProgress));
-        localStorage.setItem('notevault_theme', darkMode ? 'dark' : 'light');
+        localStorage.setItem('notevault_theme', currentTheme);
     } catch (e) {
         console.error('Error saving user data:', e);
+    }
+}
+
+// Theme toggle functionality
+function toggleTheme() {
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(currentTheme);
+    saveUserData();
+    showNotification('Theme switched to ' + currentTheme + ' mode', 'success');
+}
+
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.querySelector('.theme-icon-sun').style.display = 'none';
+        document.querySelector('.theme-icon-moon').style.display = 'block';
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        document.querySelector('.theme-icon-sun').style.display = 'block';
+        document.querySelector('.theme-icon-moon').style.display = 'none';
     }
 }
 
@@ -1012,6 +1035,7 @@ function attachEvents() {
     document.getElementById('btnNextPageBot').addEventListener('click', nextPage);
     document.getElementById('btnPrevPageBot').addEventListener('click', prevPage);
     document.getElementById('btnShare').addEventListener('click', shareSite);
+    document.getElementById('btnTheme').addEventListener('click', toggleTheme);
     document.getElementById('btnShortcuts').addEventListener('click', openShortcutsModal);
     var btnThumbs = document.getElementById('btnThumbs');
     if (btnThumbs) btnThumbs.addEventListener('click', toggleThumbRail);

@@ -148,6 +148,22 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background-color: var(--md-surface);
+    color: var(--md-on-surface);
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background-color var(--md-motion-normal), color var(--md-motion-normal);
+}
 }
 
 body {
@@ -1756,4 +1772,394 @@ body.viewer-open .theme-toggle-float { display: none; }
 
 [data-theme="dark"] .important-label {
     color: var(--md-secondary) !important;
+}
+
+
+/* ===== Polish & Micro-interactions ===== */
+
+/* Smooth entrance animations for cards */
+.file-item,
+.subject-group,
+.quick-btn {
+    animation: fadeInSlide 0.4s ease-out backwards;
+}
+
+.file-item:nth-child(1) { animation-delay: 0.05s; }
+.file-item:nth-child(2) { animation-delay: 0.1s; }
+.file-item:nth-child(3) { animation-delay: 0.15s; }
+.file-item:nth-child(4) { animation-delay: 0.2s; }
+.file-item:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced hover effects with scale */
+.file-item,
+.quick-btn,
+.btn-control,
+.btn-back {
+    transition: all var(--md-motion-normal);
+    will-change: transform;
+}
+
+.file-item:hover {
+    transform: translateX(4px) scale(1.01);
+}
+
+.quick-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+}
+
+/* Ripple effect for buttons */
+.btn-control:active::after,
+.btn-back:active::after,
+.quick-btn:active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Smooth page transitions */
+.welcome-screen,
+.pdf-viewer {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Enhanced loading spinner */
+.spinner {
+    position: relative;
+}
+
+.spinner::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: rgba(99, 102, 241, 0.3);
+    animation: spin 1.2s linear infinite reverse;
+}
+
+/* Staggered subject group animations */
+.subject-group:nth-child(1) { animation-delay: 0.1s; }
+.subject-group:nth-child(2) { animation-delay: 0.2s; }
+.subject-group:nth-child(3) { animation-delay: 0.3s; }
+.subject-group:nth-child(4) { animation-delay: 0.4s; }
+.subject-group:nth-child(5) { animation-delay: 0.5s; }
+.subject-group:nth-child(6) { animation-delay: 0.6s; }
+
+/* Smooth sidebar transitions */
+.sidebar {
+    transition: transform var(--md-motion-slow) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar.open {
+    box-shadow: var(--md-elevation-3);
+}
+
+/* Enhanced focus states for accessibility */
+*:focus-visible {
+    outline: 2px solid var(--md-primary);
+    outline-offset: 2px;
+    border-radius: var(--md-shape-xs);
+}
+
+button:focus-visible,
+.file-item:focus-visible {
+    outline-color: var(--md-primary);
+}
+
+/* Smooth color transitions */
+.file-icon,
+.subject-dot,
+.btn-favorite {
+    transition: all var(--md-motion-normal);
+}
+
+/* Enhanced notification entrance */
+.notification {
+    animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Modal backdrop animation */
+.modal {
+    animation: fadeInBackdrop 0.3s ease-out;
+}
+
+@keyframes fadeInBackdrop {
+    from {
+        background: rgba(0, 0, 0, 0);
+        backdrop-filter: blur(0px);
+    }
+    to {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+    }
+}
+
+/* Smooth orb animations with reduced motion support */
+.orb {
+    animation-timing-function: ease-in-out;
+    will-change: transform;
+}
+
+/* Loading skeleton effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.loading-skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--md-surface-container) 0%,
+        var(--md-surface-container-high) 20%,
+        var(--md-surface-container) 40%,
+        var(--md-surface-container) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* Improved scroll indicators */
+.subject-list::-webkit-scrollbar-thumb {
+    background: var(--md-outline-variant);
+    border-radius: 4px;
+    transition: background var(--md-motion-normal);
+}
+
+.subject-list::-webkit-scrollbar-thumb:hover {
+    background: var(--md-outline);
+}
+
+/* Subtle pulse on favorites */
+.btn-favorite:hover {
+    animation: pulse-star 0.6s ease-in-out;
+}
+
+@keyframes pulse-star {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Enhanced canvas transitions */
+.pages-wrapper canvas {
+    transition: opacity var(--md-motion-normal), transform var(--md-motion-slow);
+}
+
+.pages-wrapper canvas:hover {
+    box-shadow: var(--md-elevation-3);
+}
+
+/* Smooth zoom indicator */
+.zoom-level,
+.page-info {
+    transition: all var(--md-motion-fast);
+}
+
+/* Polish for mobile interactions */
+@media (hover: none) and (pointer: coarse) {
+    /* Disable hover effects on touch devices */
+    .file-item:hover {
+        transform: none;
+    }
+    
+    /* Enhanced touch feedback */
+    .file-item:active {
+        transform: scale(0.98);
+        background: var(--md-surface-container-high);
+    }
+    
+    .quick-btn:active {
+        transform: scale(0.95);
+    }
+}
+
+/* Improved glass effect */
+.sidebar,
+.viewer-topbar,
+.modal-content {
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* Subtle gradient on active items */
+.file-item.active {
+    background: linear-gradient(
+        90deg,
+        rgba(99, 102, 241, 0.08) 0%,
+        rgba(99, 102, 241, 0.12) 100%
+    );
+}
+
+/* Enhanced shadow depth on cards */
+.welcome-card,
+.modal-content,
+.shortcut-item {
+    box-shadow: var(--md-elevation-1);
+    transition: box-shadow var(--md-motion-normal);
+}
+
+.welcome-card:hover,
+.shortcut-item:hover {
+    box-shadow: var(--md-elevation-2);
+}
+
+/* Smooth state transitions */
+.btn-control.active {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 2px var(--md-primary-container);
+}
+
+/* Polish reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .orb {
+        animation: none;
+    }
+}
+
+/* Enhanced contrast for better readability */
+@media (prefers-contrast: high) {
+    :root {
+        --md-outline: #000000;
+        --md-on-surface: #000000;
+    }
+    
+    [data-theme="dark"] {
+        --md-outline: #ffffff;
+        --md-on-surface: #ffffff;
+    }
+}
+
+/* Dark mode polish */
+[data-theme="dark"] .file-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .notification {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Smooth theme transitions */
+* {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: var(--md-motion-normal);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exception for animations and transforms */
+.spinner,
+.orb,
+.loading-skeleton,
+.notification,
+.modal {
+    transition-property: opacity, transform;
+}
+
+
+/* ===== Loading Progress Bar ===== */
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity var(--md-motion-fast);
+}
+
+.loading-bar.visible {
+    opacity: 1;
+}
+
+.loading-bar-progress {
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--md-primary) 0%,
+        var(--md-secondary) 50%,
+        var(--md-tertiary) 100%
+    );
+    width: 0%;
+    transition: width 0.3s ease-out;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* Indeterminate loading animation */
+.loading-bar.indeterminate .loading-bar-progress {
+    width: 30%;
+    animation: indeterminate 1.5s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+@keyframes indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(400%);
+    }
+}
+
+/* Scroll progress indicator */
+.scroll-progress {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    height: 2px;
+    background: var(--md-primary);
+    width: 0%;
+    transition: width 0.1s ease-out;
+    z-index: 100;
 }
