@@ -100,6 +100,19 @@ var rendering = false;
 var pendingRender = null;
 var twoPageMode = false;
 var currentFileType = 'pdf';
+var thumbRendered = 0;
+
+// ===== Subject Card Icons (inline SVG paths) =====
+var SUBJECT_ICONS = {
+    "CNC": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    "OS": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+    "TOC": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+    "Data Science": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>',
+    "UHV": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    "PPTs": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+    "Lab Manuals": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.5V2"/><path d="M8.5 2h7"/><line x1="7" y1="15" x2="17" y2="15"/></svg>',
+    "default": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+};
 
 // ===== New Features State =====
 var favorites = [];
@@ -168,7 +181,10 @@ var loadingSpinner = document.getElementById('loadingSpinner');
 var pageInfo = document.getElementById('pageInfo');
 var pageInfoBot = document.getElementById('pageInfoBot');
 var zoomLevelEl = document.getElementById('zoomLevel');
-var quickSubjects = document.getElementById('quickSubjects');
+var subjectCards = document.getElementById('subjectCards');
+var thumbRail = document.getElementById('thumbRail');
+var thumbRailList = document.getElementById('thumbRailList');
+var viewerProgressFill = document.getElementById('viewerProgressFill');
 var noteViewer = document.getElementById('noteViewer');
 var imageViewer = document.getElementById('imageViewer');
 
@@ -177,12 +193,14 @@ function init() {
     try {
         loadUserData();
         buildSidebar();
-        buildQuickSubjects();
+        buildSubjectCards();
         countPdfs();
         attachEvents();
         addMobileToggle();
         updateFavoritesUI();
         updateRecentFilesUI();
+        var navHome = document.getElementById('navHome');
+        if (navHome) navHome.classList.add('active');
     } catch (err) {
         console.error("Initialization failed:", err);
     }
@@ -194,6 +212,10 @@ function countPdfs() {
     totalPdfsEl.textContent = count;
     var subjectsEl = document.getElementById('totalSubjects');
     if (subjectsEl) subjectsEl.textContent = SUBJECTS.length;
+    var chipF = document.getElementById('chipFiles');
+    if (chipF) chipF.textContent = count;
+    var chipS = document.getElementById('chipSubjects');
+    if (chipS) chipS.textContent = SUBJECTS.length;
 }
 
 // ===== Build Sidebar =====
@@ -222,7 +244,10 @@ function fileItemHTML(file, color) {
     var isFavorite = favorites.indexOf(file.path) !== -1;
     var starIcon = isFavorite ? '★' : '☆';
     var starColor = isFavorite ? color : 'var(--text-muted)';
-    
+    var prog = readingProgress[file.path];
+    var progBar = (prog && prog.total > 0) ?
+        '<span class="file-progress"><span class="file-progress-fill" style="width:' + Math.min(100, Math.max(3, prog.percentage || 0)) + '%"></span></span>' : '';
+
     return '<div class="file-item" data-path="' + escapeHtml(file.path) + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')">' +
         '<div class="file-icon" style="background: ' + color + '22; color: ' + color + '">' + label + '</div>' +
         '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
@@ -231,6 +256,7 @@ function fileItemHTML(file, color) {
         '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')" title="Download">' +
         '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
         '</button>' +
+        progBar +
         '</div>';
 }
 
@@ -238,9 +264,19 @@ function escapeHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-function buildQuickSubjects() {
-    quickSubjects.innerHTML = SUBJECTS.map(function(s) {
-        return '<button class="quick-btn" onclick="expandSubject(\'' + s.name + '\')" style="border-color: ' + s.color + '30; color: ' + s.color + '">' + s.name + '</button>';
+function buildSubjectCards() {
+    if (!subjectCards) return;
+    subjectCards.innerHTML = SUBJECTS.map(function(s, i) {
+        var icon = SUBJECT_ICONS[s.name] || SUBJECT_ICONS['default'];
+        return '<button class="subject-card" style="--card-color:' + s.color + '; animation-delay:' + (i * 60) + 'ms" onclick="expandSubject(\'' + s.name + '\')">' +
+            '<span class="subject-card-icon">' + icon + '</span>' +
+            '<span class="subject-card-info">' +
+            '<span class="subject-card-name">' + escapeHtml(s.name) + '</span>' +
+            '<span class="subject-card-full">' + escapeHtml(s.fullName) + '</span>' +
+            '</span>' +
+            '<span class="subject-card-count">' + s.files.length + ' files</span>' +
+            '<svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+            '</button>';
     }).join('');
 }
 
@@ -266,7 +302,7 @@ function expandSubject(name) {
 function toggleFavorite(encodedPath) {
     var path = decodeURIComponent(encodedPath);
     var index = favorites.indexOf(path);
-    
+
     if (index === -1) {
         favorites.push(path);
         showNotification('Added to favorites', 'success');
@@ -274,7 +310,7 @@ function toggleFavorite(encodedPath) {
         favorites.splice(index, 1);
         showNotification('Removed from favorites', 'info');
     }
-    
+
     saveUserData();
     buildSidebar();
     updateFavoritesUI();
@@ -297,13 +333,13 @@ function updateFavoritesUI() {
 function addToRecent(path, name) {
     // Remove if already exists
     recentFiles = recentFiles.filter(function(f) { return f.path !== path; });
-    
+
     // Add to beginning
     recentFiles.unshift({ path: path, name: name, timestamp: Date.now() });
-    
+
     // Keep only last 10
     recentFiles = recentFiles.slice(0, 10);
-    
+
     saveUserData();
     updateRecentFilesUI();
 }
@@ -334,11 +370,11 @@ function showNotification(message, type) {
     notification.className = 'notification notification-' + (type || 'info');
     notification.textContent = message;
     document.body.appendChild(notification);
-    
+
     setTimeout(function() {
         notification.classList.add('show');
     }, 10);
-    
+
     setTimeout(function() {
         notification.classList.remove('show');
         setTimeout(function() {
@@ -355,6 +391,7 @@ function openFile(encodedPath, encodedName) {
     currentPage = 1;
     zoomScale = 1.0;
     currentFileType = getFileType(path);
+    thumbRendered = 0;
 
     // Add to recent files
     addToRecent(path, name);
@@ -389,6 +426,7 @@ function openFile(encodedPath, encodedName) {
         bottomBar.style.display = '';
         zoomControls.forEach(function(e) { e.style.display = ''; });
         openPdfFile(path);
+        if (progress && progress.page > 1) showResumeChip(progress.page);
     } else if (currentFileType === 'html') {
         pageControls.forEach(function(b) { b.style.display = 'none'; });
         pageInfoEls.forEach(function(e) { e.style.display = 'none'; });
@@ -424,6 +462,83 @@ function hideAllViewers() {
     loadingSpinner.classList.remove('visible');
     var fallback = document.getElementById('pptFallback');
     if (fallback) fallback.style.display = 'none';
+    var chip = document.getElementById('resumeChip');
+    if (chip) chip.remove();
+}
+
+// ===== Resume Chip =====
+function showResumeChip(page) {
+    var old = document.getElementById('resumeChip');
+    if (old) old.remove();
+    var chip = document.createElement('div');
+    chip.className = 'resume-chip';
+    chip.id = 'resumeChip';
+    chip.innerHTML = 'Resumed at page ' + page +
+        '<button class="resume-chip-go" onclick="goBack()">Close</button>';
+    pdfCanvasContainer.appendChild(chip);
+    setTimeout(function() {
+        if (chip.parentNode) chip.parentNode.removeChild(chip);
+    }, 5000);
+}
+
+// ===== Thumbnail Rail =====
+function toggleThumbRail() {
+    if (!pdfDoc || currentFileType !== 'pdf') return;
+    if (!thumbRail) return;
+    var willOpen = !thumbRail.classList.contains('open');
+    thumbRail.classList.toggle('open');
+    var btn = document.getElementById('btnThumbs');
+    if (btn) btn.classList.toggle('active', willOpen);
+    if (willOpen) {
+        if (!thumbRendered) buildThumbs();
+        updateThumbActive();
+    }
+}
+
+function buildThumbs() {
+    if (!thumbRailList || !pdfDoc) return;
+    var html = '';
+    for (var i = 1; i <= totalPages; i++) {
+        html += '<div class="thumb-item" data-page="' + i + '" onclick="goToThumbPage(' + i + ')"><canvas></canvas><span>' + i + '</span></div>';
+    }
+    thumbRailList.innerHTML = html;
+    renderThumbBatch();
+}
+
+function renderThumbBatch() {
+    if (!pdfDoc) return;
+    var target = Math.min(thumbRendered + 15, totalPages);
+    for (var p = thumbRendered + 1; p <= target; p++) renderThumb(p);
+    thumbRendered = target;
+}
+
+async function renderThumb(p) {
+    try {
+        var page = await pdfDoc.getPage(p);
+        var viewport = page.getViewport({ scale: 0.12 });
+        var canvas = document.querySelector('.thumb-item[data-page="' + p + '"] canvas');
+        if (!canvas) return;
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+    } catch (e) { /* skip thumbnails that fail to render */ }
+}
+
+function goToThumbPage(p) {
+    if (!pdfDoc) return;
+    currentPage = p;
+    updatePageInfo();
+    renderCurrentView();
+    pdfCanvasContainer.scrollTop = 0;
+    updateThumbActive();
+}
+
+function updateThumbActive() {
+    if (!thumbRailList || !thumbRailList.children.length) return;
+    for (var i = 0; i < thumbRailList.children.length; i++) {
+        var it = thumbRailList.children[i];
+        it.classList.toggle('active', Number(it.getAttribute('data-page')) === currentPage);
+    }
 }
 
 function openImageFile(path) {
@@ -505,11 +620,11 @@ async function openPdfFile(path) {
 async function renderPageToCanvas(canvas, pageNum) {
     var page = await pdfDoc.getPage(pageNum);
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    
+
     // Adjust base scale for mobile devices
     var isMobile = window.innerWidth <= 768;
     var baseScale = isMobile ? zoomScale * 1.2 : zoomScale * 1.5;
-    
+
     var viewport = page.getViewport({ scale: baseScale });
 
     // On mobile, ensure canvas doesn't exceed container width
@@ -601,7 +716,13 @@ function updatePageInfo() {
     }
     pageInfo.textContent = text;
     pageInfoBot.textContent = text;
-    
+
+    // Update reading progress bar
+    if (viewerProgressFill && totalPages > 0) {
+        viewerProgressFill.style.width = Math.round((currentPage / totalPages) * 100) + '%';
+    }
+    updateThumbActive();
+
     // Save reading progress
     if (currentPdf && totalPages > 0) {
         saveReadingProgress(currentPdf, currentPage, totalPages);
@@ -682,7 +803,13 @@ function goBack() {
     pdfDoc = null;
     currentPdf = null;
     currentFileType = 'pdf';
+    thumbRendered = 0;
     hideAllViewers();
+    if (thumbRail) thumbRail.classList.remove('open');
+    if (thumbRailList) thumbRailList.innerHTML = '';
+    var btnT = document.getElementById('btnThumbs');
+    if (btnT) btnT.classList.remove('active');
+    if (viewerProgressFill) viewerProgressFill.style.width = '0%';
     loadingSpinner.innerHTML = '<div class="spinner"></div><p>Loading document...</p>';
     loadingSpinner.classList.remove('visible');
     noteViewer.src = '';
@@ -791,6 +918,11 @@ function copyToClipboard(text) {
     });
 }
 
+function setNavActive(btn) {
+    document.querySelectorAll('.bottom-nav-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+}
+
 // ===== Event Listeners =====
 function attachEvents() {
     document.getElementById('btnBack').addEventListener('click', goBack);
@@ -805,6 +937,38 @@ function attachEvents() {
     document.getElementById('btnPrevPageBot').addEventListener('click', prevPage);
     document.getElementById('btnShare').addEventListener('click', shareSite);
     document.getElementById('btnShortcuts').addEventListener('click', openShortcutsModal);
+    var btnThumbs = document.getElementById('btnThumbs');
+    if (btnThumbs) btnThumbs.addEventListener('click', toggleThumbRail);
+
+    if (thumbRailList) {
+        thumbRailList.addEventListener('scroll', function() {
+            if (thumbRendered < totalPages && thumbRailList.scrollTop + thumbRailList.clientHeight > thumbRailList.scrollHeight - 400) {
+                renderThumbBatch();
+            }
+        });
+    }
+
+    // Bottom navigation (mobile)
+    var navHome = document.getElementById('navHome');
+    if (navHome) navHome.addEventListener('click', function() {
+        if (currentPdf) goBack();
+        closeSidebar();
+        setNavActive(navHome);
+    });
+    var navSearch = document.getElementById('navSearch');
+    if (navSearch) navSearch.addEventListener('click', function() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        setTimeout(function() { searchInput.focus(); }, 350);
+        setNavActive(navSearch);
+    });
+    var navSubjects = document.getElementById('navSubjects');
+    if (navSubjects) navSubjects.addEventListener('click', function() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        setNavActive(navSubjects);
+    });
+
     document.getElementById('sidebarToggle').addEventListener('click', function() {
         sidebar.classList.toggle('open');
         sidebarOverlay.classList.toggle('visible');
@@ -908,7 +1072,7 @@ function attachEvents() {
             case 'ArrowLeft': case 'ArrowUp': if (pdfDoc) { e.preventDefault(); prevPage(); } break;
             case '+': case '=': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomIn(); } break;
             case '-': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomOut(); } break;
-            case 'Escape': 
+            case 'Escape':
                 if (document.getElementById('shortcutsModal').classList.contains('show')) {
                     closeShortcutsModal();
                 } else if (currentPdf) {
