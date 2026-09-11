@@ -221,14 +221,16 @@ function toggleTheme() {
 }
 
 function applyTheme(theme) {
+    var sunIcons = document.querySelectorAll('.theme-icon-sun');
+    var moonIcons = document.querySelectorAll('.theme-icon-moon');
     if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        document.querySelector('.theme-icon-sun').style.display = 'none';
-        document.querySelector('.theme-icon-moon').style.display = 'block';
+        sunIcons.forEach(function(el) { el.style.display = 'none'; });
+        moonIcons.forEach(function(el) { el.style.display = 'block'; });
     } else {
         document.documentElement.removeAttribute('data-theme');
-        document.querySelector('.theme-icon-sun').style.display = 'block';
-        document.querySelector('.theme-icon-moon').style.display = 'none';
+        sunIcons.forEach(function(el) { el.style.display = 'block'; });
+        moonIcons.forEach(function(el) { el.style.display = 'none'; });
     }
 }
 
@@ -981,15 +983,19 @@ function animatePageTurn(direction) {
 
 // ===== Sidebar Mobile =====
 function addMobileToggle() {
+    var topbar = document.querySelector('.mobile-topbar');
+    if (!topbar) return;
     var btn = document.createElement('button');
     btn.className = 'mobile-toggle';
     btn.id = 'mobileToggle';
+    btn.setAttribute('aria-label', 'Menu');
+    btn.setAttribute('title', 'Menu');
     btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
     btn.onclick = function() {
         sidebar.classList.toggle('open');
         sidebarOverlay.classList.toggle('visible');
     };
-    document.body.appendChild(btn);
+    topbar.appendChild(btn);
 }
 
 function closeSidebar() {
@@ -1036,6 +1042,8 @@ function attachEvents() {
     document.getElementById('btnPrevPageBot').addEventListener('click', prevPage);
     document.getElementById('btnShare').addEventListener('click', shareSite);
     document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+    var btnThemeMobile = document.getElementById('btnThemeMobile');
+    if (btnThemeMobile) btnThemeMobile.addEventListener('click', toggleTheme);
     document.getElementById('btnShortcuts').addEventListener('click', openShortcutsModal);
     var btnThumbs = document.getElementById('btnThumbs');
     if (btnThumbs) btnThumbs.addEventListener('click', toggleThumbRail);
