@@ -1011,6 +1011,24 @@ body.viewer-open .mobile-topbar { display: none; }
     font-size: 0.92rem;
 }
 
+.live-viewer-chip b {
+    color: var(--md-tertiary);
+    font-size: 0.76rem;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+    margin-right: 2px;
+    border-radius: 50%;
+    background: var(--md-outline);
+}
+
+.live-viewer-chip:has(.is-live) .live-dot {
+    background: var(--md-tertiary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--md-tertiary) 16%, transparent);
+}
+
 /* Subject cards — Material grid */
 .subject-cards {
     display: grid;
