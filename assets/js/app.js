@@ -355,7 +355,7 @@ function fileItemHTML(file, tone) {
     return '<div class="file-item" data-path="' + escapeHtml(file.path) + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')">' +
         '<div class="file-icon" style="--subject-fill: ' + tone.fill + '; --subject-tint: ' + tone.tint + '">' + label + '</div>' +
         '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
-        '<span class="file-size">' + (file.size || '') + '</span>' +
+        '<span class="file-meta"><span class="file-type-badge" style="color: ' + tone.tint + '; background: ' + tone.fill + '">' + label + '</span>' + (file.size ? '<span class="file-size">' + file.size + '</span>' : '') + '</span>' +
         '<button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite(\'' + encodeURIComponent(file.path) + '\')" title="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '" style="color: ' + starColor + '">' + starIcon + '</button>' +
         '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')" title="Download">' +
         '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
@@ -378,8 +378,9 @@ function buildSubjectCards() {
             '<span class="subject-card-info">' +
             '<span class="subject-card-name">' + escapeHtml(s.name) + '</span>' +
             '<span class="subject-card-full">' + escapeHtml(s.fullName) + '</span>' +
+            '<span class="subject-card-meta">' + s.files.length + ' files' + (s.important && s.important.length ? ' · ' + s.important.length + ' important topics' : '') + '</span>' +
             '</span>' +
-            '<span class="subject-card-count">' + s.files.length + ' files</span>' +
+            '<span class="subject-card-count">' + s.files.length + '</span>' +
             '<svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
             '</button>';
     }).join('');
@@ -447,8 +448,24 @@ function addToRecent(path, name) {
 }
 
 function updateRecentFilesUI() {
-    // This will be called to update any recent files display
-    // For now, we'll add it to the welcome screen
+    var section = document.getElementById('recentSection');
+    var row = document.getElementById('recentRow');
+    if (!section || !row) return;
+
+    var recent = recentFiles.slice(0, 6);
+    if (!recent.length) {
+        section.style.display = 'none';
+        row.innerHTML = '';
+        return;
+    }
+
+    section.style.display = 'block';
+    row.innerHTML = recent.map(function(f) {
+        return '<button class="recent-chip" onclick="openFile(\'' + encodeURIComponent(f.path) + '\', \'' + encodeURIComponent(f.name) + '\')" title="' + escapeHtml(f.name) + '">' +
+            '<span class="recent-chip-icon">' + getFileLabel(f.path) + '</span>' +
+            '<span class="recent-chip-name">' + escapeHtml(f.name) + '</span>' +
+            '</button>';
+    }).join('');
 }
 
 // ===== Reading Progress =====
@@ -697,11 +714,36 @@ function openPptFile(path, name) {
     }
 }
 
+var pdfLibPromise = null;
+
+// Lazy-load pdf.js only when a PDF is first opened (saves ~450 KB on initial load)
+function loadPdfLib() {
+    if (window.pdfjsLib) return Promise.resolve();
+    if (pdfLibPromise) return pdfLibPromise;
+
+    pdfLibPromise = new Promise(function(resolve, reject) {
+        var script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        script.async = true;
+        script.onload = function() {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            resolve();
+        };
+        script.onerror = function() {
+            pdfLibPromise = null;
+            reject(new Error('Failed to load PDF library'));
+        };
+        document.head.appendChild(script);
+    });
+    return pdfLibPromise;
+}
+
 async function openPdfFile(path) {
     loadingSpinner.classList.add('visible');
     pagesWrapper.style.display = 'none';
     noteViewer.style.display = 'none';
     try {
+        await loadPdfLib();
         // Fetch only the chunks needed for the current page when the server
         // supports range requests (GitHub Pages does) — big PDFs open much faster.
         var loadingTask = pdfjsLib.getDocument({ url: path, disableAutoFetch: true });
@@ -939,10 +981,16 @@ function filterFiles(query) {
     var q = query.toLowerCase().trim();
     var items = document.querySelectorAll('.file-item');
     var groups = document.querySelectorAll('.subject-group');
+    var searchEmpty = document.getElementById('searchEmpty');
 
     if (!q) {
         items.forEach(function(el) { el.style.display = ''; });
-        groups.forEach(function(g) { g.style.display = ''; });
+        groups.forEach(function(g, i) {
+            g.style.display = '';
+            var shouldExpand = i === 0;
+            g.classList.toggle('expanded', shouldExpand);
+        });
+        if (searchEmpty) searchEmpty.style.display = 'none';
         return;
     }
 
@@ -951,11 +999,24 @@ function filterFiles(query) {
         el.style.display = name.indexOf(q) !== -1 ? '' : 'none';
     });
 
+    var anyVisible = false;
     groups.forEach(function(g) {
         var vis = g.querySelectorAll('.file-item:not([style*="display: none"])');
-        g.style.display = vis.length > 0 ? '' : 'none';
-        if (vis.length > 0) g.classList.add('expanded');
+        var hasVis = vis.length > 0;
+        g.style.display = hasVis ? '' : 'none';
+        if (hasVis) g.classList.add('expanded');
+        if (hasVis) anyVisible = true;
     });
+
+    if (searchEmpty) {
+        if (anyVisible) {
+            searchEmpty.style.display = 'none';
+        } else {
+            var text = document.getElementById('searchEmptyText');
+            if (text) text.textContent = 'No files found for "' + query.trim() + '"';
+            searchEmpty.style.display = 'flex';
+        }
+    }
 }
 
 // ===== Page Turn Animation =====
@@ -1115,6 +1176,18 @@ function attachEvents() {
     // Close modal on background click
     document.getElementById('shortcutsModal').addEventListener('click', function(e) {
         if (e.target.id === 'shortcutsModal') {
+            closeShortcutsModal();
+        }
+    });
+
+    // Close sheet/overlay with Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        if (sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
+        var modal = document.getElementById('shortcutsModal');
+        if (modal && modal.classList.contains('show')) {
             closeShortcutsModal();
         }
     });

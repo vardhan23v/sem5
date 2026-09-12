@@ -14,8 +14,10 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=10">
+    <link rel="stylesheet" href="assets/css/style.css?v=11">
 </head>
 <body>
 
@@ -104,6 +106,10 @@
             </svg>
             <input type="text" class="search-input" id="searchInput" placeholder="Search files...">
         </div>
+        <div class="search-empty" id="searchEmpty" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span id="searchEmptyText">No files found</span>
+        </div>
 
         <!-- Stats -->
         <div class="stats-bar">
@@ -146,6 +152,13 @@
                         <span class="stat-chip"><b id="chipFiles">0</b>&nbsp;files</span>
                         <span class="stat-chip"><b id="chipSubjects">0</b>&nbsp;subjects</span>
                     </div>
+                </div>
+                <div class="recent-section" id="recentSection" style="display: none;">
+                    <div class="recent-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Recently opened</span>
+                    </div>
+                    <div class="recent-row" id="recentRow"></div>
                 </div>
                 <div class="subject-cards" id="subjectCards">
                     <!-- Subject cards, populated by JS -->
@@ -312,15 +325,11 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-    <script src="assets/js/firebase-presence.js?v=1"></script>
-    <script src="assets/js/app.js?v=14"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js" defer></script>
+    <script src="assets/js/firebase-presence.js?v=2" defer></script>
+    <script src="assets/js/app.js?v=15"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
