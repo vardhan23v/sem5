@@ -12,13 +12,8 @@
         appId: '1:628354183588:web:3eff72453a6f20f00fd131'
     };
 
-    function updateViewerCount(count) {
-        document.querySelectorAll('[data-live-viewers]').forEach(function (element) {
-            element.textContent = count + (count === 1 ? ' viewer' : ' viewers');
-            element.classList.toggle('is-live', count > 0);
-        });
-    }
-
+    // Backend-only live viewer presence. No UI is updated — this data is
+    // consumed from the Realtime Database externally (e.g. admin dashboard).
     function startPresence() {
         if (!window.firebase || !firebase.apps.length) return;
 
@@ -37,12 +32,6 @@
             });
         }).catch(function (error) {
             console.warn('Live viewer presence is unavailable:', error.message);
-        });
-
-        presenceRef.on('value', function (snapshot) {
-            updateViewerCount(snapshot.numChildren());
-        }, function (error) {
-            console.warn('Live viewer count is unavailable:', error.message);
         });
     }
 
