@@ -389,7 +389,7 @@ body.viewer-open .mobile-topbar { display: none; }
     width: var(--sheet-width);
     max-width: calc(100vw - 24px);
     background: var(--md-surface-container);
-    border: 1px solid var(--md-outline-variant);
+    border: 1px solid transparent;
     border-radius: var(--md-shape-lg);
     box-shadow: var(--md-elevation-3);
     z-index: 110;
@@ -979,6 +979,7 @@ body.viewer-open .mobile-topbar { display: none; }
     justify-content: center;
     padding: 40px 48px;
     overflow-y: auto;
+    overflow-x: clip;
 }
 
 .welcome-card {
@@ -989,6 +990,7 @@ body.viewer-open .mobile-topbar { display: none; }
 }
 
 .welcome-card > * { max-width: 100%; }
+.welcome-card > * { min-width: 0; }
 
 .welcome-hero {
     margin-bottom: 28px;
@@ -997,8 +999,8 @@ body.viewer-open .mobile-topbar { display: none; }
     background:
         radial-gradient(900px 400px at 100% 0%, var(--md-secondary-container) 0%, transparent 55%),
         linear-gradient(135deg, var(--md-primary-container), var(--md-surface-1));
-    border: 1px solid rgba(109, 90, 230, 0.18);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), var(--md-elevation-1);
+    border: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 10px 28px rgba(72, 63, 140, 0.08);
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -1113,7 +1115,7 @@ body.viewer-open .mobile-topbar { display: none; }
     flex-shrink: 0;
     max-width: 240px;
     padding: 8px 14px 8px 8px;
-    border: 1px solid var(--md-outline-variant);
+    border: 1px solid transparent;
     border-radius: var(--md-shape-full);
     background: var(--md-surface-1);
     color: var(--md-on-surface);
@@ -1180,7 +1182,7 @@ body.viewer-open .mobile-topbar { display: none; }
     align-items: center;
     gap: 14px;
     padding: 18px;
-    border: 1px solid var(--md-outline-variant);
+    border: 1px solid transparent;
     border-radius: var(--md-shape-lg);
     background: var(--md-surface-1);
     color: var(--md-on-surface);
@@ -1735,6 +1737,14 @@ body.viewer-open .mobile-topbar { display: none; }
         padding: calc(64px + env(safe-area-inset-top)) 16px calc(var(--navbar-height) + 24px);
     }
 
+    .welcome-hero {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 18px rgba(72, 63, 140, 0.06);
+    }
+
+    .subject-card {
+        box-shadow: 0 1px 4px rgba(72, 63, 140, 0.05);
+    }
+
     /* Bottom navigation — Material nav bar */
     .bottom-nav {
         display: flex;
@@ -2190,9 +2200,17 @@ button:focus-visible,
     transition: box-shadow var(--md-motion-normal);
 }
 
-.welcome-card:hover,
+.welcome-card {
+    box-shadow: none;
+}
+
 .shortcut-item:hover {
     box-shadow: var(--md-elevation-2);
+}
+
+:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--md-primary) 42%, transparent);
+    outline-offset: 3px;
 }
 
 /* Smooth state transitions */
