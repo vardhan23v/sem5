@@ -1,5 +1,17 @@
 # 📚 NoteVault — Semester 5
 
+<p align="center">
+  <a href="https://vardhan23v.github.io/sem5/">
+    <img src="https://img.shields.io/website?url=https%3A%2F%2Fvardhan23v.github.io%2Fsem5%2F&label=Live%20Site&color=6b5ae0&style=for-the-badge" alt="Live Site">
+  </a>
+  <img src="https://img.shields.io/github/deployments/vardhan23v/sem5/github-pages?label=GitHub%20Pages&color=6b5ae0&style=for-the-badge" alt="GitHub Pages deployment">
+  <img src="https://img.shields.io/badge/built%20with-HTML%20%E2%80%A2%20CSS%20%E2%80%A2%20JS-e34f26?style=for-the-badge&logo=html5&logoColor=white" alt="Built with HTML/CSS/JS">
+  <img src="https://img.shields.io/badge/PWA-ready-2e8d8f?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA">
+  <img src="https://img.shields.io/badge/Firebase-live%20presence-ffca28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase live presence">
+  <img src="https://img.shields.io/github/last-commit/vardhan23v/sem5?color=9c6fb5&style=for-the-badge" alt="Last commit">
+  <img src="https://img.shields.io/github/repo-size/vardhan23v/sem5?color=6b5ae0&style=for-the-badge" alt="Repo size">
+</p>
+
 Study materials for my 5th semester, organized by subject and readable right in the browser.
 
 **Live site:** https://vardhan23v.github.io/sem5/

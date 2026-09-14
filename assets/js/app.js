@@ -217,20 +217,17 @@ function toggleTheme() {
     currentTheme = currentTheme === 'light' ? 'dark' : 'light';
     applyTheme(currentTheme);
     saveUserData();
-    showNotification('Theme switched to ' + currentTheme + ' mode', 'success');
+    showNotification('Switched to ' + (currentTheme === 'dark' ? 'Dark' : 'Light') + ' mode', 'info');
 }
 
 function applyTheme(theme) {
-    var sunIcons = document.querySelectorAll('.theme-icon-sun');
-    var moonIcons = document.querySelectorAll('.theme-icon-moon');
+    var metaTheme = document.querySelector('meta[name="theme-color"]');
     if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        sunIcons.forEach(function(el) { el.style.display = 'none'; });
-        moonIcons.forEach(function(el) { el.style.display = 'block'; });
+        if (metaTheme) metaTheme.setAttribute('content', '#131218');
     } else {
         document.documentElement.removeAttribute('data-theme');
-        sunIcons.forEach(function(el) { el.style.display = 'block'; });
-        moonIcons.forEach(function(el) { el.style.display = 'none'; });
+        if (metaTheme) metaTheme.setAttribute('content', '#faf9ff');
     }
 }
 
@@ -415,12 +412,11 @@ function toggleFavorite(encodedPath) {
     }
 
     saveUserData();
-    buildSidebar();
     updateFavoritesUI();
 }
 
 function updateFavoritesUI() {
-    // Update favorite stars in sidebar
+    // Update favorite stars in sidebar without rebuilding DOM or resetting search
     document.querySelectorAll('.file-item').forEach(function(item) {
         var path = item.getAttribute('data-path');
         var btn = item.querySelector('.btn-favorite');
@@ -428,6 +424,9 @@ function updateFavoritesUI() {
             var isFavorite = favorites.indexOf(path) !== -1;
             btn.textContent = isFavorite ? '★' : '☆';
             btn.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+            var parentGroup = item.closest('.subject-group');
+            var tone = parentGroup ? subjectTone(parentGroup.getAttribute('data-subject')) : null;
+            btn.style.color = isFavorite ? (tone ? tone.tint : 'var(--md-primary)') : 'var(--md-on-surface-variant)';
         }
     });
 }
@@ -592,8 +591,8 @@ function showResumeChip(page) {
     var chip = document.createElement('div');
     chip.className = 'resume-chip';
     chip.id = 'resumeChip';
-    chip.innerHTML = 'Resumed at page ' + page +
-        '<button class="resume-chip-go" onclick="goBack()">Close</button>';
+    chip.innerHTML = '<span>Resumed at page ' + page + '</span>' +
+        '<button class="resume-chip-go" aria-label="Dismiss" title="Dismiss" onclick="var c=document.getElementById(\'resumeChip\'); if(c) c.remove();">✕</button>';
     pdfCanvasContainer.appendChild(chip);
     setTimeout(function() {
         if (chip.parentNode) chip.parentNode.removeChild(chip);
@@ -1105,6 +1104,8 @@ function attachEvents() {
     document.getElementById('btnTheme').addEventListener('click', toggleTheme);
     var btnThemeMobile = document.getElementById('btnThemeMobile');
     if (btnThemeMobile) btnThemeMobile.addEventListener('click', toggleTheme);
+    var themeToggleViewer = document.getElementById('themeToggleViewer');
+    if (themeToggleViewer) themeToggleViewer.addEventListener('click', toggleTheme);
     document.getElementById('btnShortcuts').addEventListener('click', openShortcutsModal);
     var btnThumbs = document.getElementById('btnThumbs');
     if (btnThumbs) btnThumbs.addEventListener('click', toggleThumbRail);
@@ -1280,6 +1281,18 @@ function attachEvents() {
             case 'ArrowLeft': case 'ArrowUp': if (pdfDoc) { e.preventDefault(); prevPage(); } break;
             case '+': case '=': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomIn(); } break;
             case '-': if (pdfDoc && !e.metaKey) { e.preventDefault(); zoomOut(); } break;
+            case 'f': case 'F':
+                if (currentPdf && !e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    toggleFullscreen();
+                }
+                break;
+            case 't': case 'T':
+                if (pdfDoc && !e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    toggleThumbRail();
+                }
+                break;
             case 'Escape':
                 if (document.getElementById('shortcutsModal').classList.contains('show')) {
                     closeShortcutsModal();

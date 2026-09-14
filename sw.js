@@ -1,10 +1,10 @@
-const CACHE_NAME = 'notevault-shell-v5';
+const CACHE_NAME = 'notevault-shell-v6';
 const APP_SHELL = [
   './',
   './index.html',
-  './assets/css/style.css?v=11',
-  './assets/js/firebase-presence.js?v=2',
-  './assets/js/app.js?v=15',
+  './assets/css/style.css?v=12',
+  './assets/js/firebase-presence.js?v=3',
+  './assets/js/app.js?v=16',
   './favicon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png'
