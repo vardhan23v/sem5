@@ -183,7 +183,15 @@ function subjectTone(name) {
 var favorites = [];
 var recentFiles = [];
 var readingProgress = {};
+var completed = [];          // paths marked as done
+var activeFilter = 'all';    // sidebar filter chip: all | pdf | html | ppt | fav | todo
 var currentTheme = 'light';
+
+// Find-in-document state (per open PDF)
+var pageTexts = null;        // cached text per page, filled lazily
+var findHits = [];           // [{ page, count }]
+var findIndex = -1;
+var findQuery = '';
 
 // Load saved data from localStorage
 function loadUserData() {
@@ -191,6 +199,7 @@ function loadUserData() {
         favorites = JSON.parse(localStorage.getItem('notevault_favorites') || '[]');
         recentFiles = JSON.parse(localStorage.getItem('notevault_recent') || '[]');
         readingProgress = JSON.parse(localStorage.getItem('notevault_progress') || '{}');
+        completed = JSON.parse(localStorage.getItem('notevault_done') || '[]');
         currentTheme = localStorage.getItem('notevault_theme') || 'light';
         applyTheme(currentTheme);
     } catch (e) {
@@ -204,6 +213,7 @@ function saveUserData() {
         localStorage.setItem('notevault_favorites', JSON.stringify(favorites));
         localStorage.setItem('notevault_recent', JSON.stringify(recentFiles.slice(0, 10)));
         localStorage.setItem('notevault_progress', JSON.stringify(readingProgress));
+        localStorage.setItem('notevault_done', JSON.stringify(completed));
         localStorage.setItem('notevault_theme', currentTheme);
     } catch (e) {
         console.error('Error saving user data:', e);
@@ -287,6 +297,7 @@ function init() {
         updateRecentFilesUI();
         var navHome = document.getElementById('navHome');
         if (navHome) navHome.classList.add('active');
+        openFromHash(true);
     } catch (err) {
         console.error("Initialization failed:", err);
     }
@@ -342,16 +353,20 @@ function buildSidebar() {
 function fileItemHTML(file, tone) {
     var label = getFileLabel(file.path);
     var isFavorite = favorites.indexOf(file.path) !== -1;
+    var isDone = completed.indexOf(file.path) !== -1;
     var starIcon = isFavorite ? '★' : '☆';
     var starColor = isFavorite ? tone.tint : 'var(--md-on-surface-variant)';
     var prog = readingProgress[file.path];
     var progBar = (prog && prog.total > 0) ?
         '<span class="file-progress"><span class="file-progress-fill" style="width:' + Math.min(100, Math.max(3, prog.percentage || 0)) + '%"></span></span>' : '';
 
-    return '<div class="file-item" data-path="' + escapeHtml(file.path) + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')">' +
+    return '<div class="file-item' + (isDone ? ' done' : '') + '" data-path="' + escapeHtml(file.path) + '" data-type="' + getFileType(file.path) + '" onclick="openFile(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')">' +
         '<div class="file-icon" style="--subject-fill: ' + tone.fill + '; --subject-tint: ' + tone.tint + '">' + label + '</div>' +
         '<span class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</span>' +
         '<span class="file-meta"><span class="file-type-badge" style="color: ' + tone.tint + '; background: ' + tone.fill + '">' + label + '</span>' + (file.size ? '<span class="file-size">' + file.size + '</span>' : '') + '</span>' +
+        '<button class="btn-done" onclick="event.stopPropagation(); toggleDone(\'' + encodeURIComponent(file.path) + '\')" title="' + (isDone ? 'Mark as not done' : 'Mark as done') + '" aria-pressed="' + (isDone ? 'true' : 'false') + '">' +
+        '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</button>' +
         '<button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite(\'' + encodeURIComponent(file.path) + '\')" title="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '" style="color: ' + starColor + '">' + starIcon + '</button>' +
         '<button class="btn-dl" onclick="event.stopPropagation(); downloadPdf(\'' + encodeURIComponent(file.path) + '\', \'' + encodeURIComponent(file.name) + '\')" title="Download">' +
         '  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
@@ -369,12 +384,18 @@ function buildSubjectCards() {
     subjectCards.innerHTML = SUBJECTS.map(function(s, i) {
         var icon = SUBJECT_ICONS[s.name] || SUBJECT_ICONS['default'];
         var tone = subjectTone(s.name);
-        return '<button class="subject-card" style="--subject-fill:' + tone.fill + '; --subject-tint:' + tone.tint + '; animation-delay:' + (i * 60) + 'ms" onclick="expandSubject(\'' + s.name + '\')">' +
+        var done = subjectDoneCount(s);
+        var pct = s.files.length ? Math.round(done / s.files.length * 100) : 0;
+        var meta = done > 0
+            ? done + ' / ' + s.files.length + ' done'
+            : s.files.length + ' files' + (s.important && s.important.length ? ' · ' + s.important.length + ' important topics' : '');
+        return '<button class="subject-card' + (pct === 100 ? ' complete' : '') + '" data-subject="' + escapeHtml(s.name) + '" style="--subject-fill:' + tone.fill + '; --subject-tint:' + tone.tint + '; animation-delay:' + (i * 60) + 'ms" onclick="expandSubject(\'' + s.name + '\')">' +
             '<span class="subject-card-icon">' + icon + '</span>' +
             '<span class="subject-card-info">' +
             '<span class="subject-card-name">' + escapeHtml(s.name) + '</span>' +
             '<span class="subject-card-full">' + escapeHtml(s.fullName) + '</span>' +
-            '<span class="subject-card-meta">' + s.files.length + ' files' + (s.important && s.important.length ? ' · ' + s.important.length + ' important topics' : '') + '</span>' +
+            '<span class="subject-card-meta">' + meta + '</span>' +
+            '<span class="subject-card-progress" aria-hidden="true"><span class="subject-card-progress-fill" style="width:' + pct + '%"></span></span>' +
             '</span>' +
             '<span class="subject-card-count">' + s.files.length + '</span>' +
             '<svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
@@ -429,6 +450,49 @@ function updateFavoritesUI() {
             btn.style.color = isFavorite ? (tone ? tone.tint : 'var(--md-primary)') : 'var(--md-on-surface-variant)';
         }
     });
+}
+
+// ===== Done / completion tracking =====
+function subjectDoneCount(subject) {
+    return subject.files.filter(function(f) { return completed.indexOf(f.path) !== -1; }).length;
+}
+
+function toggleDone(encodedPath, silent) {
+    var path = decodeURIComponent(encodedPath);
+    var index = completed.indexOf(path);
+    if (index === -1) {
+        completed.push(path);
+        if (!silent) showNotification('Marked as done', 'success');
+    } else {
+        completed.splice(index, 1);
+        if (!silent) showNotification('Marked as not done', 'info');
+    }
+    saveUserData();
+    updateDoneUI();
+}
+
+function markDone(path) {
+    if (completed.indexOf(path) !== -1) return;
+    completed.push(path);
+    saveUserData();
+    updateDoneUI();
+    showNotification('Finished — marked as done', 'success');
+}
+
+function updateDoneUI() {
+    document.querySelectorAll('.file-item').forEach(function(item) {
+        var path = item.getAttribute('data-path');
+        var isDone = completed.indexOf(path) !== -1;
+        item.classList.toggle('done', isDone);
+        var btn = item.querySelector('.btn-done');
+        if (btn) {
+            btn.title = isDone ? 'Mark as not done' : 'Mark as done';
+            btn.setAttribute('aria-pressed', isDone ? 'true' : 'false');
+        }
+    });
+    buildSubjectCards();
+    // Re-apply the active filter in case "To read" is selected
+    if (activeFilter === 'todo') filterFiles(searchInput.value);
 }
 
 // Look up a file entry (name + subject) by path across all subjects
@@ -532,8 +596,42 @@ function showNotification(message, type) {
     }, 2500);
 }
 
+// ===== Deep links (#file=<path>&page=<n>) =====
+function fileHash(path, page) {
+    return '#file=' + encodeURIComponent(path) + (page && page > 1 ? '&page=' + page : '');
+}
+
+function parseHash() {
+    var h = window.location.hash;
+    if (h.indexOf('#file=') !== 0) return null;
+    var params = {};
+    h.slice(1).split('&').forEach(function(part) {
+        var kv = part.split('=');
+        try { params[kv[0]] = decodeURIComponent(kv.slice(1).join('=')); } catch (e) { /* ignore bad escapes */ }
+    });
+    if (!params.file) return null;
+    return { path: params.file, page: parseInt(params.page, 10) || 0 };
+}
+
+function openFromHash(replace) {
+    var target = parseHash();
+    if (!target) return false;
+    var entry = findFileByPath(target.path);
+    var name = entry ? entry.file.name : target.path.split('/').pop();
+    if (!entry) {
+        // Allow "important topic" images too
+        var known = SUBJECTS.some(function(s) {
+            return (s.important || []).some(function(imp) { return imp.path === target.path; });
+        });
+        if (!known) { showNotification('That file is not in the library', 'warning'); return false; }
+    }
+    openFile(encodeURIComponent(target.path), encodeURIComponent(name), { fromHistory: true, page: target.page, replace: replace });
+    return true;
+}
+
 // ===== Open File =====
-function openFile(encodedPath, encodedName) {
+function openFile(encodedPath, encodedName, opts) {
+    opts = opts || {};
     var path = decodeURIComponent(encodedPath);
     var name = decodeURIComponent(encodedName);
     currentPdf = path;
@@ -541,6 +639,8 @@ function openFile(encodedPath, encodedName) {
     zoomScale = 1.0;
     currentFileType = getFileType(path);
     thumbRendered = 0;
+    pageTexts = null;
+    closeFindBar(true);
 
     // Add to recent files
     addToRecent(path, name);
@@ -549,6 +649,18 @@ function openFile(encodedPath, encodedName) {
     var progress = getReadingProgress(path);
     if (progress && currentFileType === 'pdf') {
         currentPage = progress.page;
+    }
+    if (opts.page && currentFileType === 'pdf') {
+        currentPage = opts.page;
+        progress = null; // explicit page in the link wins over saved progress
+    }
+
+    // Keep the URL shareable and the browser Back button meaningful
+    var state = { file: path };
+    if (opts.replace) {
+        history.replaceState(state, '', fileHash(path, currentPage));
+    } else if (!opts.fromHistory) {
+        history.pushState(state, '', fileHash(path, currentPage));
     }
 
     document.querySelectorAll('.file-item').forEach(function(el) { el.classList.remove('active'); });
@@ -900,6 +1012,11 @@ function updatePageInfo() {
     // Save reading progress
     if (currentPdf && totalPages > 0) {
         saveReadingProgress(currentPdf, currentPage, totalPages);
+        if (window.location.hash.indexOf('#file=') === 0) {
+            history.replaceState({ file: currentPdf }, '', fileHash(currentPdf, currentPage));
+        }
+        var lastVisible = twoPageMode ? currentPage + 1 : currentPage;
+        if (lastVisible >= totalPages && completed.indexOf(currentPdf) === -1) markDone(currentPdf);
     }
 }
 
@@ -970,7 +1087,12 @@ function toggleFullscreen() {
 }
 
 // ===== Go Back =====
-function goBack() {
+function goBack(fromHistory) {
+    if (!fromHistory && window.location.hash.indexOf('#file=') === 0) {
+        // Let popstate call us back so the Back button and this stay in sync
+        history.back();
+        return;
+    }
     pdfViewer.style.display = 'none';
     welcomeScreen.style.display = 'flex';
     document.body.classList.remove('viewer-open');
@@ -984,6 +1106,8 @@ function goBack() {
     var btnT = document.getElementById('btnThumbs');
     if (btnT) btnT.classList.remove('active');
     if (viewerProgressFill) viewerProgressFill.style.width = '0%';
+    pageTexts = null;
+    closeFindBar(true);
     loadingSpinner.innerHTML = '<div class="spinner"></div><p>Loading document...</p>';
     loadingSpinner.classList.remove('visible');
     noteViewer.src = '';
@@ -1013,7 +1137,9 @@ function filterFiles(query) {
     var groups = document.querySelectorAll('.subject-group');
     var searchEmpty = document.getElementById('searchEmpty');
 
-    if (!q) {
+    var filtering = activeFilter !== 'all';
+
+    if (!q && !filtering) {
         items.forEach(function(el) { el.style.display = ''; });
         groups.forEach(function(g, i) {
             g.style.display = '';
@@ -1031,11 +1157,22 @@ function filterFiles(query) {
         subjectMatches[s.name] = (s.name + ' ' + s.fullName).toLowerCase().indexOf(q) !== -1;
     });
 
+    function passesFilter(el) {
+        var path = el.getAttribute('data-path');
+        switch (activeFilter) {
+            case 'pdf': case 'html': case 'ppt': return el.getAttribute('data-type') === activeFilter;
+            case 'fav': return favorites.indexOf(path) !== -1;
+            case 'todo': return completed.indexOf(path) === -1;
+            default: return true;
+        }
+    }
+
     items.forEach(function(el) {
         var name = el.querySelector('.file-name').textContent.toLowerCase();
         var group = el.closest('.subject-group');
         var subjectHit = group ? subjectMatches[group.getAttribute('data-subject')] : false;
-        el.style.display = (name.indexOf(q) !== -1 || subjectHit) ? '' : 'none';
+        var textHit = !q || name.indexOf(q) !== -1 || subjectHit;
+        el.style.display = (textHit && passesFilter(el)) ? '' : 'none';
     });
 
     var anyVisible = false;
@@ -1052,7 +1189,7 @@ function filterFiles(query) {
             searchEmpty.style.display = 'none';
         } else {
             var text = document.getElementById('searchEmptyText');
-            if (text) text.textContent = 'No files found for "' + query.trim() + '"';
+            if (text) text.textContent = q ? 'No files found for "' + query.trim() + '"' : 'Nothing matches this filter';
             searchEmpty.style.display = 'flex';
         }
     }
@@ -1107,8 +1244,13 @@ function closeSidebar() {
 // ===== Share =====
 function shareSite() {
     var url = window.location.href.split('?')[0].split('#')[0];
+    var text = 'Check out these 5th semester study materials!';
+    if (currentPdf) {
+        url += fileHash(currentPdf, currentFileType === 'pdf' ? currentPage : 0);
+        text = viewerTitle.textContent + ' — NoteVault';
+    }
     if (navigator.share) {
-        navigator.share({ title: 'NoteVault | Semester 5 Materials', text: 'Check out these 5th semester study materials!', url: url }).catch(function() { copyToClipboard(url); });
+        navigator.share({ title: 'NoteVault | Semester 5 Materials', text: text, url: url }).catch(function() { copyToClipboard(url); });
     } else {
         copyToClipboard(url);
     }
@@ -1116,6 +1258,7 @@ function shareSite() {
 
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
+        showNotification(currentPdf ? 'Link to this file copied' : 'Link copied', 'success');
         var btn = document.getElementById('btnShare');
         var orig = btn.innerHTML;
         btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -1126,6 +1269,149 @@ function copyToClipboard(text) {
 function setNavActive(btn) {
     document.querySelectorAll('.bottom-nav-btn, .rail-btn, .rail-fab').forEach(function(b) { b.classList.remove('active'); });
     if (btn) btn.classList.add('active');
+}
+
+// ===== Find in document (PDF text search) =====
+function openFindBar() {
+    if (!pdfDoc || currentFileType !== 'pdf') return;
+    var bar = document.getElementById('findBar');
+    var input = document.getElementById('findInput');
+    var btn = document.getElementById('btnFind');
+    if (!bar || !input) return;
+    bar.style.display = 'flex';
+    if (btn) btn.classList.add('active');
+    input.focus();
+    input.select();
+}
+
+function closeFindBar(silent) {
+    var bar = document.getElementById('findBar');
+    var btn = document.getElementById('btnFind');
+    var status = document.getElementById('findStatus');
+    if (bar) bar.style.display = 'none';
+    if (btn) btn.classList.remove('active');
+    if (status) status.textContent = '';
+    findHits = [];
+    findIndex = -1;
+    findQuery = '';
+    if (silent) {
+        var input = document.getElementById('findInput');
+        if (input) input.value = '';
+    }
+}
+
+function toggleFindBar() {
+    var bar = document.getElementById('findBar');
+    if (bar && bar.style.display !== 'none') closeFindBar(); else openFindBar();
+}
+
+// Extract and cache the text of every page (done once per document)
+async function ensurePageTexts() {
+    if (pageTexts) return pageTexts;
+    var doc = pdfDoc;
+    var texts = [];
+    for (var p = 1; p <= doc.numPages; p++) {
+        if (pdfDoc !== doc) return null; // document changed while extracting
+        try {
+            var page = await doc.getPage(p);
+            var content = await page.getTextContent();
+            texts.push(content.items.map(function(it) { return it.str; }).join(' ').toLowerCase());
+        } catch (e) {
+            texts.push('');
+        }
+    }
+    if (pdfDoc === doc) pageTexts = texts;
+    return pageTexts;
+}
+
+function countOccurrences(haystack, needle) {
+    var n = 0, i = 0;
+    while ((i = haystack.indexOf(needle, i)) !== -1) { n++; i += needle.length; }
+    return n;
+}
+
+async function runFind(query, direction) {
+    var status = document.getElementById('findStatus');
+    var q = (query || '').trim().toLowerCase();
+    if (!pdfDoc || !q) { if (status) status.textContent = ''; findHits = []; findIndex = -1; return; }
+
+    if (q !== findQuery) {
+        if (status) status.textContent = 'Searching…';
+        var texts = await ensurePageTexts();
+        if (!texts) return;
+        findQuery = q;
+        findHits = [];
+        texts.forEach(function(t, i) {
+            var c = countOccurrences(t, q);
+            if (c > 0) findHits.push({ page: i + 1, count: c });
+        });
+        // Start from the first hit at or after the current page
+        findIndex = -1;
+        for (var i = 0; i < findHits.length; i++) {
+            if (findHits[i].page >= currentPage) { findIndex = i; break; }
+        }
+        if (findIndex === -1 && findHits.length) findIndex = 0;
+    } else if (findHits.length) {
+        findIndex = (findIndex + (direction < 0 ? -1 : 1) + findHits.length) % findHits.length;
+    }
+
+    if (!findHits.length) {
+        if (status) status.textContent = 'No matches';
+        return;
+    }
+
+    var hit = findHits[findIndex];
+    var total = findHits.reduce(function(a, h) { return a + h.count; }, 0);
+    if (status) status.textContent = 'Page ' + hit.page + ' · ' + (findIndex + 1) + '/' + findHits.length + ' pages · ' + total + ' match' + (total === 1 ? '' : 'es');
+    if (hit.page !== currentPage) {
+        currentPage = hit.page;
+        updatePageInfo();
+        renderCurrentView();
+        pdfCanvasContainer.scrollTop = 0;
+    }
+}
+
+// ===== Jump to page =====
+function showPageJump() {
+    if (!pdfDoc || currentFileType !== 'pdf') return;
+    var input = document.getElementById('pageJump');
+    if (!input) return;
+    input.max = totalPages;
+    input.value = currentPage;
+    pageInfo.style.display = 'none';
+    input.style.display = '';
+    input.focus();
+    input.select();
+}
+
+function hidePageJump(apply) {
+    var input = document.getElementById('pageJump');
+    if (!input) return;
+    if (apply) {
+        var n = parseInt(input.value, 10);
+        if (n >= 1 && n <= totalPages && n !== currentPage) {
+            currentPage = n;
+            updatePageInfo();
+            renderCurrentView();
+            pdfCanvasContainer.scrollTop = 0;
+        }
+    }
+    input.style.display = 'none';
+    pageInfo.style.display = '';
+}
+
+function clearSearch() {
+    searchInput.value = '';
+    setFilter('all');
+    searchInput.focus();
+}
+
+function setFilter(name) {
+    activeFilter = name;
+    document.querySelectorAll('.filter-chip').forEach(function(c) {
+        c.classList.toggle('active', c.getAttribute('data-filter') === name);
+    });
+    filterFiles(searchInput.value);
 }
 
 // ===== Event Listeners =====
@@ -1149,6 +1435,52 @@ function attachEvents() {
     document.getElementById('btnShortcuts').addEventListener('click', openShortcutsModal);
     var btnThumbs = document.getElementById('btnThumbs');
     if (btnThumbs) btnThumbs.addEventListener('click', toggleThumbRail);
+
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() { setFilter(chip.getAttribute('data-filter')); });
+    });
+
+    // Find in document
+    var btnFind = document.getElementById('btnFind');
+    if (btnFind) btnFind.addEventListener('click', toggleFindBar);
+    var findInput = document.getElementById('findInput');
+    if (findInput) {
+        findInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); runFind(findInput.value, e.shiftKey ? -1 : 1); }
+            else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeFindBar(); }
+        });
+        // Live search as you type (debounced); Enter/Shift+Enter step through hits
+        var findTimer = null;
+        findInput.addEventListener('input', function() {
+            clearTimeout(findTimer);
+            findTimer = setTimeout(function() { runFind(findInput.value, 1); }, 350);
+        });
+    }
+    var findNext = document.getElementById('findNext');
+    if (findNext) findNext.addEventListener('click', function() { runFind(findInput.value, 1); });
+    var findPrev = document.getElementById('findPrev');
+    if (findPrev) findPrev.addEventListener('click', function() { runFind(findInput.value, -1); });
+    var findClose = document.getElementById('findClose');
+    if (findClose) findClose.addEventListener('click', function() { closeFindBar(); });
+
+    // Jump to page: click the page counter
+    pageInfo.addEventListener('click', showPageJump);
+    pageInfo.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showPageJump(); } });
+    var pageJump = document.getElementById('pageJump');
+    if (pageJump) {
+        pageJump.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); hidePageJump(true); }
+            else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); hidePageJump(false); }
+        });
+        pageJump.addEventListener('blur', function() { hidePageJump(true); });
+    }
+
+    // Browser Back/Forward: mirror the #file hash
+    window.addEventListener('popstate', function() {
+        if (parseHash()) { openFromHash(true); }
+        else if (currentPdf) { goBack(true); }
+    });
 
     if (thumbRailList) {
         thumbRailList.addEventListener('scroll', function() {
@@ -1315,6 +1647,11 @@ function attachEvents() {
 
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
+        if ((e.metaKey || e.ctrlKey) && (e.key === 'f' || e.key === 'F') && pdfDoc && currentFileType === 'pdf') {
+            e.preventDefault();
+            openFindBar();
+            return;
+        }
         if (e.target.tagName === 'INPUT') return;
         switch (e.key) {
             case 'ArrowRight': case 'ArrowDown': if (pdfDoc) { e.preventDefault(); nextPage(); } break;
@@ -1333,9 +1670,16 @@ function attachEvents() {
                     toggleThumbRail();
                 }
                 break;
+            case 'Home': if (pdfDoc && currentPage !== 1) { e.preventDefault(); goToThumbPage(1); } break;
+            case 'End': if (pdfDoc && currentPage !== totalPages) { e.preventDefault(); goToThumbPage(twoPageMode ? Math.max(1, totalPages - 1) : totalPages); } break;
+            case 'd': case 'D':
+                if (currentPdf && !e.metaKey && !e.ctrlKey) { e.preventDefault(); toggleDone(encodeURIComponent(currentPdf)); }
+                break;
             case 'Escape':
                 if (document.getElementById('shortcutsModal').classList.contains('show')) {
                     closeShortcutsModal();
+                } else if (document.getElementById('findBar').style.display !== 'none') {
+                    closeFindBar();
                 } else if (currentPdf) {
                     goBack();
                 }

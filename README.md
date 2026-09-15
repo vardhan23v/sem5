@@ -31,16 +31,20 @@ Study materials for my 5th semester, organized by subject and readable right in 
 ## Features
 
 - **Built-in PDF viewer** with zoom, page thumbnails, two-page mode, swipe gestures and fullscreen
+- **Find in document** (`Ctrl`/`Cmd`+`F`) searches the text of every page and jumps between hits
+- **Jump to page** by clicking the page counter; `Home`/`End` go to the first and last page
+- **Shareable links** to any file and page (`#file=…&page=…`), and the browser Back button closes the reader
 - **HTML notes and images** open in the same reader
 - **PPT viewer** via the Microsoft Office Online embed (live site only)
-- **Search** across files and subjects
+- **Search** across files and subjects, with filter chips for PDF, notes, PPT, starred and unread
 - **Favorites and recently opened** rows on the home screen
+- **Mark as done** (`d` in the reader, or the tick on any file); subject cards show your progress, and finishing a PDF marks it automatically
 - **Reading progress** remembers the page you were on in every PDF
 - **Light and dark themes**
 - **Installable** as a PWA, with the app shell available offline
 - Press `?` in the reader to see keyboard shortcuts
 
-Favorites, recents, progress and theme are stored in your browser's `localStorage` and never leave your device. The site also records anonymous presence in Firebase so a live-viewer count can be added later; no personal data is sent.
+Favorites, recents, done marks, progress and theme are stored in your browser's `localStorage` and never leave your device. The site also records anonymous presence in Firebase so a live-viewer count can be added later; no personal data is sent.
 
 ## Adding materials
 
