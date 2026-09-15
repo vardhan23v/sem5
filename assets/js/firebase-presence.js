@@ -25,32 +25,24 @@
         var presenceRef = database.ref('presence');
         var connectedRef = database.ref('.info/connected');
 
-        console.log('[NoteVault] Signing in anonymously...');
-
         firebase.auth().signInAnonymously().then(function (result) {
             var uid = result.user.uid;
             var visitorRef = presenceRef.child(uid);
-            console.log('[NoteVault] Auth success — UID:', uid);
 
             connectedRef.on('value', function (snap) {
                 if (snap.val() === true) {
-                    console.log('[NoteVault] Connected to Realtime Database.');
                     visitorRef.onDisconnect().remove().then(function () {
                         return visitorRef.set({
                             online: true,
                             lastSeen: firebase.database.ServerValue.TIMESTAMP,
                             page: window.location.pathname
                         });
-                    }).then(function () {
-                        console.log('[NoteVault] Presence set successfully.');
                     }).catch(function (err) {
                         console.error('[NoteVault] Presence write failed:', err.code, err.message);
                         if (err.code === 'PERMISSION_DENIED') {
                             console.error('[NoteVault] ⚠️ Check your Firebase Realtime Database rules — anonymous writes to /presence must be allowed.');
                         }
                     });
-                } else {
-                    console.log('[NoteVault] Disconnected from Realtime Database.');
                 }
             });
         }).catch(function (error) {
@@ -66,10 +58,8 @@
 
     function initFirebase() {
         if (window.firebase && typeof firebase.database === 'function' && typeof firebase.auth === 'function') {
-            console.log('[NoteVault] Firebase SDK loaded. Initializing app...');
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
-                console.log('[NoteVault] Firebase app initialized — project:', firebaseConfig.projectId);
             }
             startPresence();
         } else {

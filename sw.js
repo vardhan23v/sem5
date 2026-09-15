@@ -1,10 +1,10 @@
-const CACHE_NAME = 'notevault-shell-v6';
+const CACHE_NAME = 'notevault-shell-v8';
 const APP_SHELL = [
   './',
   './index.html',
-  './assets/css/style.css?v=12',
-  './assets/js/firebase-presence.js?v=3',
-  './assets/js/app.js?v=16',
+  './assets/css/style.css?v=13',
+  './assets/js/firebase-presence.js?v=5',
+  './assets/js/app.js?v=17',
   './favicon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png'
@@ -13,7 +13,8 @@ const APP_SHELL = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
+      // Revalidate with the server so a stale HTTP-cached copy is never stored.
+      .then(cache => cache.addAll(APP_SHELL.map(url => new Request(url, { cache: 'no-cache' }))))
       .then(() => self.skipWaiting())
   );
 });
@@ -31,6 +32,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
+  if (!request.url.startsWith(self.location.origin)) return;
 
   const isAppShell = request.destination === 'document' ||
     request.url.includes('/assets/css/') ||
@@ -38,14 +40,20 @@ self.addEventListener('fetch', event => {
     request.url.endsWith('/favicon.svg');
 
   if (isAppShell) {
+    // Network first so a deploy is picked up on the next load;
+    // fall back to the cached shell when offline.
     event.respondWith(
-      caches.match(request).then(cached => cached || fetch(request).then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+      fetch(request, { cache: 'no-cache' }).then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
         return response;
-      }))
+      }).catch(() => caches.match(request))
     );
   } else {
+    // Study materials (PDFs, images, notes): network, with whatever
+    // the browser has cached as a fallback.
     event.respondWith(
       fetch(request).catch(() => caches.match(request))
     );

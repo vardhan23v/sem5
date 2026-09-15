@@ -80,7 +80,7 @@ var SUBJECTS = [
             { name: "Unit 1 — Automata Solved & Animated (HTML)", path: "TOC/CS3103-1_Unit1_TOC_Notes.html", size: "48 KB" },
             { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB" },
             { name: "TOC — MSE 1 Question Paper.pdf", path: "TOC/TOC MSE1.pdf", size: "18.8 MB" },
-            { name: "TOC — MCQs (Word)", path: "TOC/Toc_MCQs.docx", size: "1.4 MB" }
+            { name: "TOC — MCQs with Answers.pdf", path: "TOC/TOC_MCQs_with_Answers-1.pdf", size: "185 KB" }
         ]
     },
     {
@@ -118,6 +118,7 @@ var SUBJECTS = [
         color: "#ec4899",
         files: [
             { name: "MCQ — Unit 1 Questions.pdf", path: "UHV/MCQ_UHV_1.pdf", size: "46 KB" },
+            { name: "Unit 1 — Descriptive Q&A.pdf", path: "UHV/Unit 1 — Descriptive Q&A.pdf", size: "801 KB" },
             { name: "Unit 1 — Descriptive Q&A.docx", path: "UHV/UHV_Unit I - Descriptive Question and Answer.docx", size: "570 KB" }
         ]
     },
@@ -183,7 +184,6 @@ function subjectTone(name) {
 var favorites = [];
 var recentFiles = [];
 var readingProgress = {};
-var darkMode = true;
 var currentTheme = 'light';
 
 // Load saved data from localStorage
@@ -193,7 +193,6 @@ function loadUserData() {
         recentFiles = JSON.parse(localStorage.getItem('notevault_recent') || '[]');
         readingProgress = JSON.parse(localStorage.getItem('notevault_progress') || '{}');
         currentTheme = localStorage.getItem('notevault_theme') || 'light';
-        darkMode = currentTheme === 'dark';
         applyTheme(currentTheme);
     } catch (e) {
         console.error('Error loading user data:', e);
@@ -285,6 +284,7 @@ function init() {
         attachEvents();
         addMobileToggle();
         updateFavoritesUI();
+        updateFavoritesRow();
         updateRecentFilesUI();
         var navHome = document.getElementById('navHome');
         if (navHome) navHome.classList.add('active');
@@ -413,6 +413,7 @@ function toggleFavorite(encodedPath) {
 
     saveUserData();
     updateFavoritesUI();
+    updateFavoritesRow();
 }
 
 function updateFavoritesUI() {
@@ -429,6 +430,42 @@ function updateFavoritesUI() {
             btn.style.color = isFavorite ? (tone ? tone.tint : 'var(--md-primary)') : 'var(--md-on-surface-variant)';
         }
     });
+}
+
+// Look up a file entry (name + subject) by path across all subjects
+function findFileByPath(path) {
+    for (var i = 0; i < SUBJECTS.length; i++) {
+        var files = SUBJECTS[i].files;
+        for (var j = 0; j < files.length; j++) {
+            if (files[j].path === path) return { file: files[j], subject: SUBJECTS[i] };
+        }
+    }
+    return null;
+}
+
+function fileChipHTML(path, name) {
+    return '<button class="recent-chip" onclick="openFile(\'' + encodeURIComponent(path) + '\', \'' + encodeURIComponent(name) + '\')" title="' + escapeHtml(name) + '">' +
+        '<span class="recent-chip-icon">' + getFileLabel(path) + '</span>' +
+        '<span class="recent-chip-name">' + escapeHtml(name) + '</span>' +
+        '</button>';
+}
+
+// Favorites row on the welcome screen
+function updateFavoritesRow() {
+    var section = document.getElementById('favoritesSection');
+    var row = document.getElementById('favoritesRow');
+    if (!section || !row) return;
+
+    // Drop favorites whose files no longer exist in the index
+    var entries = favorites.map(findFileByPath).filter(Boolean);
+    if (!entries.length) {
+        section.style.display = 'none';
+        row.innerHTML = '';
+        return;
+    }
+
+    section.style.display = 'block';
+    row.innerHTML = entries.map(function(e) { return fileChipHTML(e.file.path, e.file.name); }).join('');
 }
 
 // ===== Recent Files =====
@@ -459,12 +496,7 @@ function updateRecentFilesUI() {
     }
 
     section.style.display = 'block';
-    row.innerHTML = recent.map(function(f) {
-        return '<button class="recent-chip" onclick="openFile(\'' + encodeURIComponent(f.path) + '\', \'' + encodeURIComponent(f.name) + '\')" title="' + escapeHtml(f.name) + '">' +
-            '<span class="recent-chip-icon">' + getFileLabel(f.path) + '</span>' +
-            '<span class="recent-chip-name">' + escapeHtml(f.name) + '</span>' +
-            '</button>';
-    }).join('');
+    row.innerHTML = recent.map(function(f) { return fileChipHTML(f.path, f.name); }).join('');
 }
 
 // ===== Reading Progress =====
@@ -564,8 +596,8 @@ function openFile(encodedPath, encodedName) {
         zoomControls.forEach(function(e) { e.style.display = 'none'; });
         openPptFile(path, name);
     } else if (currentFileType === 'download' || currentFileType === 'docx') {
-        // For PPTX/DOCX files, trigger download instead of trying to display
-        downloadPdf(encodedPath, name);
+        // Word documents have no in-browser viewer — download them instead
+        downloadPdf(encodedPath, encodedName);
         goBack();
         return;
     }
@@ -993,9 +1025,18 @@ function filterFiles(query) {
         return;
     }
 
+    // Match file names, and also the subject's short or full name
+    // ("os", "networks") so a subject query shows all of its files.
+    var subjectMatches = {};
+    SUBJECTS.forEach(function(s) {
+        subjectMatches[s.name] = (s.name + ' ' + s.fullName).toLowerCase().indexOf(q) !== -1;
+    });
+
     items.forEach(function(el) {
         var name = el.querySelector('.file-name').textContent.toLowerCase();
-        el.style.display = name.indexOf(q) !== -1 ? '' : 'none';
+        var group = el.closest('.subject-group');
+        var subjectHit = group ? subjectMatches[group.getAttribute('data-subject')] : false;
+        el.style.display = (name.indexOf(q) !== -1 || subjectHit) ? '' : 'none';
     });
 
     var anyVisible = false;
@@ -1325,13 +1366,7 @@ function attachEvents() {
         }, 300);
     });
 
-    // Prevent pull-to-refresh on mobile when viewing PDFs
-    document.body.addEventListener('touchmove', function(e) {
-        if (pdfViewer.style.display === 'flex' && window.scrollY === 0) {
-            // Allow scrolling but prevent pull-to-refresh
-        }
-    }, { passive: true });
-}
+    }
 
 // ===== Start =====
 document.addEventListener('DOMContentLoaded', init);

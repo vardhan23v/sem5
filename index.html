@@ -9,6 +9,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>NoteVault | Semester 5</title>
     <meta name="description" content="Access and read all your 5th semester study materials — PDFs and notes organized by subject.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="NoteVault — Semester 5">
+    <meta property="og:description" content="5th semester study materials — PDFs, notes and presentations, organized by subject and readable in the browser.">
+    <meta property="og:url" content="https://vardhan23v.github.io/sem5/">
+    <meta property="og:image" content="https://vardhan23v.github.io/sem5/icons/icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <link rel="canonical" href="https://vardhan23v.github.io/sem5/">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="icons/icon-180.png">
     <link rel="manifest" href="manifest.webmanifest">
@@ -17,7 +24,7 @@
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=12">
+    <link rel="stylesheet" href="assets/css/style.css?v=13">
 </head>
 <body>
 
@@ -153,6 +160,13 @@
                         <span class="stat-chip"><b id="chipFiles">0</b>&nbsp;files</span>
                         <span class="stat-chip"><b id="chipSubjects">0</b>&nbsp;subjects</span>
                     </div>
+                </div>
+                <div class="recent-section" id="favoritesSection" style="display: none;">
+                    <div class="recent-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <span>Favorites</span>
+                    </div>
+                    <div class="recent-row" id="favoritesRow"></div>
                 </div>
                 <div class="recent-section" id="recentSection" style="display: none;">
                     <div class="recent-header">
@@ -337,8 +351,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js" defer></script>
-    <script src="assets/js/firebase-presence.js?v=4" defer></script>
-    <script src="assets/js/app.js?v=16"></script>
+    <script src="assets/js/firebase-presence.js?v=5" defer></script>
+    <script src="assets/js/app.js?v=17"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
