@@ -118,8 +118,7 @@ var SUBJECTS = [
         color: "#ec4899",
         files: [
             { name: "MCQ — Unit 1 Questions.pdf", path: "UHV/MCQ_UHV_1.pdf", size: "46 KB" },
-            { name: "Unit 1 — Descriptive Q&A.pdf", path: "UHV/Unit 1 — Descriptive Q&A.pdf", size: "801 KB" },
-            { name: "Unit 1 — Descriptive Q&A.docx", path: "UHV/UHV_Unit I - Descriptive Question and Answer.docx", size: "570 KB" }
+            { name: "Unit 1 — Descriptive Q&A.pdf", path: "UHV/Unit 1 — Descriptive Q&A.pdf", size: "801 KB" }
         ]
     },
     {
