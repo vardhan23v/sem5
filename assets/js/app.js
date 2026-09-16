@@ -731,17 +731,21 @@ function hideAllViewers() {
 
 // ===== Resume Chip =====
 function showResumeChip(page) {
+    showViewerChip('Resumed at page ' + page);
+}
+
+function showViewerChip(text, ms) {
     var old = document.getElementById('resumeChip');
     if (old) old.remove();
     var chip = document.createElement('div');
     chip.className = 'resume-chip';
     chip.id = 'resumeChip';
-    chip.innerHTML = '<span>Resumed at page ' + page + '</span>' +
+    chip.innerHTML = '<span>' + escapeHtml(text) + '</span>' +
         '<button class="resume-chip-go" aria-label="Dismiss" title="Dismiss" onclick="var c=document.getElementById(\'resumeChip\'); if(c) c.remove();">✕</button>';
     pdfCanvasContainer.appendChild(chip);
     setTimeout(function() {
         if (chip.parentNode) chip.parentNode.removeChild(chip);
-    }, 5000);
+    }, ms || 5000);
 }
 
 // ===== Thumbnail Rail =====
@@ -845,6 +849,11 @@ function openPptFile(path, name) {
         noteViewer.style.display = 'block';
         noteViewer.src = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fileUrl);
         if (fallback) fallback.style.display = 'none';
+        noteViewer.onload = function() {
+            noteViewer.onload = null;
+            focusSlides();
+        };
+        showViewerChip('Use ← → to change slides', 4000);
     } else {
         // Local preview: the embed service can't reach this host — offer download
         noteViewer.style.display = 'none';
@@ -1654,6 +1663,10 @@ function attachEvents() {
             openFindBar();
             return;
         }
+        if (currentFileType === 'ppt' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === ' ')) {
+            focusSlides();
+            return;
+        }
         if (e.target.tagName === 'INPUT') return;
         switch (e.key) {
             case 'ArrowRight': case 'ArrowDown': if (pdfDoc) { e.preventDefault(); nextPage(); } break;
@@ -1715,3 +1728,9 @@ function attachEvents() {
 
 // ===== Start =====
 document.addEventListener('DOMContentLoaded', init);
+
+// The Office Online embed only reacts to arrow keys when its frame has focus
+function focusSlides() {
+    if (currentFileType !== 'ppt' || noteViewer.style.display === 'none') return;
+    try { noteViewer.focus(); } catch (e) { /* cross-origin frames may refuse focus */ }
+}
