@@ -21,6 +21,7 @@ var SUBJECTS = [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
             { name: "CNC Problems.pdf", path: "CNC/CNC PROBLEMS.pdf", size: "6.5 MB" },
+            { name: "Unit 1 — Important Questions & Answers.pdf", path: "CNC/Computer_Network_Unit_1_Important_Questions_Answers.pdf", size: "2.7 MB" },
             { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
             { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" },
             { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "CNC/mcqs/CNC_Unit1_MCQ_Bank_with_Answers.pdf", size: "54 KB" }
