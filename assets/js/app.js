@@ -13,15 +13,17 @@ var SUBJECTS = [
             { name: "Important Topic 1", path: "CNC/important/IMG-20250913-WA0002.jpg" },
             { name: "Important Topic 2", path: "CNC/important/IMG-20250913-WA0008.jpg" },
             { name: "Important Topic 3", path: "CNC/important/IMG-20250913-WA0012.jpg" },
-            { name: "Important Topic 4", path: "CNC/important/IMG-20250913-WA0016.jpg" }
+            { name: "Important Topic 4", path: "CNC/important/IMG-20250913-WA0016.jpg" },
+            { name: "Important Topic 5", path: "CNC/important/WhatsApp Image 2026-09-16 at 09.55.14.jpeg" },
+            { name: "Important Topic 6", path: "CNC/important/WhatsApp Image 2026-09-16 at 09.55.36.jpeg" }
         ],
         files: [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
+            { name: "CNC Problems.pdf", path: "CNC/CNC PROBLEMS.pdf", size: "6.5 MB" },
             { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
             { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" },
-            { name: "Unit 1 MCQs.pdf", path: "CNC/mcqs/Unit 1 MCQs.pdf", size: "116 KB" },
-            { name: "Unit 1 MCQs — 30 Questions (Clean).pdf", path: "CNC/mcqs/CS3001-1_CNC_UNIT 1_MCQs-30 (clean).pdf", size: "156 KB" }
+            { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "CNC/mcqs/CNC_Unit1_MCQ_Bank_with_Answers.pdf", size: "54 KB" }
         ]
     },
     {
