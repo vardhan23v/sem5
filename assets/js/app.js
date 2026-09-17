@@ -42,6 +42,7 @@ var SUBJECTS = [
             { name: "OS Unit 2.pdf", path: "OS/OS UNIT 2.pdf", size: "16.8 MB" },
             { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB" },
             { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
+            { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "OS/OS_Unit1_MCQ_Bank_with_Answers.pdf", size: "56 KB" },
             { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
             { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" },
             { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" },
