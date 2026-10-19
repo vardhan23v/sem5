@@ -1,9 +1,0 @@
-{
-  "redirects": [
-    {
-      "source": "/:path*",
-      "destination": "https://vardhan23v.github.io/sem5/:path*",
-      "permanent": false
-    }
-  ]
-}
