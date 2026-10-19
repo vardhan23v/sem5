@@ -3,7 +3,7 @@
     {
       "source": "/:path*",
       "destination": "https://vardhan23v.github.io/sem5/:path*",
-      "permanent": true
+      "permanent": false
     }
   ]
 }
