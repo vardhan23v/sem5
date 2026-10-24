@@ -60,12 +60,17 @@
   color: var(--text-secondary);
   transition:
     background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .iconBtn:hover {
   background: var(--bg-card);
   color: var(--text-primary);
+}
+
+.iconBtn:active {
+  transform: scale(0.94);
 }
 
 /* The hamburger only exists below the sidebar breakpoint. */
@@ -108,13 +113,18 @@
   transition:
     border-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
+    background-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .searchBtn:hover {
   border-color: var(--border-strong);
   background: var(--bg-card);
   color: var(--text-primary);
+}
+
+.searchBtn:active {
+  transform: scale(0.98);
 }
 
 .searchBtnActive {

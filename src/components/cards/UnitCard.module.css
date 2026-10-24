@@ -10,13 +10,20 @@
   transition:
     border-color var(--duration-base) var(--ease-out),
     background-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
 }
 
 .card:hover {
   border-color: var(--border-accent);
   background: var(--bg-card-hover);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-3px);
+}
+
+.card:active {
+  transform: translateY(-1px);
+  transition-duration: var(--duration-fast);
 }
 
 .card:focus-visible {
@@ -40,6 +47,16 @@
   border-radius: var(--radius-sm);
   background: var(--accent-softer);
   color: var(--accent);
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.card:hover .iconBox {
+  border-color: var(--border-accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
 }
 
 .arrow {
@@ -52,7 +69,7 @@
 
 .card:hover .arrow {
   color: var(--accent);
-  transform: translateX(2px);
+  transform: translateX(3px);
 }
 
 .body {

@@ -30,7 +30,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({ resource, showSubjec
         <div className={styles.actions}>
           <button
             type="button"
-            className={`${styles.action} ${done ? styles.actionOn : ''}`}
+            className={`${styles.action} ${done ? styles.actionOn : ''} ${done ? 'nv-pop' : ''}`}
             onClick={() => toggleDone(resource.path)}
             aria-pressed={done}
             aria-label={done ? `Mark ${resource.name} as not done` : `Mark ${resource.name} as done`}
@@ -40,7 +40,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({ resource, showSubjec
           </button>
           <button
             type="button"
-            className={`${styles.action} ${favorite ? styles.favoriteOn : ''}`}
+            className={`${styles.action} ${favorite ? styles.favoriteOn : ''} ${favorite ? 'nv-pop' : ''}`}
             onClick={() => toggleFavorite(resource.path)}
             aria-pressed={favorite}
             aria-label={

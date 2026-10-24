@@ -10,13 +10,20 @@
   transition:
     border-color var(--duration-base) var(--ease-out),
     background-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
 }
 
 .card:hover {
   border-color: var(--border-accent);
   background: var(--bg-card-hover);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-3px);
+}
+
+.card:active {
+  transform: translateY(-1px);
+  transition-duration: var(--duration-fast);
 }
 
 .card:focus-visible {
@@ -38,6 +45,11 @@
   height: 34px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.card:hover .iconBox {
+  transform: translateY(-1px);
 }
 
 .arrow {
@@ -50,7 +62,7 @@
 
 .card:hover .arrow {
   color: var(--accent);
-  transform: translateX(2px);
+  transform: translateX(3px);
 }
 
 .body {
@@ -122,7 +134,18 @@
   display: block;
   height: 100%;
   border-radius: inherit;
+  transform-origin: left center;
   transition: width var(--duration-slow) var(--ease-out);
+  animation: subjectProgressIn 420ms var(--ease-out) backwards;
+}
+
+@keyframes subjectProgressIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* On phones the nine cards run long, so each becomes a compact two-line row:

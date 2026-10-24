@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
@@ -30,7 +30,7 @@ export const AppShell: React.FC = () => {
 
   // A new page should start at the top; filter changes (same path) keep their
   // position so results do not jump around while typing.
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
@@ -57,7 +57,9 @@ export const AppShell: React.FC = () => {
         <Topbar />
         <main id="main-content" className={styles.main}>
           <div className={styles.container}>
-            <Outlet />
+            <div key={location.pathname} className={`${styles.route} nv-page-in`}>
+              <Outlet />
+            </div>
           </div>
           <footer className={styles.footer}>
             <span>NoteVault · Semester 5</span>

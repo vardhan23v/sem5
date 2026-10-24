@@ -16,12 +16,16 @@
   background: var(--bg-surface);
   transition:
     border-color var(--duration-base) var(--ease-out),
-    background-color var(--duration-base) var(--ease-out);
+    background-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
 }
 
 .card:hover {
   border-color: var(--border-accent);
   background: var(--bg-card-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
 .top {
@@ -75,6 +79,14 @@
   font-weight: var(--weight-semibold);
 }
 
+.resume svg {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.card:hover .resume svg {
+  transform: translateX(2px);
+}
+
 .track {
   display: block;
   height: 2px;
@@ -88,4 +100,15 @@
   height: 100%;
   background: var(--accent);
   border-radius: inherit;
+  transform-origin: left center;
+  animation: progressIn 380ms var(--ease-out) backwards;
+}
+
+@keyframes progressIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }

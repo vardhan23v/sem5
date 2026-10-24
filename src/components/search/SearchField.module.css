@@ -48,11 +48,19 @@
   height: 28px;
   border-radius: var(--radius-xs);
   color: var(--text-muted);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .clear:hover {
   background: var(--bg-card);
   color: var(--text-primary);
+}
+
+.clear:active {
+  transform: scale(0.92);
 }
 
 .kbd {

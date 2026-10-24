@@ -196,3 +196,53 @@
   border-radius: var(--radius-lg);
   background: var(--bg-card);
 }
+
+/* ------------------------------- motion primitives -------------------------
+   Shared entrance and feedback animations. Motion is short, transform/opacity
+   only, and is switched off by the reduced-motion block in base.css.
+   -------------------------------------------------------------------------- */
+
+.nv-page-in {
+  animation: nv-page-in var(--duration-page) var(--ease-out) both;
+}
+
+.nv-fade-in {
+  animation: nv-fade-in var(--duration-base) var(--ease-out) both;
+}
+
+.nv-pop {
+  animation: nv-pop 200ms var(--ease-out);
+}
+
+@keyframes nv-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes nv-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes nv-pop {
+  0% {
+    transform: scale(0.86);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
