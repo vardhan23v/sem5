@@ -10,22 +10,22 @@ var SUBJECTS = [
         fullName: "Computer Networks & Communication",
         color: "#f97316",
         important: [
-            { name: "Important Topic 1", path: "CNC/important/IMG-20250913-WA0002.jpg" },
-            { name: "Important Topic 2", path: "CNC/important/IMG-20250913-WA0008.jpg" },
-            { name: "Important Topic 3", path: "CNC/important/IMG-20250913-WA0012.jpg" },
-            { name: "Important Topic 4", path: "CNC/important/IMG-20250913-WA0016.jpg" },
-            { name: "Important Topic 5", path: "CNC/important/WhatsApp Image 2026-09-16 at 09.55.14.jpeg" },
-            { name: "Important Topic 6", path: "CNC/important/WhatsApp Image 2026-09-16 at 09.55.36.jpeg" }
+            { name: "Important Topic 1", path: "CNC/important/IMG-20250913-WA0002.jpg", kind: "notes" },
+            { name: "Important Topic 2", path: "CNC/important/IMG-20250913-WA0008.jpg", kind: "notes" },
+            { name: "Important Topic 3", path: "CNC/important/IMG-20250913-WA0012.jpg", kind: "notes" },
+            { name: "Important Topic 4", path: "CNC/important/IMG-20250913-WA0016.jpg", kind: "notes" },
+            { name: "Important Topic 5", path: "CNC/important/WhatsApp Image 2026-09-16 at 09.55.14.jpeg", kind: "notes" },
+            { name: "Important Topic 6", path: "CNC/important/WhatsApp Image 2026-09-16 at 09.55.36.jpeg", kind: "notes" }
         ],
         files: [
-            { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
-            { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
-            { name: "CNC Unit 2 — Handwritten Notes.pdf", path: "CNC/CNC_Unit 2.pdf", size: "4.8 MB" },
-            { name: "CNC Problems.pdf", path: "CNC/CNC PROBLEMS.pdf", size: "6.5 MB" },
-            { name: "Unit 1 — Important Questions & Answers.pdf", path: "CNC/Computer_Network_Unit_1_Important_Questions_Answers.pdf", size: "2.7 MB" },
-            { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
-            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB" },
-            { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "CNC/mcqs/CNC_Unit1_MCQ_Bank_with_Answers.pdf", size: "54 KB" }
+            { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB", units: ["Unit 1"], kind: "pdf", topic: "Introduction · Network Models · Physical & Data-Link Layer · MAC" },
+            { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB", units: ["Unit 2"], kind: "pdf", topic: "Ethernet · Network Layer · IPv4 · Routing" },
+            { name: "CNC Unit 2 — Handwritten Notes.pdf", path: "CNC/CNC_Unit 2.pdf", size: "4.8 MB", units: ["Unit 2"], kind: "notes", topic: "Routing Algorithms · Dijkstra · Distance Vector · Link State · Traffic Shaping" },
+            { name: "CNC Problems.pdf", path: "CNC/CNC PROBLEMS.pdf", size: "6.5 MB", units: ["General"], kind: "pdf", topic: "Practice problems" },
+            { name: "Unit 1 — Important Questions & Answers.pdf", path: "CNC/Computer_Network_Unit_1_Important_Questions_Answers.pdf", size: "2.7 MB", units: ["Unit 1"], kind: "question-paper", topic: "Unit I exam-ready answers" },
+            { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB", units: ["Unit 1"], kind: "notes", topic: "Unit I — Computer Network & Communication" },
+            { name: "Unit 1 — Mastery Notes (HTML)", path: "CNC/CS3001-1_Unit1_Notes.html", size: "76 KB", units: ["Unit 1"], kind: "notes", topic: "Unit I — Introduction, Network Models, Physical & Data-Link Layer" },
+            { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "CNC/mcqs/CNC_Unit1_MCQ_Bank_with_Answers.pdf", size: "54 KB", units: ["Unit 1"], kind: "question-paper", topic: "Unit 1 MCQs — network basics, topologies, models" }
         ]
     },
     {
@@ -33,28 +33,28 @@ var SUBJECTS = [
         fullName: "Operating Systems",
         color: "#3b82f6",
         important: [
-            { name: "Important Topic 1", path: "OS/important/IMG-20250913-WA0006.jpg" },
-            { name: "Important Topic 2", path: "OS/important/IMG-20250913-WA0020.jpg" },
-            { name: "Important Topic 3", path: "OS/important/WhatsApp Image 2026-09-11 at 13.05.24 (1).jpeg" },
-            { name: "Important Topic 4", path: "OS/important/WhatsApp Image 2026-09-11 at 13.05.24.jpeg" }
+            { name: "Important Topic 1", path: "OS/important/IMG-20250913-WA0006.jpg", kind: "notes" },
+            { name: "Important Topic 2", path: "OS/important/IMG-20250913-WA0020.jpg", kind: "notes" },
+            { name: "Important Topic 3", path: "OS/important/WhatsApp Image 2026-09-11 at 13.05.24 (1).jpeg", kind: "notes" },
+            { name: "Important Topic 4", path: "OS/important/WhatsApp Image 2026-09-11 at 13.05.24.jpeg", kind: "notes" }
         ],
         files: [
-            { name: "OS Unit 1.pdf", path: "OS/OS UNIT 1.pdf", size: "10.5 MB" },
-            { name: "OS Unit 2.pdf", path: "OS/OS UNIT 2.pdf", size: "16.8 MB" },
-            { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB" },
-            { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB" },
-            { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "OS/OS_Unit1_MCQ_Bank_with_Answers.pdf", size: "56 KB" },
-            { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB" },
-            { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB" },
-            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB" },
-            { name: "Unit 2 — Ch 5 Process Synchronization.pdf", path: "OS/Unit-2/CH5_PROCESS SYNCHRONIZATION.pdf", size: "685 KB" },
-            { name: "Unit 2 — Ch 6 Deadlocks.pdf", path: "OS/Unit-2/CH6_DEADLOCKS.pdf", size: "426 KB" },
-            { name: "Unit 2 — Ch 7 Main Memory.pdf", path: "OS/Unit-2/CH7_MAIN MEMORY.pdf", size: "1.9 MB" },
-            { name: "Unit 2 — MCQs.pdf", path: "OS/Unit-2/OS_MCQS_UNIT2 .pdf", size: "138 KB" },
-            { name: "Unit 3 — Ch 9 File System Concept.pdf", path: "OS/Unit-3/CH9_FILE SYSTEM CONCEPT.pdf", size: "110 KB" },
-            { name: "Unit 3 — Ch 10 File System Structure.pdf", path: "OS/Unit-3/CH10_FILE SYSTEM STRUCTURE.pdf", size: "534 KB" },
-            { name: "Unit 3 — Ch 11 Disk Scheduling.pdf", path: "OS/Unit-3/CH11_DISK SCHEDULING.pdf", size: "645 KB" },
-            { name: "Unit 3 — MCQs.pdf", path: "OS/Unit-3/OS_MCQ_UNIT3.pdf", size: "133 KB" }
+            { name: "OS Unit 1.pdf", path: "OS/OS UNIT 1.pdf", size: "10.5 MB", units: ["Unit 1"], kind: "pdf", topic: "OS Structure · Processes · Threads · CPU Scheduling" },
+            { name: "OS Unit 2.pdf", path: "OS/OS UNIT 2.pdf", size: "16.8 MB", units: ["Unit 2"], kind: "pdf", topic: "Process Synchronization · Deadlocks · Main Memory" },
+            { name: "OS Unit 3.pdf", path: "OS/OS UNIT 3.pdf", size: "8.8 MB", units: ["Unit 3"], kind: "pdf", topic: "Virtual Memory · File System · Disk Scheduling" },
+            { name: "Unit 1 — OS Structure & Scheduling (HTML)", path: "OS/CS2004-1_Unit1_OS_Notes.html", size: "56 KB", units: ["Unit 1"], kind: "notes", topic: "OS Structure · Processes · Threads · CPU Scheduling" },
+            { name: "Unit 1 — MCQ Bank with Answers.pdf", path: "OS/OS_Unit1_MCQ_Bank_with_Answers.pdf", size: "56 KB", units: ["Unit 1"], kind: "question-paper", topic: "OS services, system calls, linkers and loaders" },
+            { name: "Notes — Page 1 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.09.28.jpeg", size: "96 KB", units: ["General"], kind: "notes", topic: "Handwritten note page" },
+            { name: "Notes — Page 2 (Image)", path: "OS/WhatsApp Image 2026-08-20 at 19.10.26.jpeg", size: "339 KB", units: ["General"], kind: "notes", topic: "Handwritten note page" },
+            { name: "OS Syllabus.pdf", path: "OS/ppts/OS syllabus.pdf", size: "166 KB", units: ["General"], kind: "pdf", topic: "CS2004-1 syllabus & course outcomes" },
+            { name: "Unit 2 — Ch 5 Process Synchronization.pdf", path: "OS/Unit-2/CH5_PROCESS SYNCHRONIZATION.pdf", size: "685 KB", units: ["Unit 2"], kind: "pdf", topic: "Critical-section · Peterson's solution · Semaphores" },
+            { name: "Unit 2 — Ch 6 Deadlocks.pdf", path: "OS/Unit-2/CH6_DEADLOCKS.pdf", size: "426 KB", units: ["Unit 2"], kind: "pdf", topic: "Deadlock characterization, avoidance, detection" },
+            { name: "Unit 2 — Ch 7 Main Memory.pdf", path: "OS/Unit-2/CH7_MAIN MEMORY.pdf", size: "1.9 MB", units: ["Unit 2"], kind: "pdf", topic: "Paging · Page table structure · Swapping" },
+            { name: "Unit 2 — MCQs.pdf", path: "OS/Unit-2/OS_MCQS_UNIT2 .pdf", size: "138 KB", units: ["Unit 2"], kind: "question-paper", topic: "Process synchronization & deadlocks MCQs" },
+            { name: "Unit 3 — Ch 9 File System Concept.pdf", path: "OS/Unit-3/CH9_FILE SYSTEM CONCEPT.pdf", size: "110 KB", units: ["Unit 3"], kind: "pdf", topic: "File concept · File-system interface" },
+            { name: "Unit 3 — Ch 10 File System Structure.pdf", path: "OS/Unit-3/CH10_FILE SYSTEM STRUCTURE.pdf", size: "534 KB", units: ["Unit 3"], kind: "pdf", topic: "File-system structure, operations, directories" },
+            { name: "Unit 3 — Ch 11 Disk Scheduling.pdf", path: "OS/Unit-3/CH11_DISK SCHEDULING.pdf", size: "645 KB", units: ["Unit 3"], kind: "pdf", topic: "Disk scheduling algorithms" },
+            { name: "Unit 3 — MCQs.pdf", path: "OS/Unit-3/OS_MCQ_UNIT3.pdf", size: "133 KB", units: ["Unit 3"], kind: "question-paper", topic: "Demand paging, page replacement MCQs" }
         ]
     },
     {
@@ -62,13 +62,13 @@ var SUBJECTS = [
         fullName: "Lecture Presentations",
         color: "#f43f5e",
         files: [
-            { name: "CNC — Unit 1 Chapter 1", path: "CNC/ppts/UNIT-1 Chap-1.pptx", size: "7.6 MB" },
-            { name: "CNC — Unit 1 Chapter 2", path: "CNC/ppts/UNIT-1 Chap-2.pptx", size: "3.4 MB" },
-            { name: "OS — Ch 1 Operating System Structure", path: "OS/ppts/CH_1_OPERATING SYSTEM STRUCTURE.pptx", size: "2.2 MB" },
-            { name: "OS — Ch 2 Process Management", path: "OS/ppts/CH_2_PROCESS MANAGEMENT.pptx", size: "2.6 MB" },
-            { name: "OS — Ch 3 Threads", path: "OS/ppts/CH3_THREADS.pptx", size: "1.9 MB" },
-            { name: "OS — Ch 4 CPU Scheduling", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB" },
-            { name: "Data Science — IDS Unit 1", path: "Data Science/ppts/IDS Unit-1(1).pptx", size: "2.6 MB" }
+            { name: "CNC — Unit 1 Chapter 1", path: "CNC/ppts/UNIT-1 Chap-1.pptx", size: "7.6 MB", units: ["Unit 1"], kind: "ppt", topic: "Introduction to computer networks" },
+            { name: "CNC — Unit 1 Chapter 2", path: "CNC/ppts/UNIT-1 Chap-2.pptx", size: "3.4 MB", units: ["Unit 1"], kind: "ppt", topic: "Network models and physical layer" },
+            { name: "OS — Ch 1 Operating System Structure", path: "OS/ppts/CH_1_OPERATING SYSTEM STRUCTURE.pptx", size: "2.2 MB", units: ["Unit 1"], kind: "ppt", topic: "OS services and system calls" },
+            { name: "OS — Ch 2 Process Management", path: "OS/ppts/CH_2_PROCESS MANAGEMENT.pptx", size: "2.6 MB", units: ["Unit 1"], kind: "ppt", topic: "Process concept, scheduling, IPC" },
+            { name: "OS — Ch 3 Threads", path: "OS/ppts/CH3_THREADS.pptx", size: "1.9 MB", units: ["Unit 1"], kind: "ppt", topic: "Multithreading models" },
+            { name: "OS — Ch 4 CPU Scheduling", path: "OS/ppts/CH4_CPU SCHEDULING.pptx", size: "2.4 MB", units: ["Unit 1"], kind: "ppt", topic: "Scheduling criteria and algorithms" },
+            { name: "Data Science — IDS Unit 1", path: "Data Science/ppts/IDS Unit-1(1).pptx", size: "2.6 MB", units: ["Unit 1"], kind: "ppt", topic: "Data analysis with Excel" }
         ]
     },
     {
@@ -76,17 +76,17 @@ var SUBJECTS = [
         fullName: "Theory of Computation",
         color: "#a855f7",
         important: [
-            { name: "Important Topic 1", path: "TOC/important/IMG-20250913-WA0010.jpg" },
-            { name: "Important Topic 2", path: "TOC/important/IMG-20250913-WA0018.jpg" }
+            { name: "Important Topic 1", path: "TOC/important/IMG-20250913-WA0010.jpg", kind: "notes" },
+            { name: "Important Topic 2", path: "TOC/important/IMG-20250913-WA0018.jpg", kind: "notes" }
         ],
         files: [
-            { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC/TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB" },
-            { name: "TOC Unit 1 — Automata (HTML)", path: "TOC/unit1-theory-of-computation.html", size: "33 KB" },
-            { name: "Unit 1 — Automata Solved & Animated (HTML)", path: "TOC/CS3103-1_Unit1_TOC_Notes.html", size: "48 KB" },
-            { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB" },
-            { name: "TOC — MSE 1 Question Paper.pdf", path: "TOC/TOC MSE1.pdf", size: "18.8 MB" },
-            { name: "TOC — MSE 2 Notes.pdf", path: "TOC/TOC MSE-2 notes.pdf", size: "23.2 MB" },
-            { name: "TOC — MCQs with Answers.pdf", path: "TOC/TOC_MCQs_with_Answers-1.pdf", size: "185 KB" }
+            { name: "TOC Unit 1 — Automata (Master Notes).pdf", path: "TOC/TOC_Unit1_Automata_Master_Notes.pdf", size: "1.0 MB", units: ["Unit 1"], kind: "notes", topic: "Finite Automata · Regular Expressions · Non-Regularity" },
+            { name: "TOC Unit 1 — Automata (HTML)", path: "TOC/unit1-theory-of-computation.html", size: "33 KB", units: ["Unit 1"], kind: "notes", topic: "Unit I — Automata" },
+            { name: "Unit 1 — Automata Solved & Animated (HTML)", path: "TOC/CS3103-1_Unit1_TOC_Notes.html", size: "48 KB", units: ["Unit 1"], kind: "notes", topic: "DFA · NFA · ε-NFA · Regular Expressions" },
+            { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB", units: ["Unit 1"], kind: "notes", topic: "Interactive DFA design and solved problems" },
+            { name: "TOC — MSE 1 Question Paper.pdf", path: "TOC/TOC MSE1.pdf", size: "18.8 MB", units: ["Unit 1", "Unit 2", "Unit 3"], kind: "question-paper", topic: "Mid-semester question paper (all units)" },
+            { name: "TOC — MSE 2 Notes.pdf", path: "TOC/TOC MSE-2 notes.pdf", size: "23.2 MB", units: ["Unit 2", "Unit 3"], kind: "notes", topic: "DFA minimization · Grammars · Pushdown Automata" },
+            { name: "TOC — MCQs with Answers.pdf", path: "TOC/TOC_MCQs_with_Answers-1.pdf", size: "185 KB", units: ["Unit 1", "Unit 2", "Unit 3"], kind: "question-paper", topic: "Automata, regular languages, grammars, PDA, Turing machines" }
         ]
     },
     {
@@ -94,8 +94,8 @@ var SUBJECTS = [
         fullName: "Employability & Social Development",
         color: "#14b8a6",
         files: [
-            { name: "ESD — Unit 1.pdf", path: "ESD/ESD Unit 1.pdf", size: "139 KB" },
-            { name: "ESD — Unit 1 MCQ Bank with Answers.pdf", path: "ESD/ESD_Unit1_MCQ_Bank_with_Answers.pdf", size: "88 KB" }
+            { name: "ESD — Unit 1.pdf", path: "ESD/ESD Unit 1.pdf", size: "139 KB", units: ["Unit 1"], kind: "pdf", topic: "Quantitative aptitude — numbers" },
+            { name: "ESD — Unit 1 MCQ Bank with Answers.pdf", path: "ESD/ESD_Unit1_MCQ_Bank_with_Answers.pdf", size: "88 KB", units: ["Unit 1"], kind: "question-paper", topic: "Unit 1 MCQs with answers" }
         ]
     },
     {
@@ -103,9 +103,9 @@ var SUBJECTS = [
         fullName: "Social Connect Responsibility",
         color: "#f59e0b",
         files: [
-            { name: "SCR — Unit I.pdf", path: "SCR/SCR_Unit I.pdf", size: "838 KB" },
-            { name: "SCR — Unit II.pdf", path: "SCR/SCR_Unit II.pdf", size: "605 KB" },
-            { name: "SCR — Unit III.pdf", path: "SCR/SCR_Unit III.pdf", size: "297 KB" }
+            { name: "SCR — Unit I.pdf", path: "SCR/SCR_Unit I.pdf", size: "838 KB", units: ["Unit 1"], kind: "question-paper", topic: "Village, diversity and society — MCQs" },
+            { name: "SCR — Unit II.pdf", path: "SCR/SCR_Unit II.pdf", size: "605 KB", units: ["Unit 2"], kind: "question-paper", topic: "Social schemes and responsibility — MCQs" },
+            { name: "SCR — Unit III.pdf", path: "SCR/SCR_Unit III.pdf", size: "297 KB", units: ["Unit 3"], kind: "question-paper", topic: "Regulation and business responsibility — MCQs" }
         ]
     },
     {
@@ -113,10 +113,10 @@ var SUBJECTS = [
         fullName: "Introduction to Data Science",
         color: "#10b981",
         files: [
-            { name: "IDS Unit 1.pdf", path: "Data Science/IDS UNIT 1.pdf", size: "8.1 MB" },
-            { name: "Data Science — Master Notes (HTML)", path: "Data Science/data-science-master-notes.html", size: "57 KB" },
-            { name: "Data Analysis — Detailed Notes (HTML)", path: "Data Science/unit1-detailed-notes.html", size: "52 KB" },
-            { name: "Unit 1 — Data Analysis with Excel (HTML)", path: "Data Science/CS1231-1_Unit1_DataScience_Notes.html", size: "56 KB" }
+            { name: "IDS Unit 1.pdf", path: "Data Science/IDS UNIT 1.pdf", size: "8.1 MB", units: ["Unit 1"], kind: "pdf", topic: "Data Analysis using Excel" },
+            { name: "Data Science — Master Notes (HTML)", path: "Data Science/data-science-master-notes.html", size: "57 KB", units: ["Unit 1"], kind: "notes", topic: "Introduction to Data Science" },
+            { name: "Data Analysis — Detailed Notes (HTML)", path: "Data Science/unit1-detailed-notes.html", size: "52 KB", units: ["Unit 1"], kind: "notes", topic: "Data Analysis using Excel — detailed" },
+            { name: "Unit 1 — Data Analysis with Excel (HTML)", path: "Data Science/CS1231-1_Unit1_DataScience_Notes.html", size: "56 KB", units: ["Unit 1"], kind: "notes", topic: "Types, process, cleaning, sorting and filtering" }
         ]
     },
     {
@@ -124,8 +124,8 @@ var SUBJECTS = [
         fullName: "Universal Human Values",
         color: "#ec4899",
         files: [
-            { name: "MCQ — Unit 1 Questions.pdf", path: "UHV/MCQ_UHV_1.pdf", size: "46 KB" },
-            { name: "Unit 1 — Descriptive Q&A.pdf", path: "UHV/Unit 1 — Descriptive Q&A.pdf", size: "801 KB" }
+            { name: "MCQ — Unit 1 Questions.pdf", path: "UHV/MCQ_UHV_1.pdf", size: "46 KB", units: ["Unit 1"], kind: "question-paper", topic: "Value education — MCQs" },
+            { name: "Unit 1 — Descriptive Q&A.pdf", path: "UHV/Unit 1 — Descriptive Q&A.pdf", size: "801 KB", units: ["Unit 1"], kind: "notes", topic: "Human values — descriptive questions and answers" }
         ]
     },
     {
@@ -133,14 +133,126 @@ var SUBJECTS = [
         fullName: "Lab Manuals & Syllabus",
         color: "#eab308",
         files: [
-            { name: "PC++ Syllabus.pdf", path: "PC++_SYLLABUS.pdf", size: "107 KB" },
-            { name: "CNC Lab Manual.pdf", path: "Lab Manuals/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB" },
-            { name: "OS Lab Manual.pdf", path: "Lab Manuals/OS_LAB_MANUAL.pdf", size: "959 KB" },
-            { name: "C++ Lab Manual.pdf", path: "Lab Manuals/C++_LAB_MANUAL.pdf", size: "313 KB" },
-            { name: "Java Spring Lab Manual.pdf", path: "Lab Manuals/Java_Spring_Lab_Manual.pdf", size: "513 KB" }
+            { name: "PC++ Syllabus.pdf", path: "PC++_SYLLABUS.pdf", size: "107 KB", units: ["Lab Manuals"], kind: "lab-manual", topic: "Programming with C++ — CS3651-1 syllabus" },
+            { name: "CNC Lab Manual.pdf", path: "Lab Manuals/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf", size: "767 KB", units: ["Lab Manuals"], kind: "lab-manual", topic: "21CS502 Computer Network and Communication lab" },
+            { name: "OS Lab Manual.pdf", path: "Lab Manuals/OS_LAB_MANUAL.pdf", size: "959 KB", units: ["Lab Manuals"], kind: "lab-manual", topic: "Operating Systems lab programs" },
+            { name: "C++ Lab Manual.pdf", path: "Lab Manuals/C++_LAB_MANUAL.pdf", size: "313 KB", units: ["Lab Manuals"], kind: "lab-manual", topic: "C++ programming lab experiments" },
+            { name: "Java Spring Lab Manual.pdf", path: "Lab Manuals/Java_Spring_Lab_Manual.pdf", size: "513 KB", units: ["Lab Manuals"], kind: "lab-manual", topic: "CS3603-1 Java and Spring Framework lab" }
         ]
     }
 ];
+
+// ===== Taxonomy & helpers =====
+// Homepage categories. There is deliberately no "Unit 4" — this semester has
+// only three units, and Unit 4 is never rendered as a navigation option.
+var UNITS = ['Unit 1', 'Unit 2', 'Unit 3', 'Lab Manuals'];
+var GENERAL = 'General';
+
+// Resource types. Order matches the filter chips in index.html.
+var KINDS = ['pdf', 'ppt', 'notes', 'question-paper', 'lab-manual'];
+
+var KIND_LABEL = {
+    'pdf': 'PDF',
+    'ppt': 'PPT',
+    'notes': 'Notes',
+    'question-paper': 'Question paper',
+    'lab-manual': 'Lab manual'
+};
+
+// Flat, de-duplicated index of every resource in the library.
+// Built once at startup; every view and search runs off this.
+var ALL_FILES = [];
+(function buildIndex() {
+    SUBJECTS.forEach(function (subject) {
+        (subject.files || []).forEach(function (f) {
+            ALL_FILES.push({
+                name: f.name,
+                path: f.path,
+                size: f.size || '',
+                units: f.units && f.units.length ? f.units.slice() : [GENERAL],
+                kind: f.kind || kindFromExtension(f.path),
+                topic: f.topic || '',
+                subject: subject.name,
+                subjectFull: subject.fullName || subject.name,
+                color: subject.color || '#6b5ae0'
+            });
+        });
+        (subject.important || []).forEach(function (imp) {
+            ALL_FILES.push({
+                name: imp.name,
+                path: imp.path,
+                size: '',
+                units: imp.units && imp.units.length ? imp.units.slice() : [GENERAL],
+                kind: imp.kind || 'notes',
+                topic: '',
+                subject: subject.name,
+                subjectFull: subject.fullName || subject.name,
+                color: subject.color || '#6b5ae0',
+                important: true
+            });
+        });
+    });
+})();
+
+var jpg = /\.(jpe?g|png|webp|gif|svg)$/i;
+
+function kindFromExtension(path) {
+    var ext = (path.split('.').pop() || '').toLowerCase();
+    if (ext === 'pptx' || ext === 'ppt') return 'ppt';
+    if (ext === 'html') return 'notes';
+    if (jpg.test(ext)) return 'notes';
+    return 'pdf';
+}
+
+function kindLabel(kind) {
+    return KIND_LABEL[kind] || KIND_LABEL.pdf;
+}
+
+function unitLabel(unit) {
+    return unit === 'Lab Manuals' ? 'Lab Manuals' : unit;
+}
+
+// Case/whitespace-insensitive haystack used by search.
+function normalize(s) {
+    return (s || '').toString().toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+// Every searchable field of a resource, as one normalized string.
+function searchText(entry) {
+    return normalize([
+        entry.name, entry.subject, entry.subjectFull, entry.topic,
+        entry.units.join(' '), kindLabel(entry.kind), entry.kind,
+        entry.important ? 'important topic' : ''
+    ].join(' '));
+}
+
+function unitHasResources(unit) {
+    return ALL_FILES.some(function (f) { return f.units.indexOf(unit) !== -1; });
+}
+
+// Files for a subject, optionally restricted to one unit.
+function filesFor(subjectName, unit) {
+    return ALL_FILES.filter(function (f) {
+        if (f.subject !== subjectName) return false;
+        return !unit || f.units.indexOf(unit) !== -1;
+    });
+}
+
+// Subjects that actually have resources in a unit, with accurate counts.
+function subjectsInUnit(unit) {
+    var out = [];
+    SUBJECTS.forEach(function (s) {
+        var files = filesFor(s.name, unit);
+        if (files.length) {
+            out.push({ subject: s, files: files, count: files.length });
+        }
+    });
+    return out;
+}
+
+function countInUnit(unit) {
+    return ALL_FILES.filter(function (f) { return f.units.indexOf(unit) !== -1; }).length;
+}
 
 // ===== State =====
 var currentPdf = null;
@@ -188,10 +300,12 @@ function subjectTone(name) {
 
 // ===== New Features State =====
 var favorites = [];
-var recentFiles = [];
+var studyHistory = [];       // Continue Studying — most recent first, max 8
 var readingProgress = {};
 var completed = [];          // paths marked as done
-var activeFilter = 'all';    // sidebar filter chip: all | pdf | html | ppt | fav | todo
+var activeFilter = 'all';    // resource-type filter chip
+var activeUnit = '';         // '' = all units
+var activeSubject = '';      // '' = all subjects
 var currentTheme = 'light';
 
 // Find-in-document state (per open PDF)
@@ -204,7 +318,7 @@ var findQuery = '';
 function loadUserData() {
     try {
         favorites = JSON.parse(localStorage.getItem('notevault_favorites') || '[]');
-        recentFiles = JSON.parse(localStorage.getItem('notevault_recent') || '[]');
+        studyHistory = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
         readingProgress = JSON.parse(localStorage.getItem('notevault_progress') || '{}');
         completed = JSON.parse(localStorage.getItem('notevault_done') || '[]');
         currentTheme = localStorage.getItem('notevault_theme') || 'light';
@@ -212,17 +326,26 @@ function loadUserData() {
     } catch (e) {
         console.error('Error loading user data:', e);
     }
+    // Guard against corrupted payloads, an older schema, or a browser that
+    // hands back something other than what we stored.
+    if (!Array.isArray(favorites)) favorites = [];
+    if (!Array.isArray(completed)) completed = [];
+    if (!readingProgress || typeof readingProgress !== 'object' || Array.isArray(readingProgress)) {
+        readingProgress = {};
+    }
+    studyHistory = sanitizeHistory(studyHistory);
 }
 
 // Save data to localStorage
 function saveUserData() {
     try {
         localStorage.setItem('notevault_favorites', JSON.stringify(favorites));
-        localStorage.setItem('notevault_recent', JSON.stringify(recentFiles.slice(0, 10)));
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(studyHistory));
         localStorage.setItem('notevault_progress', JSON.stringify(readingProgress));
         localStorage.setItem('notevault_done', JSON.stringify(completed));
         localStorage.setItem('notevault_theme', currentTheme);
     } catch (e) {
+        // Quota exceeded or storage blocked (private browsing) — keep running.
         console.error('Error saving user data:', e);
     }
 }
@@ -301,10 +424,13 @@ function init() {
         addMobileToggle();
         updateFavoritesUI();
         updateFavoritesRow();
-        updateRecentFilesUI();
+        renderContinueStudying();
+        buildUnitCards();
+        buildSubjectFilterChips();
+        renderView();
         var navHome = document.getElementById('navHome');
         if (navHome) navHome.classList.add('active');
-        openFromHash(true);
+        applyRoute(parseRoute(), true);
     } catch (err) {
         console.error("Initialization failed:", err);
     }
@@ -320,6 +446,316 @@ function countPdfs() {
     if (chipF) chipF.textContent = count;
     var chipS = document.getElementById('chipSubjects');
     if (chipS) chipS.textContent = SUBJECTS.length;
+}
+
+// ===== Navigation views =====
+// Homepage → Unit → Subject → Files. Hash-based so every view has a shareable
+// URL and the browser Back button behaves correctly.
+var currentView = { name: 'home' };
+// Where we were before a reader was opened, so Back returns to it.
+var previousView = { name: 'home' };
+
+function buildUnitCards() {
+    var wrap = document.getElementById('unitCards');
+    if (!wrap) return;
+    var html = UNITS.map(function (unit, i) {
+        var count = countInUnit(unit);
+        var subs = subjectsInUnit(unit).length;
+        var meta = count + (count === 1 ? ' resource' : ' resources') +
+                   ' · ' + subs + (subs === 1 ? ' subject' : ' subjects');
+        return '<button class="unit-card" type="button" style="animation-delay:' + (i * 70) + 'ms" ' +
+            'onclick="navigateCategory(\'' + unit + '\')" aria-label="Open ' + escapeHtml(unit) + '">' +
+            '<span class="unit-card-head">' +
+                '<span class="unit-card-name">' + escapeHtml(unit) + '</span>' +
+                '<svg class="unit-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+            '</span>' +
+            '<span class="unit-card-meta">' + escapeHtml(meta) + '</span>' +
+            '</button>';
+    }).join('');
+
+    // Secondary entry point. Deliberately not a unit, so it can never be
+    // mistaken for one.
+    html += '<button class="unit-card unit-card--all" type="button" onclick="navigateAll()" ' +
+        'aria-label="Browse all resources">' +
+        '<span class="unit-card-head">' +
+            '<span class="unit-card-name">All Resources</span>' +
+            '<svg class="unit-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>' +
+        '</span>' +
+        '<span class="unit-card-meta">' + ALL_FILES.length + ' resources · ' + SUBJECTS.length + ' subjects</span>' +
+        '</button>';
+
+    wrap.innerHTML = html;
+}
+
+// Subject filter chips, generated from the real subject list.
+function buildSubjectFilterChips() {
+    var wrap = document.getElementById('subjectFilterChips');
+    if (!wrap) return;
+    var html = '<button class="subject-filter-chip active" data-subject-filter="">All subjects</button>';
+    SUBJECTS.forEach(function (s) {
+        html += '<button class="subject-filter-chip" data-subject-filter="' + escapeHtml(s.name) + '">' +
+            escapeHtml(s.name) + '</button>';
+    });
+    wrap.innerHTML = html;
+}
+
+function navigateHome(replace) {
+    currentView = { name: 'home' };
+    setRoute('#', replace);
+    renderView();
+}
+
+function navigateCategory(unit, replace) {
+    if (UNITS.indexOf(unit) === -1) { navigateHome(replace); return; }
+    currentView = { name: 'category', unit: unit };
+    setRoute('#unit=' + encodeURIComponent(unit), replace);
+    renderView();
+}
+
+function navigateAll(replace) {
+    currentView = { name: 'category', unit: '' };
+    setRoute('#all', replace);
+    renderView();
+}
+
+function navigateSubject(unit, subject, replace) {
+    currentView = { name: 'subject', unit: unit || '', subject: subject };
+    var route = unit
+        ? '#subject=' + encodeURIComponent(unit) + '/' + encodeURIComponent(subject)
+        : '#subject=/' + encodeURIComponent(subject);
+    setRoute(route, replace);
+    renderView();
+}
+
+function setRoute(hash, replace) {
+    var url = window.location.pathname + window.location.search + hash;
+    if (replace) { try { history.replaceState({}, '', url); } catch (e) { window.location.hash = hash; } }
+    else { try { history.pushState({}, '', url); } catch (e) { window.location.hash = hash; } }
+}
+
+function renderView() {
+    var home = document.getElementById('welcomeScreen');
+    var cat = document.getElementById('viewCategory');
+    var sub = document.getElementById('viewSubject');
+    var sea = document.getElementById('viewSearch');
+    var bar = document.getElementById('viewBar');
+    var count = document.getElementById('resultCount');
+
+    if (count) count.style.display = currentView.name === 'search' ? '' : 'none';
+
+    [cat, sub, sea].forEach(function (el) { if (el) el.style.display = 'none'; });
+
+    if (currentView.name === 'home') {
+        if (home) home.style.display = 'flex';
+        if (bar) bar.style.display = 'none';
+        return;
+    }
+
+    if (home) home.style.display = 'none';
+    if (bar) bar.style.display = 'flex';
+
+    if (currentView.name === 'category') {
+        if (cat) cat.style.display = 'flex';
+        renderCategoryView();
+    } else if (currentView.name === 'subject') {
+        if (sub) sub.style.display = 'flex';
+        renderSubjectView();
+    } else if (currentView.name === 'search') {
+        if (sea) sea.style.display = 'flex';
+        renderSearchResults();
+    }
+}
+
+function renderBreadcrumb(trail) {
+    var bar = document.getElementById('viewBar');
+    if (!bar) return;
+    var titleEl = document.getElementById('viewTitle');
+    if (titleEl) titleEl.textContent = trail[trail.length - 1].label;
+
+    var html = '<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>';
+    trail.forEach(function (node, i) {
+        var last = i === trail.length - 1;
+        html += '<li>' + (last || !node.href
+            ? '<span aria-current="page">' + escapeHtml(node.label) + '</span>'
+            : '<a href="' + node.href + '">' + escapeHtml(node.label) + '</a>') + '</li>';
+        if (!last) html += '<li class="crumb-sep" aria-hidden="true">/</li>';
+    });
+    html += '</ol></nav>';
+
+    bar.innerHTML = html +
+        '<button class="btn-back-text" type="button" onclick="history.back()">Back</button>';
+}
+
+function renderCategoryView() {
+    var unit = currentView.unit;
+    var host = document.getElementById('viewCategory');
+    if (!host) return;
+
+    if (!unit) {
+        renderBreadcrumb([{ label: 'Home', href: '#' }, { label: 'All Resources' }]);
+        var all = ALL_FILES.slice().sort(function (a, b) { return a.subject.localeCompare(b.subject); });
+        host.innerHTML =
+            '<p class="view-lede">Every resource in the library, across all units and subjects.</p>' +
+            '<div class="result-grid">' + all.map(resourceCardHTML).join('') + '</div>';
+        return;
+    }
+
+    var groups = subjectsInUnit(unit);
+    renderBreadcrumb([
+        { label: 'Home', href: '#' },
+        { label: unit }
+    ]);
+
+    if (!groups.length) {
+        host.innerHTML = '<p class="view-lede">No resources are filed under ' + escapeHtml(unit) + ' yet.</p>' +
+            '<div class="empty-state"><p>Nothing here yet.</p>' +
+            '<button class="btn-clear-search" type="button" onclick="navigateAll()">Browse all resources</button></div>';
+        return;
+    }
+
+    var html = '<p class="view-lede">' + countInUnit(unit) +
+        (countInUnit(unit) === 1 ? ' resource' : ' resources') +
+        ' across ' + groups.length + (groups.length === 1 ? ' subject.' : ' subjects.') + '</p>';
+    html += '<div class="subject-grid">';
+    groups.forEach(function (g, i) {
+        var s = g.subject;
+        var tone = subjectTone(s.name);
+        html += '<button class="subject-card" type="button" style="--subject-fill:' + tone.fill +
+            '; --subject-tint:' + tone.tint + '; animation-delay:' + (i * 60) + 'ms" ' +
+            'onclick="navigateSubject(\'' + unit + '\', \'' + s.name + '\')">' +
+            '<span class="subject-card-icon">' + (SUBJECT_ICONS[s.name] || SUBJECT_ICONS['default']) + '</span>' +
+            '<span class="subject-card-info">' +
+                '<span class="subject-card-name">' + escapeHtml(s.name) + '</span>' +
+                '<span class="subject-card-full">' + escapeHtml(s.fullName) + '</span>' +
+                '<span class="subject-card-meta">' + g.count + (g.count === 1 ? ' resource' : ' resources') + '</span>' +
+            '</span>' +
+            '<span class="subject-card-count">' + g.count + '</span>' +
+            '<svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+            '</button>';
+    });
+    html += '</div>';
+    host.innerHTML = html;
+}
+
+function renderSubjectView() {
+    var unit = currentView.unit;
+    var subjectName = currentView.subject;
+    var host = document.getElementById('viewSubject');
+    if (!host) return;
+
+    var subject = null;
+    SUBJECTS.forEach(function (s) { if (s.name === subjectName) subject = s; });
+    if (!subject) {
+        renderBreadcrumb([{ label: 'Home', href: '#' }, { label: 'Not found' }]);
+        host.innerHTML = '<div class="empty-state"><p>That subject is not in the library.</p>' +
+            '<button class="btn-clear-search" type="button" onclick="navigateHome()">Back to home</button></div>';
+        return;
+    }
+
+    var files = filesFor(subjectName, unit || null);
+    var trail = [{ label: 'Home', href: '#' }];
+    if (unit) trail.push({ label: unit, href: '#unit=' + encodeURIComponent(unit) });
+    trail.push({ label: subjectName });
+    renderBreadcrumb(trail);
+
+    if (!files.length) {
+        host.innerHTML = '<div class="empty-state"><p>No ' + escapeHtml(unit || '') +
+            ' resources for ' + escapeHtml(subjectName) + '.</p>' +
+            '<button class="btn-clear-search" type="button" onclick="navigateSubject(\'\', \'' + subjectName + '\')">See all ' +
+            escapeHtml(subjectName) + ' resources</button></div>';
+        return;
+    }
+
+    var html = '<p class="view-lede">' + files.length +
+        (files.length === 1 ? ' resource' : ' resources') + ' in ' + escapeHtml(subjectName) +
+        (unit ? ' · ' + escapeHtml(unit) : '') + '.</p>';
+    html += '<div class="result-grid">' + files.map(resourceCardHTML).join('') + '</div>';
+    host.innerHTML = html;
+}
+
+// ===== Resource cards =====
+function resourceCardHTML(f) {
+    var unitText = f.units.join(', ');
+    return '<button class="resource-card" type="button" ' +
+        'onclick="openFile(\'' + encodeURIComponent(f.path) + '\', \'' + encodeURIComponent(f.name) + '\')" ' +
+        'title="' + escapeHtml(f.name) + '">' +
+        '<span class="resource-kind kind-' + escapeHtml(f.kind) + '">' + escapeHtml(kindLabel(f.kind)) + '</span>' +
+        '<span class="resource-name">' + escapeHtml(f.name) + '</span>' +
+        '<span class="resource-meta">' +
+            '<span class="resource-subject">' + escapeHtml(f.subject) + '</span>' +
+            '<span class="resource-unit">' + escapeHtml(unitText) + '</span>' +
+        '</span>' +
+        '<span class="resource-topic">' + escapeHtml(f.topic || '') + '</span>' +
+        (f.size ? '<span class="resource-size">' + escapeHtml(f.size) + '</span>' : '') +
+        '</button>';
+}
+
+// ===== Smart search & filters =====
+function matchesQuery(entry, q) {
+    if (!q) return true;
+    var hay = searchText(entry);
+    return q.split(' ').every(function (term) {
+        return term && hay.indexOf(term) !== -1;
+    });
+}
+
+function applyFilters() {
+    var q = normalize(searchInput.value);
+    return ALL_FILES.filter(function (f) {
+        if (activeFilter !== 'all' && f.kind !== activeFilter) return false;
+        if (activeUnit && f.units.indexOf(activeUnit) === -1) return false;
+        if (activeSubject && f.subject !== activeSubject) return false;
+        return matchesQuery(f, q);
+    });
+}
+
+function renderSearchResults() {
+    var host = document.getElementById('viewSearch');
+    if (!host) return;
+    var q = normalize(searchInput.value);
+    var results = applyFilters();
+
+    renderBreadcrumb([{ label: 'Home', href: '#' }, { label: 'Search' }]);
+
+    var summary = document.getElementById('resultCount');
+    if (summary) {
+        summary.textContent = results.length +
+            (results.length === 1 ? ' result' : ' results') +
+            (q ? ' for “' + searchInput.value.trim() + '”' : '') +
+            (activeFilter !== 'all' ? ' · ' + escapeHtml(kindLabel(activeFilter)) : '') +
+            (activeUnit ? ' · ' + escapeHtml(activeUnit) : '') +
+            (activeSubject ? ' · ' + escapeHtml(activeSubject) : '');
+    }
+
+    if (!results.length) {
+        host.innerHTML =
+            '<div class="empty-state">' +
+            '<h3>No matches</h3>' +
+            '<p>Nothing matches the current search and filters.</p>' +
+            '<button class="btn-clear-search" type="button" onclick="clearAllFilters()">Clear search &amp; filters</button>' +
+            '</div>';
+        return;
+    }
+
+    host.innerHTML = '<div class="result-grid">' + results.map(resourceCardHTML).join('') + '</div>';
+}
+
+function clearAllFilters() {
+    searchInput.value = '';
+    activeFilter = 'all';
+    activeUnit = '';
+    activeSubject = '';
+    document.querySelectorAll('.filter-chip, .unit-filter-chip, .subject-filter-chip').forEach(function (c) {
+        c.classList.remove('active');
+    });
+    var all = document.querySelector('.filter-chip[data-filter="all"]');
+    if (all) all.classList.add('active');
+    var allUnits = document.querySelector('.unit-filter-chip[data-unit=""]');
+    if (allUnits) allUnits.classList.add('active');
+    var allSubs = document.querySelector('.subject-filter-chip[data-subject-filter=""]');
+    if (allSubs) allSubs.classList.add('active');
+    renderSearchResults();
+    updateClearFiltersVisibility();
 }
 
 // ===== Build Sidebar =====
@@ -498,8 +934,6 @@ function updateDoneUI() {
         }
     });
     buildSubjectCards();
-    // Re-apply the active filter in case "To read" is selected
-    if (activeFilter === 'todo') filterFiles(searchInput.value);
 }
 
 // Look up a file entry (name + subject) by path across all subjects
@@ -538,35 +972,132 @@ function updateFavoritesRow() {
     row.innerHTML = entries.map(function(e) { return fileChipHTML(e.file.path, e.file.name); }).join('');
 }
 
-// ===== Recent Files =====
-function addToRecent(path, name) {
-    // Remove if already exists
-    recentFiles = recentFiles.filter(function(f) { return f.path !== path; });
+// ===== Continue Studying =====
+// Persisted in localStorage only. No account, backend or network call.
+var HISTORY_KEY = 'notevault_history';
+var HISTORY_LIMIT = 8;
 
-    // Add to beginning
-    recentFiles.unshift({ path: path, name: name, timestamp: Date.now() });
-
-    // Keep only last 10
-    recentFiles = recentFiles.slice(0, 10);
-
-    saveUserData();
-    updateRecentFilesUI();
+// Coerce whatever is in storage into a clean, de-duplicated list.
+function sanitizeHistory(list) {
+    if (!Array.isArray(list)) return [];
+    var seen = {};
+    var out = [];
+    list.forEach(function (item) {
+        if (!item || typeof item.path !== 'string' || !item.path) return;
+        if (seen[item.path]) return;                 // one entry per resource
+        seen[item.path] = true;
+        out.push({
+            path: item.path,
+            name: typeof item.name === 'string' ? item.name : item.path.split('/').pop(),
+            subject: typeof item.subject === 'string' ? item.subject : '',
+            units: Array.isArray(item.units) ? item.units.slice() : [],
+            kind: typeof item.kind === 'string' ? item.kind : kindFromExtension(item.path),
+            openedAt: (typeof item.openedAt === 'number' && isFinite(item.openedAt))
+                ? item.openedAt : Date.now()
+        });
+    });
+    return out.slice(0, HISTORY_LIMIT);
 }
 
-function updateRecentFilesUI() {
-    var section = document.getElementById('recentSection');
-    var row = document.getElementById('recentRow');
-    if (!section || !row) return;
+// Build a history record from a library resource.
+function studyEntryFor(entry) {
+    return {
+        path: entry.path,
+        name: entry.name,
+        subject: entry.subject,
+        units: entry.units.slice(),
+        kind: entry.kind,
+        openedAt: Date.now()
+    };
+}
 
-    var recent = recentFiles.slice(0, 6);
-    if (!recent.length) {
+// Record a resource as opened. Reopening updates the existing entry rather
+// than appending a duplicate, and moves it to the top.
+function recordStudy(entry) {
+    studyHistory = studyHistory.filter(function (h) { return h.path !== entry.path; });
+    studyHistory.unshift(entry);
+    studyHistory = studyHistory.slice(0, HISTORY_LIMIT);
+    saveUserData();
+    renderContinueStudying();
+}
+
+function clearStudyHistory() {
+    studyHistory = [];
+    saveUserData();
+    renderContinueStudying();
+    showNotification('Study history cleared', 'info');
+}
+
+// "3m ago" / "2h ago" / "4d ago" — falls back to a date for anything old.
+function relativeTime(ts) {
+    if (!ts || !isFinite(ts)) return '';
+    var s = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+    if (s < 60) return 'just now';
+    var m = Math.floor(s / 60);
+    if (m < 60) return m + 'm ago';
+    var h = Math.floor(m / 60);
+    if (h < 24) return h + 'h ago';
+    var d = Math.floor(h / 24);
+    if (d < 7) return d + 'd ago';
+    var w = Math.floor(d / 7);
+    if (w < 5) return w + 'w ago';
+    try { return new Date(ts).toLocaleDateString(); } catch (e) { return ''; }
+}
+
+// Compact history card. Long filenames are clamped with ellipsis by CSS.
+function historyCardHTML(item) {
+    var unitText = item.units && item.units.length
+        ? item.units.join(', ')
+        : 'General';
+    return '<button class="history-card" type="button" ' +
+        'onclick="openFromHistory(\'' + encodeURIComponent(item.path) + '\')" ' +
+        'title="' + escapeHtml(item.name) + '">' +
+        '<span class="history-kind kind-' + escapeHtml(item.kind) + '">' + escapeHtml(kindLabel(item.kind)) + '</span>' +
+        '<span class="history-name">' + escapeHtml(item.name) + '</span>' +
+        '<span class="history-meta">' +
+            '<span class="history-subject">' + escapeHtml(item.subject || '—') + '</span>' +
+            '<span class="history-unit">' + escapeHtml(unitText) + '</span>' +
+        '</span>' +
+        '<span class="history-time">' + escapeHtml(relativeTime(item.openedAt)) + '</span>' +
+        '</button>';
+}
+
+function renderContinueStudying() {
+    var section = document.getElementById('continueSection');
+    if (!section) return;
+    var grid = document.getElementById('continueGrid');
+    var empty = document.getElementById('continueEmpty');
+    var clearBtn = document.getElementById('continueClear');
+
+    // Drop history entries whose resource is no longer in the library.
+    var before = studyHistory.length;
+    studyHistory = sanitizeHistory(studyHistory.filter(function (h) {
+        return findFileByPath(h.path) || SUBJECTS.some(function (s) {
+            return (s.important || []).some(function (i) { return i.path === h.path; });
+        });
+    }));
+    if (studyHistory.length !== before) saveUserData();
+
+    if (!studyHistory.length) {
         section.style.display = 'none';
-        row.innerHTML = '';
+        if (grid) grid.innerHTML = '';
         return;
     }
 
     section.style.display = 'block';
-    row.innerHTML = recent.map(function(f) { return fileChipHTML(f.path, f.name); }).join('');
+    if (empty) empty.style.display = 'none';
+    if (grid) {
+        grid.innerHTML = studyHistory.map(historyCardHTML).join('');
+    }
+    if (clearBtn) clearBtn.disabled = false;
+}
+
+// Clicking a history card reopens the original working resource URL.
+function openFromHistory(encodedPath) {
+    var path = decodeURIComponent(encodedPath);
+    var entry = findFileByPath(path);
+    var name = entry ? entry.name : path.split('/').pop();
+    openFile(encodeURIComponent(path), encodeURIComponent(name));
 }
 
 // ===== Reading Progress =====
@@ -620,6 +1151,70 @@ function parseHash() {
     return { path: params.file, page: parseInt(params.page, 10) || 0 };
 }
 
+// Parse any hash into a route object: file deep links, navigation views,
+// or a search query. The legacy `#file=` format is unchanged.
+function parseRoute() {
+    var h = window.location.hash;
+    if (!h || h === '#') return { type: 'home' };
+    if (h.indexOf('#file=') === 0) {
+        var file = parseHash();
+        if (!file) return { type: 'home' };
+        return { type: 'file', path: file.path, page: file.page };
+    }
+    if (h.indexOf('#unit=') === 0) {
+        var u = decodeURIComponent(h.slice(6).split('&')[0]);
+        return { type: 'unit', unit: u };
+    }
+    if (h.indexOf('#all') === 0) return { type: 'all' };
+    if (h.indexOf('#subject=') === 0) {
+        var parts = decodeURIComponent(h.slice(9).split('&')[0]).split('/');
+        return { type: 'subject', unit: parts[0] || '', subject: parts[1] || '' };
+    }
+    if (h.indexOf('#search') === 0) {
+        var q = h.indexOf('#search=') === 0 ? decodeURIComponent(h.slice(8).split('&')[0]) : '';
+        return { type: 'search', query: q };
+    }
+    return { type: 'home' };
+}
+
+// Apply a parsed route to the UI. File routes open the reader.
+function applyRoute(route, replace) {
+    if (route.type === 'file') {
+        var entry = findFileByPath(route.path);
+        var name = entry ? entry.file.name : route.path.split('/').pop();
+        if (!entry) {
+            var known = SUBJECTS.some(function(s) {
+                return (s.important || []).some(function(imp) { return imp.path === route.path; });
+            });
+            if (!known) {
+                renderView();
+                showNotification('That file is not in the library', 'warning');
+                return;
+            }
+        }
+        openFile(encodeURIComponent(route.path), encodeURIComponent(name),
+                 { fromHistory: true, page: route.page, replace: replace });
+        return;
+    }
+
+    if (currentPdf) goBack(true);
+
+    if (route.type === 'unit') { navigateCategory(route.unit, replace); return; }
+    if (route.type === 'all') { navigateAll(replace); return; }
+    if (route.type === 'subject') {
+        searchInput.value = '';
+        navigateSubject(route.unit, route.subject, replace);
+        return;
+    }
+    if (route.type === 'search') {
+        searchInput.value = route.query || '';
+        currentView = { name: 'search', query: normalize(route.query || '') };
+        renderView();
+        return;
+    }
+    navigateHome(replace);
+}
+
 function openFromHash(replace) {
     var target = parseHash();
     if (!target) return false;
@@ -641,16 +1236,38 @@ function openFile(encodedPath, encodedName, opts) {
     opts = opts || {};
     var path = decodeURIComponent(encodedPath);
     var name = decodeURIComponent(encodedName);
+    var prevPdf = currentPdf;
     currentPdf = path;
     currentPage = 1;
+    // Remember where we came from so Back returns to this view.
+    if (prevPdf !== path) previousView = currentView;
     zoomScale = 1.0;
     currentFileType = getFileType(path);
     thumbRendered = 0;
     pageTexts = null;
     closeFindBar(true);
 
-    // Add to recent files
-    addToRecent(path, name);
+    // Record in Continue Studying (localStorage only, no network)
+    var found = findFileByPath(path);
+    if (!found) {
+        // "Important topic" images live outside the subject file lists
+        SUBJECTS.forEach(function (s) {
+            if (found) return;
+            (s.important || []).forEach(function (imp) {
+                if (found || imp.path !== path) return;
+                found = { file: imp, subject: s };
+            });
+        });
+    }
+    var libFile = found ? found.file : null;
+    recordStudy({
+        path: path,
+        name: name,
+        subject: found ? found.subject.name : '',
+        units: libFile && libFile.units ? libFile.units.slice() : [GENERAL],
+        kind: libFile && libFile.kind ? libFile.kind : kindFromExtension(path),
+        openedAt: Date.now()
+    });
 
     // Check for saved progress
     var progress = getReadingProgress(path);
@@ -1104,13 +1721,13 @@ function toggleFullscreen() {
 
 // ===== Go Back =====
 function goBack(fromHistory) {
-    if (!fromHistory && window.location.hash.indexOf('#file=') === 0) {
+    if (!fromHistory && window.location.hash && window.location.hash !== '#') {
         // Let popstate call us back so the Back button and this stay in sync
         history.back();
         return;
     }
     pdfViewer.style.display = 'none';
-    welcomeScreen.style.display = 'flex';
+    renderView();
     document.body.classList.remove('viewer-open');
     pdfDoc = null;
     currentPdf = null;
@@ -1147,68 +1764,22 @@ function closeShortcutsModal() {
 }
 
 // ===== Search =====
+// Typing switches to the results view and re-renders it. The sidebar still
+// holds the input, so the handler stays attached to the same element id.
 function filterFiles(query) {
-    var q = query.toLowerCase().trim();
-    var items = document.querySelectorAll('.file-item');
-    var groups = document.querySelectorAll('.subject-group');
-    var searchEmpty = document.getElementById('searchEmpty');
+    searchInput.value = query;
+    var q = normalize(query);
+    var filtersOn = activeFilter !== 'all' || activeUnit || activeSubject;
 
-    var filtering = activeFilter !== 'all';
-
-    if (!q && !filtering) {
-        items.forEach(function(el) { el.style.display = ''; });
-        groups.forEach(function(g, i) {
-            g.style.display = '';
-            var shouldExpand = i === 0;
-            g.classList.toggle('expanded', shouldExpand);
-        });
-        if (searchEmpty) searchEmpty.style.display = 'none';
+    if (!q && !filtersOn) {
+        if (currentView.name === 'search') navigateHome(true);
         return;
     }
 
-    // Match file names, and also the subject's short or full name
-    // ("os", "networks") so a subject query shows all of its files.
-    var subjectMatches = {};
-    SUBJECTS.forEach(function(s) {
-        subjectMatches[s.name] = (s.name + ' ' + s.fullName).toLowerCase().indexOf(q) !== -1;
-    });
-
-    function passesFilter(el) {
-        var path = el.getAttribute('data-path');
-        switch (activeFilter) {
-            case 'pdf': case 'html': case 'ppt': return el.getAttribute('data-type') === activeFilter;
-            case 'fav': return favorites.indexOf(path) !== -1;
-            case 'todo': return completed.indexOf(path) === -1;
-            default: return true;
-        }
-    }
-
-    items.forEach(function(el) {
-        var name = el.querySelector('.file-name').textContent.toLowerCase();
-        var group = el.closest('.subject-group');
-        var subjectHit = group ? subjectMatches[group.getAttribute('data-subject')] : false;
-        var textHit = !q || name.indexOf(q) !== -1 || subjectHit;
-        el.style.display = (textHit && passesFilter(el)) ? '' : 'none';
-    });
-
-    var anyVisible = false;
-    groups.forEach(function(g) {
-        var vis = g.querySelectorAll('.file-item:not([style*="display: none"])');
-        var hasVis = vis.length > 0;
-        g.style.display = hasVis ? '' : 'none';
-        if (hasVis) g.classList.add('expanded');
-        if (hasVis) anyVisible = true;
-    });
-
-    if (searchEmpty) {
-        if (anyVisible) {
-            searchEmpty.style.display = 'none';
-        } else {
-            var text = document.getElementById('searchEmptyText');
-            if (text) text.textContent = q ? 'No files found for "' + query.trim() + '"' : 'Nothing matches this filter';
-            searchEmpty.style.display = 'flex';
-        }
-    }
+    currentView = { name: 'search', query: q };
+    var route = q ? '#search=' + encodeURIComponent(q) : '#search';
+    setRoute(route, currentView.name === 'search' && !filtersOn);
+    renderView();
 }
 
 // ===== Page Turn Animation =====
@@ -1417,8 +1988,13 @@ function hidePageJump(apply) {
 }
 
 function clearSearch() {
+    clearAllFilters();
     searchInput.value = '';
-    setFilter('all');
+    if (currentView.name === 'search') {
+        currentView = { name: 'home' };
+        setRoute('#', true);
+        renderView();
+    }
     searchInput.focus();
 }
 
@@ -1427,7 +2003,57 @@ function setFilter(name) {
     document.querySelectorAll('.filter-chip').forEach(function(c) {
         c.classList.toggle('active', c.getAttribute('data-filter') === name);
     });
-    filterFiles(searchInput.value);
+    // A filter on the homepage jumps straight to results rather than
+    // silently filtering nothing.
+    if (currentView.name !== 'search') {
+        currentView = { name: 'search', query: normalize(searchInput.value) };
+        setRoute('#search', true);
+        renderView();
+    } else {
+        renderSearchResults();
+    }
+    updateClearFiltersVisibility();
+}
+
+function setUnitFilter(unit) {
+    activeUnit = unit;
+    document.querySelectorAll('.unit-filter-chip').forEach(function(c) {
+        c.classList.toggle('active', c.getAttribute('data-unit') === unit);
+    });
+    if (currentView.name !== 'search') {
+        currentView = { name: 'search', query: normalize(searchInput.value) };
+        setRoute('#search', true);
+        renderView();
+    } else {
+        renderSearchResults();
+    }
+    updateClearFiltersVisibility();
+}
+
+function setSubjectFilter(subject) {
+    activeSubject = subject;
+    document.querySelectorAll('.subject-filter-chip').forEach(function(c) {
+        c.classList.toggle('active', c.getAttribute('data-subject-filter') === subject);
+    });
+    if (currentView.name !== 'search') {
+        currentView = { name: 'search', query: normalize(searchInput.value) };
+        setRoute('#search', true);
+        renderView();
+    } else {
+        renderSearchResults();
+    }
+    updateClearFiltersVisibility();
+}
+
+function updateClearFiltersVisibility() {
+    var btn = document.getElementById('clearFiltersBtn');
+    if (!btn) return;
+    var hasActiveFilters = 
+        activeFilter !== 'all' || 
+        activeUnit !== '' || 
+        activeSubject !== '' || 
+        (searchInput && searchInput.value.trim() !== '');
+    btn.style.display = hasActiveFilters ? 'inline-flex' : 'none';
 }
 
 // ===== Event Listeners =====
@@ -1456,6 +2082,47 @@ function attachEvents() {
     document.querySelectorAll('.filter-chip').forEach(function(chip) {
         chip.addEventListener('click', function() { setFilter(chip.getAttribute('data-filter')); });
     });
+
+    // Unit / subject filter chips
+    document.querySelectorAll('.unit-filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            var u = chip.getAttribute('data-unit') || '';
+            setUnitFilter(activeUnit === u ? '' : u);
+        });
+    });
+    document.querySelectorAll('.subject-filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            var s = chip.getAttribute('data-subject-filter') || '';
+            setSubjectFilter(activeSubject === s ? '' : s);
+        });
+    });
+
+    // Clear filters button
+    var clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', clearAllFilters);
+    }
+
+    // Continue Studying — clear history needs an explicit confirmation step
+    var btnClearHistory = document.getElementById('continueClear');
+    if (btnClearHistory) {
+        btnClearHistory.addEventListener('click', function() {
+            if (btnClearHistory.dataset.confirm === '1') {
+                delete btnClearHistory.dataset.confirm;
+                btnClearHistory.textContent = 'Clear history';
+                clearStudyHistory();
+                return;
+            }
+            btnClearHistory.dataset.confirm = '1';
+            btnClearHistory.textContent = 'Tap again to confirm';
+            setTimeout(function() {
+                if (btnClearHistory.dataset.confirm === '1') {
+                    delete btnClearHistory.dataset.confirm;
+                    btnClearHistory.textContent = 'Clear history';
+                }
+            }, 3000);
+        });
+    }
 
     // Find in document
     var btnFind = document.getElementById('btnFind');
@@ -1492,10 +2159,12 @@ function attachEvents() {
         pageJump.addEventListener('blur', function() { hidePageJump(true); });
     }
 
-    // Browser Back/Forward: mirror the #file hash
+    // Browser Back/Forward: mirror whatever the hash points at.
     window.addEventListener('popstate', function() {
-        if (parseHash()) { openFromHash(true); }
-        else if (currentPdf) { goBack(true); }
+        var route = parseRoute();
+        if (route.type === 'file') { openFromHash(true); return; }
+        if (currentPdf) goBack(true);
+        applyRoute(route, true);
     });
 
     if (thumbRailList) {
@@ -1559,7 +2228,10 @@ function attachEvents() {
         sidebarOverlay.classList.toggle('visible');
     });
 
-    searchInput.addEventListener('input', function(e) { filterFiles(e.target.value); });
+    searchInput.addEventListener('input', function(e) { 
+        filterFiles(e.target.value);
+        updateClearFiltersVisibility();
+    });
     sidebarOverlay.addEventListener('click', closeSidebar);
 
     // Close modal on background click

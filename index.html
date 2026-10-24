@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=14">
+    <link rel="stylesheet" href="assets/css/style.css?v=15">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7296278909904240"
      crossorigin="anonymous"></script>
 </head>
@@ -107,28 +107,6 @@
             </div>
         </div>
 
-        <!-- Search -->
-        <div class="search-container">
-            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search files...">
-        </div>
-        <div class="filter-chips" id="filterChips" role="group" aria-label="Filter files">
-            <button class="filter-chip active" data-filter="all">All</button>
-            <button class="filter-chip" data-filter="pdf">PDF</button>
-            <button class="filter-chip" data-filter="html">Notes</button>
-            <button class="filter-chip" data-filter="ppt">PPT</button>
-            <button class="filter-chip" data-filter="fav">★ Starred</button>
-            <button class="filter-chip" data-filter="todo">To read</button>
-        </div>
-        <div class="search-empty" id="searchEmpty" style="display: none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <span id="searchEmptyText">No files found</span>
-            <button type="button" class="btn-clear-search" id="btnClearSearch" onclick="clearSearch()">Clear</button>
-        </div>
-
         <!-- Stats -->
         <div class="stats-bar">
             <div class="stat">
@@ -156,6 +134,52 @@
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
+        <!-- Global search & filters -->
+        <div class="search-bar" id="searchBar">
+            <div class="search-container">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="search-input" id="searchInput"
+                       placeholder="Search files, subjects, units, topics..."
+                       aria-label="Search all resources" autocomplete="off">
+            </div>
+            <div class="filter-chips" id="filterChips" role="group" aria-label="Filter by resource type">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="pdf">PDFs</button>
+                <button class="filter-chip" data-filter="ppt">PPTs</button>
+                <button class="filter-chip" data-filter="notes">Notes</button>
+                <button class="filter-chip" data-filter="question-paper">Question papers</button>
+                <button class="filter-chip" data-filter="lab-manual">Lab manuals</button>
+            </div>
+            <div class="unit-filter-chips" role="group" aria-label="Filter by unit">
+                <button class="unit-filter-chip active" data-unit="">All units</button>
+                <button class="unit-filter-chip" data-unit="Unit 1">Unit 1</button>
+                <button class="unit-filter-chip" data-unit="Unit 2">Unit 2</button>
+                <button class="unit-filter-chip" data-unit="Unit 3">Unit 3</button>
+                <button class="unit-filter-chip" data-unit="Lab Manuals">Lab</button>
+            </div>
+            <div class="subject-filter-chips" id="subjectFilterChips" role="group" aria-label="Filter by subject">
+                <!-- Populated by JS -->
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <p class="result-count" id="resultCount" role="status" aria-live="polite"></p>
+                <button id="clearFiltersBtn" class="btn-clear-filters" style="display:none;" aria-label="Clear all filters">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    Clear filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Breadcrumb bar for non-home views -->
+        <div class="view-bar" id="viewBar" style="display: none;">
+            <h1 class="view-title" id="viewTitle"></h1>
+        </div>
+
         <!-- Welcome Screen -->
         <div class="welcome-screen" id="welcomeScreen">
             <div class="welcome-card">
@@ -165,12 +189,33 @@
                         <span>Semester 5 · Study Hub</span>
                     </div>
                     <h2 class="welcome-title">Welcome to <span class="grad">NoteVault</span></h2>
-                    <p class="welcome-text">All your 5th semester materials in one place — PDFs, notes and presentations, organized by subject. Pick a subject to start reading.</p>
+                    <p class="welcome-text">All your 5th semester materials in one place. Pick a unit or a subject to start reading.</p>
                     <div class="welcome-stats">
                         <span class="stat-chip"><b id="chipFiles">0</b>&nbsp;files</span>
                         <span class="stat-chip"><b id="chipSubjects">0</b>&nbsp;subjects</span>
                     </div>
                 </div>
+
+                <div class="continue-section" id="continueSection" style="display: none;">
+                    <div class="continue-header">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Continue studying</span>
+                        <button type="button" class="btn-text" id="continueClear">Clear history</button>
+                    </div>
+                    <div class="continue-grid" id="continueGrid"></div>
+                    <p class="continue-empty" id="continueEmpty" style="display: none;">Resources you open will appear here.</p>
+                </div>
+
+                <div class="unit-section">
+                    <div class="section-heading">
+                        <h3>Browse by unit</h3>
+                        <span class="section-hint">Unit 1 · Unit 2 · Unit 3 · Lab Manuals</span>
+                    </div>
+                    <div class="unit-cards" id="unitCards">
+                        <!-- Unit cards, populated by JS -->
+                    </div>
+                </div>
+
                 <div class="recent-section" id="favoritesSection" style="display: none;">
                     <div class="recent-header">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -178,18 +223,21 @@
                     </div>
                     <div class="recent-row" id="favoritesRow"></div>
                 </div>
-                <div class="recent-section" id="recentSection" style="display: none;">
-                    <div class="recent-header">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <span>Recently opened</span>
-                    </div>
-                    <div class="recent-row" id="recentRow"></div>
-                </div>
+
                 <div class="subject-cards" id="subjectCards">
                     <!-- Subject cards, populated by JS -->
                 </div>
             </div>
         </div>
+
+        <!-- Unit / All-resources view -->
+        <div class="list-view" id="viewCategory" style="display: none;"></div>
+
+        <!-- Subject file view -->
+        <div class="list-view" id="viewSubject" style="display: none;"></div>
+
+        <!-- Search results view -->
+        <div class="list-view" id="viewSearch" style="display: none;"></div>
 
         <!-- PDF Viewer -->
         <div class="pdf-viewer" id="pdfViewer" style="display: none;">
