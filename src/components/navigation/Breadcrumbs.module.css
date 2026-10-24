@@ -1,0 +1,38 @@
+.nav {
+  display: flex;
+  align-items: center;
+  min-height: 18px;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+}
+
+.link {
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.link:hover {
+  color: var(--accent);
+}
+
+.current {
+  color: var(--text-secondary);
+  font-weight: var(--weight-medium);
+}
+
+.separator {
+  color: var(--border-strong);
+  flex-shrink: 0;
+}

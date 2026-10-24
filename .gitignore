@@ -4,3 +4,19 @@
 .vscode/
 github-profile/
 .vercel
+
+# Build output and dependencies
+node_modules/
+dist/
+
+# Local-only reference copies from the migration
+.migration-backup/
+legacy_vanilla/
+check_path.py
+read_files.py
+
+# Tooling caches
+.vite/
+coverage/
+test-results/
+playwright-report/

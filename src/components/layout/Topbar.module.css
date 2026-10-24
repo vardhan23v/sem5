@@ -1,0 +1,171 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topbar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--topbar-height);
+  padding: 0 var(--content-pad-lg);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-app) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.brandName {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.brandDivider {
+  color: var(--border-strong);
+  font-size: var(--text-sm);
+}
+
+.brandSection {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.iconBtn {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.iconBtn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* The hamburger only exists below the sidebar breakpoint. */
+.left > .iconBtn {
+  display: none;
+}
+
+.right > .iconBtn {
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: var(--radius-full);
+  background: var(--accent-strong);
+  color: #fff;
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  line-height: 14px;
+  text-align: center;
+}
+
+.searchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 34px;
+  padding: 0 var(--space-2) 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.searchBtn:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.searchBtnActive {
+  border-color: var(--border-accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 20px;
+  padding: 0 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+
+@media (max-width: 1023px) {
+  .topbar {
+    padding: 0 var(--content-pad-md);
+  }
+
+  .left > .iconBtn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 0 var(--content-pad-sm);
+  }
+
+  .brandSection,
+  .brandDivider {
+    display: none;
+  }
+
+  .searchLabel,
+  .kbd {
+    display: none;
+  }
+
+  .searchBtn {
+    width: 34px;
+    padding: 0;
+    justify-content: center;
+  }
+}

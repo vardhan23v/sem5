@@ -1,293 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="theme-color" content="#faf9ff">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>NoteVault | Semester 5</title>
-    <meta name="description" content="Access and read all your 5th semester study materials — PDFs and notes organized by subject.">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="NoteVault — Semester 5">
-    <meta property="og:description" content="5th semester study materials — PDFs, notes and presentations, organized by subject and readable in the browser.">
-    <meta property="og:url" content="https://vardhan23v.github.io/sem5/">
-    <meta property="og:image" content="https://vardhan23v.github.io/sem5/icons/icon-512.png">
-    <meta name="twitter:card" content="summary">
-    <link rel="canonical" href="https://vardhan23v.github.io/sem5/">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="apple-touch-icon" href="icons/icon-180.png">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=16">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7296278909904240"
-     crossorigin="anonymous"></script>
-</head>
-<body>
-
-    <!-- Mobile top bar (theme toggle + menu) -->
-    <div class="mobile-topbar">
-        <button class="theme-toggle mobile-theme-btn" id="btnThemeMobile" aria-label="Toggle theme" title="Toggle Theme">
-            <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
-    </div>
-
-    <!-- Navigation Rail (desktop) -->
-    <nav class="nav-rail" aria-label="Primary">
-        <div class="rail-logo" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </div>
-        <button class="rail-btn" id="railHome" aria-label="Home" title="Home">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
-        </button>
-        <button class="rail-btn" id="railSearch" aria-label="Search" title="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <span>Search</span>
-        </button>
-        <button class="rail-btn" id="railSubjects" aria-label="Subjects" title="Subjects">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            <span>Subjects</span>
-        </button>
-        <div class="rail-spacer"></div>
-        <button class="rail-fab" id="railFab" aria-label="Open all files" title="Open all files">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            <span>Files</span>
-        </button>
-    </nav>
-
-    <!-- Ambient Background -->
-    <div class="ambient-bg">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
-
-    <!-- Subject Sheet -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sheet-handle"></div>
-        <div class="sidebar-header">
-            <button class="sidebar-toggle theme-toggle" id="btnTheme" aria-label="Toggle theme" title="Toggle Theme">
-                <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-                <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                </svg>
-            </button>
-            <div class="logo">
-                <div class="logo-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="logo-title">NoteVault</h1>
-                    <span class="logo-subtitle">Semester 5</span>
-                </div>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="sidebar-toggle" id="btnShare" aria-label="Share" title="Copy Link">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                </button>
-                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-bar">
-            <div class="stat">
-                <span class="stat-number" id="totalPdfs">0</span>
-                <span class="stat-label">Files</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number" id="totalSubjects">0</span>
-                <span class="stat-label">Subjects</span>
-            </div>
-        </div>
-
-        <!-- Subject List -->
-        <nav class="subject-list" id="subjectList">
-            <!-- Dynamically populated -->
-        </nav>
-
-        <!-- Sidebar Footer -->
-        <div class="sidebar-footer">
-            <div class="views-counter">
-                <a href="https://github.com/vardhan23v/sem5" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; font-size: 0.75rem; opacity: 0.7;">vardhan23v/sem5 · GitHub</a>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-
-        <!-- Breadcrumb bar for non-home views -->
-        <div class="view-bar" id="viewBar" style="display: none;">
-            <h1 class="view-title" id="viewTitle"></h1>
-        </div>
-
-        <!-- Browse by unit -->
-        <section class="unit-section">
-            <div class="section-heading">
-                <h3>Browse by unit</h3>
-                <span class="section-hint">Unit 1 · Unit 2 · Unit 3 · Lab Manuals</span>
-            </div>
-            <div class="unit-cards" id="unitCards">
-                <!-- Unit cards, populated by JS -->
-            </div>
-        </section>
-
-        <!-- All Resources -->
-        <section class="all-resources-section">
-            <div class="section-heading">
-                <h3>All Resources</h3>
-                <span class="section-hint"><span id="totalFiles">0</span> files across <span id="totalSubjects">0</span> subjects</span>
-            </div>
-            <div class="resource-grid" id="resourceGrid">
-                <!-- All resources, populated by JS -->
-            </div>
-        </section>
-
-        <!-- Continue Studying -->
-        <div class="continue-section" id="continueSection" style="display: none;">
-            <div class="continue-header">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span>Continue studying</span>
-                <button type="button" class="btn-text" id="continueClear">Clear history</button>
-            </div>
-            <div class="continue-grid" id="continueGrid"></div>
-            <p class="continue-empty" id="continueEmpty" style="display: none;">Resources you open will appear here.</p>
-        </div>
-
-        <!-- Browse by subject -->
-        <section class="subject-section">
-            <div class="section-heading">
-                <h3>Browse by subject</h3>
-                <span class="section-hint">Click a subject to explore its resources</span>
-            </div>
-            <div class="subject-cards" id="subjectCards">
-                <!-- Subject cards, populated by JS -->
-            </div>
-        </section>
-
-        <!-- Favorites -->
-        <div class="favorites-section" id="favoritesSection" style="display: none;">
-            <div class="favorites-header">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span>Favorites</span>
-            </div>
-            <div class="favorites-row" id="favoritesRow"></div>
-        </div>
-
-    </main></main>
-
-    <!-- Mobile overlay for sidebar -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Mobile bottom navigation -->
-    <nav class="bottom-nav" id="bottomNav">
-        <button class="bottom-nav-btn" id="navHome" aria-label="Home" title="Home">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Home</span>
-        </button>
-        <button class="bottom-nav-btn" id="navSearch" aria-label="Search" title="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <span>Search</span>
-        </button>
-        <button class="bottom-nav-btn" id="navSubjects" aria-label="Subjects" title="Subjects">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            <span>Subjects</span>
-        </button>
-    </nav>
-
-    <!-- Keyboard Shortcuts Modal -->
-    <div class="modal" id="shortcutsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Keyboard Shortcuts</h3>
-                <button class="modal-close" onclick="closeShortcutsModal()" aria-label="Close">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="shortcuts-grid">
-                    <div class="shortcut-item">
-                        <kbd>→</kbd> <kbd>↓</kbd>
-                        <span>Next Page</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>←</kbd> <kbd>↑</kbd>
-                        <span>Previous Page</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>+</kbd> <kbd>=</kbd>
-                        <span>Zoom In</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>-</kbd>
-                        <span>Zoom Out</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>f</kbd>
-                        <span>Toggle Fullscreen</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>t</kbd>
-                        <span>Toggle Thumbnails</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>Home</kbd> <kbd>End</kbd>
-                        <span>First / Last Page</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>Ctrl</kbd> <kbd>F</kbd>
-                        <span>Find in Document</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>d</kbd>
-                        <span>Mark as Done</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>Esc</kbd>
-                        <span>Back / Close Modal</span>
-                    </div>
-                    <div class="shortcut-item">
-                        <kbd>?</kbd>
-                        <span>Show Shortcuts</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js" defer></script>
-    <script src="assets/js/firebase-presence.js?v=5" defer></script>
-    <script src="assets/js/app.js?v=24"></script>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0F0E13" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>NoteVault — Semester 5 Study Hub</title>
+    <meta
+      name="description"
+      content="Semester 5 study materials — PDFs, notes, question banks and lab manuals, organised by subject and readable in the browser."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NoteVault — Semester 5" />
+    <meta
+      property="og:description"
+      content="Semester 5 study materials — PDFs, notes and presentations, organised by subject and readable in the browser."
+    />
+    <meta property="og:url" content="https://vardhan23v.github.io/sem5/" />
+    <meta property="og:image" content="https://vardhan23v.github.io/sem5/icons/icon-512.png" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://vardhan23v.github.io/sem5/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('sw.js').catch(function() {});
-            });
-        }
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var saved = localStorage.getItem('notevault_theme');
+        document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
+      } catch (e) {}
     </script>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="padding: 24px; font-family: system-ui, sans-serif">
+        NoteVault needs JavaScript to render the library.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Offline shell is a production nicety; skip it during local development.
+      if (
+        'serviceWorker' in navigator &&
+        location.hostname !== 'localhost' &&
+        location.hostname !== '127.0.0.1'
+      ) {
+        window.addEventListener('load', function () {
+          // updateViaCache: 'none' keeps a new deployment from being masked by
+          // an HTTP-cached service worker file.
+          navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function () {});
+        });
+      }
+    </script>
+  </body>
 </html>

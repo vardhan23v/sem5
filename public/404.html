@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page not found · NoteVault</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0F0E13" />
+    <link rel="icon" type="image/svg+xml" href="/sem5/favicon.svg" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f0e13;
+        --surface: #17161f;
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #f4f2fa;
+        --muted: #a5a1b5;
+        --accent: #a78bfa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(60% 42% at 78% -8%, rgba(139, 92, 246, 0.1), transparent 70%),
+          var(--bg);
+        color: var(--text);
+        font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      main {
+        width: 100%;
+        max-width: 420px;
+        padding: 32px 28px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--surface);
+        text-align: center;
+      }
+      .code {
+        margin: 0;
+        color: var(--accent);
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      h1 {
+        margin: 4px 0 10px;
+        font-size: 18px;
+      }
+      p {
+        margin: 0 0 24px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        padding: 0 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+      }
+      a.primary {
+        border-color: transparent;
+        background: #8b5cf6;
+        color: #fff;
+      }
+    </style>
+    <script>
+      // Hash routing means every app route lives under /sem5/#/…. If someone
+      // reaches a path-based deep link, forward it to the matching hash route.
+      (function () {
+        var base = '/sem5/';
+        var path = location.pathname;
+        if (path.indexOf(base) === 0 && path !== base && path !== base + 'index.html') {
+          var rest = path.slice(base.length - 1);
+          location.replace(base + '#' + rest + location.search);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>That page isn't in the vault</h1>
+      <p>
+        The link may be out of date. Every resource is still available from the dashboard, search
+        or subject list.
+      </p>
+      <div class="actions">
+        <a class="primary" href="/sem5/">Back to NoteVault</a>
+        <a href="/sem5/#/search">Search resources</a>
+      </div>
+    </main>
+  </body>
+</html>
