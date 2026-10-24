@@ -4,7 +4,7 @@ const APP_SHELL = [
   './index.html',
   './assets/css/style.css?v=14',
   './assets/js/firebase-presence.js?v=5',
-  './assets/js/app.js?v=23',
+  './assets/js/app.js?v=24',
   './favicon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png'

@@ -20,6 +20,7 @@ var SUBJECTS = [
         files: [
             { name: "CNC Unit 1.pdf", path: "CNC/CNC UNIT 1.pdf", size: "27.0 MB" },
             { name: "CNC Unit 2.pdf", path: "CNC/CNC UNIT 2.pdf", size: "23.1 MB" },
+            { name: "CNC Unit 2 — Handwritten Notes.pdf", path: "CNC/CNC_Unit 2.pdf", size: "4.8 MB" },
             { name: "CNC Problems.pdf", path: "CNC/CNC PROBLEMS.pdf", size: "6.5 MB" },
             { name: "Unit 1 — Important Questions & Answers.pdf", path: "CNC/Computer_Network_Unit_1_Important_Questions_Answers.pdf", size: "2.7 MB" },
             { name: "Computer Networks — Unit 1 (HTML)", path: "CNC/unit1-computer-networks_1.html", size: "56 KB" },
@@ -84,6 +85,7 @@ var SUBJECTS = [
             { name: "Unit 1 — Automata Solved & Animated (HTML)", path: "TOC/CS3103-1_Unit1_TOC_Notes.html", size: "48 KB" },
             { name: "DFA Mastery — Live Machines (HTML)", path: "TOC/CS3103-1_DFA_Mastery.html", size: "44 KB" },
             { name: "TOC — MSE 1 Question Paper.pdf", path: "TOC/TOC MSE1.pdf", size: "18.8 MB" },
+            { name: "TOC — MSE 2 Notes.pdf", path: "TOC/TOC MSE-2 notes.pdf", size: "23.2 MB" },
             { name: "TOC — MCQs with Answers.pdf", path: "TOC/TOC_MCQs_with_Answers-1.pdf", size: "185 KB" }
         ]
     },
