@@ -134,221 +134,66 @@
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <!-- Global search & filters -->
-        <div class="search-bar" id="searchBar">
-            <div class="search-container">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" class="search-input" id="searchInput"
-                       placeholder="Search files, subjects, units, topics..."
-                       aria-label="Search all resources" autocomplete="off">
-            </div>
-            <div class="filter-chips" id="filterChips" role="group" aria-label="Filter by resource type">
-                <button class="filter-chip active" data-filter="all">All</button>
-                <button class="filter-chip" data-filter="pdf">PDFs</button>
-                <button class="filter-chip" data-filter="ppt">PPTs</button>
-                <button class="filter-chip" data-filter="notes">Notes</button>
-                <button class="filter-chip" data-filter="question-paper">Question papers</button>
-                <button class="filter-chip" data-filter="lab-manual">Lab manuals</button>
-            </div>
-            <div class="unit-filter-chips" role="group" aria-label="Filter by unit">
-                <button class="unit-filter-chip active" data-unit="">All units</button>
-                <button class="unit-filter-chip" data-unit="Unit 1">Unit 1</button>
-                <button class="unit-filter-chip" data-unit="Unit 2">Unit 2</button>
-                <button class="unit-filter-chip" data-unit="Unit 3">Unit 3</button>
-                <button class="unit-filter-chip" data-unit="Lab Manuals">Lab</button>
-            </div>
-            <div class="subject-filter-chips" id="subjectFilterChips" role="group" aria-label="Filter by subject">
-                <!-- Populated by JS -->
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                <p class="result-count" id="resultCount" role="status" aria-live="polite"></p>
-                <button id="clearFiltersBtn" class="btn-clear-filters" style="display:none;" aria-label="Clear all filters">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                    Clear filters
-                </button>
-            </div>
-        </div>
 
         <!-- Breadcrumb bar for non-home views -->
         <div class="view-bar" id="viewBar" style="display: none;">
             <h1 class="view-title" id="viewTitle"></h1>
         </div>
 
-        <!-- Welcome Screen -->
-        <div class="welcome-screen" id="welcomeScreen">
-            <div class="welcome-card">
-                <div class="welcome-hero">
-                    <div class="welcome-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                        <span>Semester 5 · Study Hub</span>
-                    </div>
-                    <h2 class="welcome-title">Welcome to <span class="grad">NoteVault</span></h2>
-                    <p class="welcome-text">All your 5th semester materials in one place. Pick a unit or a subject to start reading.</p>
-                    <div class="welcome-stats">
-                        <span class="stat-chip"><b id="chipFiles">0</b>&nbsp;files</span>
-                        <span class="stat-chip"><b id="chipSubjects">0</b>&nbsp;subjects</span>
-                    </div>
-                </div>
-
-                <div class="continue-section" id="continueSection" style="display: none;">
-                    <div class="continue-header">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <span>Continue studying</span>
-                        <button type="button" class="btn-text" id="continueClear">Clear history</button>
-                    </div>
-                    <div class="continue-grid" id="continueGrid"></div>
-                    <p class="continue-empty" id="continueEmpty" style="display: none;">Resources you open will appear here.</p>
-                </div>
-
-                <div class="unit-section">
-                    <div class="section-heading">
-                        <h3>Browse by unit</h3>
-                        <span class="section-hint">Unit 1 · Unit 2 · Unit 3 · Lab Manuals</span>
-                    </div>
-                    <div class="unit-cards" id="unitCards">
-                        <!-- Unit cards, populated by JS -->
-                    </div>
-                </div>
-
-                <div class="recent-section" id="favoritesSection" style="display: none;">
-                    <div class="recent-header">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <span>Favorites</span>
-                    </div>
-                    <div class="recent-row" id="favoritesRow"></div>
-                </div>
-
-                <div class="subject-cards" id="subjectCards">
-                    <!-- Subject cards, populated by JS -->
-                </div>
+        <!-- Browse by unit -->
+        <section class="unit-section">
+            <div class="section-heading">
+                <h3>Browse by unit</h3>
+                <span class="section-hint">Unit 1 · Unit 2 · Unit 3 · Lab Manuals</span>
             </div>
+            <div class="unit-cards" id="unitCards">
+                <!-- Unit cards, populated by JS -->
+            </div>
+        </section>
+
+        <!-- All Resources -->
+        <section class="all-resources-section">
+            <div class="section-heading">
+                <h3>All Resources</h3>
+                <span class="section-hint"><span id="totalFiles">0</span> files across <span id="totalSubjects">0</span> subjects</span>
+            </div>
+            <div class="resource-grid" id="resourceGrid">
+                <!-- All resources, populated by JS -->
+            </div>
+        </section>
+
+        <!-- Continue Studying -->
+        <div class="continue-section" id="continueSection" style="display: none;">
+            <div class="continue-header">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Continue studying</span>
+                <button type="button" class="btn-text" id="continueClear">Clear history</button>
+            </div>
+            <div class="continue-grid" id="continueGrid"></div>
+            <p class="continue-empty" id="continueEmpty" style="display: none;">Resources you open will appear here.</p>
         </div>
 
-        <!-- Unit / All-resources view -->
-        <div class="list-view" id="viewCategory" style="display: none;"></div>
-
-        <!-- Subject file view -->
-        <div class="list-view" id="viewSubject" style="display: none;"></div>
-
-        <!-- Search results view -->
-        <div class="list-view" id="viewSearch" style="display: none;"></div>
-
-        <!-- PDF Viewer -->
-        <div class="pdf-viewer" id="pdfViewer" style="display: none;">
-            <!-- Top Bar -->
-            <div class="viewer-topbar">
-                <button class="btn-back" id="btnBack" aria-label="Go back">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                    <span>Back</span>
-                </button>
-                <div class="viewer-title" id="viewerTitle">Document Title</div>
-                <div class="viewer-controls">
-                    <button class="btn-control" id="btnZoomOut" aria-label="Zoom out" title="Zoom Out">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                    </button>
-                    <span class="zoom-level" id="zoomLevel">100%</span>
-                    <button class="btn-control" id="btnZoomIn" aria-label="Zoom in" title="Zoom In">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                    </button>
-                    <div class="control-divider"></div>
-                    <button class="btn-control" id="btnPrevPage" aria-label="Previous page" title="Previous Page">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <span class="page-info page-info-clickable" id="pageInfo" role="button" tabindex="0" title="Jump to page">1 / 1</span>
-                    <input type="number" class="page-jump" id="pageJump" min="1" aria-label="Go to page" style="display:none;">
-                    <button class="btn-control" id="btnNextPage" aria-label="Next page" title="Next Page">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
-                    <div class="control-divider"></div>
-                    <button class="btn-control" id="btnTwoPage" aria-label="Toggle two-page view" title="Two-Page View">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
-                    </button>
-                    <button class="btn-control" id="btnDownload" aria-label="Download" title="Download">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    </button>
-                    <button class="btn-control" id="btnFind" aria-label="Find in document" title="Find in document (Ctrl+F)">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
-                    </button>
-                    <button class="btn-control" id="btnShortcuts" aria-label="Keyboard shortcuts" title="Keyboard Shortcuts">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg>
-                    </button>
-                    <button class="btn-control" id="btnThumbs" aria-label="Page thumbnails" title="Page Thumbnails">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    </button>
-                    <button class="btn-control theme-toggle" id="themeToggleViewer" aria-label="Toggle dark mode" title="Toggle dark mode">
-                        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                    </button>
-                    <button class="btn-control" id="btnFullscreen" aria-label="Toggle fullscreen" title="Fullscreen">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                    </button>
-                </div>
+        <!-- Browse by subject -->
+        <section class="subject-section">
+            <div class="section-heading">
+                <h3>Browse by subject</h3>
+                <span class="section-hint">Click a subject to explore its resources</span>
             </div>
-
-            <!-- Reading progress bar -->
-            <div class="viewer-progress" id="viewerProgress"><div class="viewer-progress-fill" id="viewerProgressFill"></div></div>
-
-            <!-- Find in document -->
-            <div class="find-bar" id="findBar" style="display:none;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" class="find-input" id="findInput" placeholder="Find in document…" aria-label="Find in document">
-                <span class="find-status" id="findStatus"></span>
-                <button class="btn-control find-nav" id="findPrev" aria-label="Previous match" title="Previous match (Shift+Enter)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg></button>
-                <button class="btn-control find-nav" id="findNext" aria-label="Next match" title="Next match (Enter)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
-                <button class="btn-control find-nav" id="findClose" aria-label="Close find" title="Close (Esc)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <div class="subject-cards" id="subjectCards">
+                <!-- Subject cards, populated by JS -->
             </div>
+        </section>
 
-            <!-- Body: thumbnail rail + document canvas -->
-            <div class="viewer-body">
-                <div class="thumb-rail" id="thumbRail">
-                    <div class="thumb-rail-list" id="thumbRailList"></div>
-                </div>
-
-            <!-- PDF Canvas Container -->
-            <div class="pdf-canvas-container" id="pdfCanvasContainer">
-                <div class="loading-spinner" id="loadingSpinner">
-                    <div class="spinner"></div>
-                    <p>Loading document...</p>
-                </div>
-                <div class="pages-wrapper" id="pagesWrapper">
-                    <canvas id="pdfCanvas"></canvas>
-                    <canvas id="pdfCanvas2" style="display:none;"></canvas>
-                </div>
-                <iframe id="noteViewer" class="note-iframe" style="display:none;" allowfullscreen></iframe>
-                <div id="pptFallback" class="ppt-fallback" style="display:none;">
-                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    <h3>Presentation preview needs the live site</h3>
-                    <p>PowerPoint previews use Microsoft's online viewer, which can't reach a local server. Open this on the deployed site, or download the file instead.</p>
-                    <button id="pptFallbackDownload" class="ppt-download-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Download PPT
-                    </button>
-                </div>
-                <img id="imageViewer" class="image-viewer" alt="Note image" style="display:none;">
+        <!-- Favorites -->
+        <div class="favorites-section" id="favoritesSection" style="display: none;">
+            <div class="favorites-header">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Favorites</span>
             </div>
-            </div><!-- /viewer-body -->
-
-            <!-- Bottom Bar -->
-            <div class="viewer-bottombar" id="viewerBottombar">
-                <button class="btn-control" id="btnPrevPageBot" aria-label="Previous page" title="Previous Page">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <span class="page-info" id="pageInfoBot">1 / 1</span>
-                <button class="btn-control" id="btnNextPageBot" aria-label="Next page" title="Next Page">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
+            <div class="favorites-row" id="favoritesRow"></div>
         </div>
-    </main>
+
+    </main></main>
 
     <!-- Mobile overlay for sidebar -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>

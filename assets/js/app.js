@@ -393,9 +393,9 @@ function getFileLabel(path) {
 var sidebar = document.getElementById('sidebar');
 var sidebarOverlay = document.getElementById('sidebarOverlay');
 var subjectList = document.getElementById('subjectList');
-var searchInput = document.getElementById('searchInput');
+var searchInput = null;
 var totalPdfsEl = document.getElementById('totalPdfs');
-var welcomeScreen = document.getElementById('welcomeScreen');
+var welcomeScreen = null;
 var pdfViewer = document.getElementById('pdfViewer');
 var viewerTitle = document.getElementById('viewerTitle');
 var pdfCanvas = document.getElementById('pdfCanvas');
@@ -534,12 +534,12 @@ function setRoute(hash, replace) {
 }
 
 function renderView() {
-    var home = document.getElementById('welcomeScreen');
+    var home = null;
     var cat = document.getElementById('viewCategory');
     var sub = document.getElementById('viewSubject');
     var sea = document.getElementById('viewSearch');
     var bar = document.getElementById('viewBar');
-    var count = document.getElementById('resultCount');
+    var count = null;
 
     if (count) count.style.display = currentView.name === 'search' ? '' : 'none';
 
@@ -717,7 +717,7 @@ function renderSearchResults() {
 
     renderBreadcrumb([{ label: 'Home', href: '#' }, { label: 'Search' }]);
 
-    var summary = document.getElementById('resultCount');
+    var summary = null;
     if (summary) {
         summary.textContent = results.length +
             (results.length === 1 ? ' result' : ' results') +
@@ -2046,7 +2046,7 @@ function setSubjectFilter(subject) {
 }
 
 function updateClearFiltersVisibility() {
-    var btn = document.getElementById('clearFiltersBtn');
+    var btn = null;
     if (!btn) return;
     var hasActiveFilters = 
         activeFilter !== 'all' || 
@@ -2098,7 +2098,7 @@ function attachEvents() {
     });
 
     // Clear filters button
-    var clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    var clearFiltersBtn = null;
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', clearAllFilters);
     }
