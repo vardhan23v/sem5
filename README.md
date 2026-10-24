@@ -62,6 +62,14 @@ scripts/copy-resources.mjs copies indexed files into dist/ after a build
 public/                   service worker, 404 fallback, manifest, icons
 ```
 
+## Recently Added & resource dates
+
+Every resource carries an `addedAt` timestamp (`Resource` in `src/types/index.ts`) that powers the homepage "Recently added" section, the sidebar item and the `/recent` view, newest first. The dates are not hand-written: `scripts/index-added.mjs` derives them from Git history — the most recent commit that added a resource's current path (`git log --diff-filter=A --no-renames --format=%cI`) — and writes them to `src/data/added-dates.json`, which `src/data/subjects.ts` and `src/lib/library.ts` join back onto every resource. Rename following is deliberately off, so a resource moved between subject folders is dated by the commit that placed it in its current location rather than an older, unrelated file. The script runs automatically via the npm pre-hooks (`predev`/`pretest`/`prebuild`) and can also be run directly with `npm run index:added`.
+
+- **Uncommitted files** have no Git date, so only for those the script falls back to the file's creation (birth) time as a provisional date and warns while doing so. Once the file is committed, the next build replaces it with the real commit date.
+- **CI** checks out with `fetch-depth: 0` because date indexing needs full Git history; shallow checkouts keep the previously committed JSON instead of corrupting dates.
+- Resources with no reliable date (never committed *and* unreadable creation time) are excluded from the newest-first list rather than being faked.
+
 ## Run locally
 
 Requires Node.js 22.13 or newer.

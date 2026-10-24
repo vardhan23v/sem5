@@ -1,0 +1,187 @@
+.row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto auto;
+  grid-template-areas: 'icon body date arrow';
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 60px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Deliberately no translate lift here: the section animates the list rows in
+   and a translateY hover would fight the entrance keyframes on small screens. */
+.row:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------- kind box -------------------------------- */
+
+.icon {
+  grid-area: icon;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-inset);
+  color: var(--text-secondary);
+  transition:
+    color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.row:hover .icon {
+  transform: translateY(-1px);
+}
+
+/* Kind palettes mirror ui.css `.nv-kind--*` and tint via currentColor. */
+.iconPdf {
+  color: #f87171;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-color: color-mix(in srgb, currentColor 26%, transparent);
+}
+
+.iconPpt {
+  color: #fb923c;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-color: color-mix(in srgb, currentColor 26%, transparent);
+}
+
+.iconNotes {
+  color: #a78bfa;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-color: color-mix(in srgb, currentColor 26%, transparent);
+}
+
+.iconQuestionPaper {
+  color: #38bdf8;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-color: color-mix(in srgb, currentColor 26%, transparent);
+}
+
+.iconLabManual {
+  color: #34d399;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-color: color-mix(in srgb, currentColor 26%, transparent);
+}
+
+/* ---------------------------------- body ----------------------------------- */
+
+.body {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--text-2xs);
+  white-space: nowrap;
+}
+
+.subject {
+  flex-shrink: 0;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--bg-inset);
+  color: var(--text-secondary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+}
+
+.units {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note {
+  font-weight: var(--weight-medium);
+}
+
+/* ---------------------------------- date ----------------------------------- */
+
+.date {
+  grid-area: date;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: var(--text-2xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.date svg {
+  color: var(--text-muted);
+}
+
+/* --------------------------------- arrow ----------------------------------- */
+
+.arrow {
+  grid-area: arrow;
+  color: var(--text-secondary);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.row:hover .arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* --------------------------------- mobile ---------------------------------- */
+
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon body arrow'
+      'icon date arrow';
+    align-content: center;
+    gap: 2px var(--space-2);
+    min-height: 0;
+    padding: var(--space-3);
+  }
+
+  .date {
+    justify-self: start;
+  }
+}

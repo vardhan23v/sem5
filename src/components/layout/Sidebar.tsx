@@ -2,8 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
   Bookmark,
+  Clock3,
   Files,
   House,
+  Layers,
   LibraryBig,
   Moon,
   Search,
@@ -19,6 +21,8 @@ import styles from './Sidebar.module.css';
 const NAV = [
   { to: '/', label: 'Home', icon: House, end: true },
   { to: '/search', label: 'Search', icon: Search, end: false },
+  { to: '/recent', label: 'Recently added', icon: Clock3, end: false },
+  { to: '/subjects', label: 'Subjects', icon: Layers, end: false },
   { to: '/all', label: 'All resources', icon: Files, end: false },
   { to: '/favorites', label: 'Favourites', icon: Bookmark, end: false },
 ];

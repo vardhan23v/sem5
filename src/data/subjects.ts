@@ -467,6 +467,16 @@ export const RAW_SUBJECTS: SubjectRaw[] = [
         "topic": "DFA minimization · Grammars · Pushdown Automata"
       },
       {
+        "name": "TOC Unit 2 — Handwritten Notes.pdf",
+        "path": "TOC/TOC UNIT 2 NOTES.pdf",
+        "size": "12.7 MB",
+        "units": [
+          "Unit 2"
+        ],
+        "kind": "notes",
+        "topic": "Equivalence & minimization of DFA · distinguishable states"
+      },
+      {
         "name": "TOC — MCQs with Answers.pdf",
         "path": "TOC/TOC_MCQs_with_Answers-1.pdf",
         "size": "185 KB",
@@ -558,6 +568,16 @@ export const RAW_SUBJECTS: SubjectRaw[] = [
         ],
         "kind": "pdf",
         "topic": "Data Analysis using Excel"
+      },
+      {
+        "name": "IDS Unit 2 — Handwritten Notes.pdf",
+        "path": "Data Science/IDS UNIT 2.pdf",
+        "size": "10.0 MB",
+        "units": [
+          "Unit 2"
+        ],
+        "kind": "notes",
+        "topic": "Data quick analysis · conditional formatting · charts · tables"
       },
       {
         "name": "Data Science — Master Notes (HTML)",

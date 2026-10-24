@@ -11,6 +11,7 @@ import { countLabel } from '../lib/format';
 import { UnitCard } from '../components/cards/UnitCard';
 import { SubjectCard } from '../components/cards/SubjectCard';
 import { ContinueStudying } from '../components/cards/ContinueStudying';
+import { RecentlyAdded } from '../components/cards/RecentlyAdded';
 import { SectionHeader } from '../components/common/PageHeader';
 import styles from './HomePage.module.css';
 
@@ -108,7 +109,10 @@ export const HomePage: React.FC = () => (
       </div>
     </section>
 
-    {/* E. Continue studying */}
+    {/* E. Recently added */}
+    <RecentlyAdded />
+
+    {/* F. Continue studying */}
     <ContinueStudying />
   </div>
 );

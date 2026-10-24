@@ -6,6 +6,7 @@ import { AppShell } from './components/layout/AppShell';
 import { RouteFallback } from './components/common/RouteFallback';
 import { HomePage } from './pages/HomePage';
 import { SearchPage } from './pages/SearchPage';
+import { RecentlyAddedPage } from './pages/RecentlyAddedPage';
 import { SubjectsPage } from './pages/SubjectsPage';
 import { SubjectPage } from './pages/SubjectPage';
 import { CategoryPage } from './pages/CategoryPage';
@@ -57,6 +58,7 @@ export const App: React.FC = () => (
         <Route element={<AppShell />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/recent" element={<RecentlyAddedPage />} />
           <Route path="/subjects" element={<SubjectsPage />} />
           <Route path="/subject/:subjectName" element={<SubjectPage />} />
           <Route path="/category/:unitId" element={<CategoryPage />} />

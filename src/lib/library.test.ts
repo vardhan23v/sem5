@@ -15,13 +15,13 @@ import { UNITS } from '../data/units';
 
 describe('library index', () => {
   it('indexes every resource exactly once', () => {
-    expect(library.totalResources).toBe(66);
-    expect(library.totalFiles).toBe(54);
+    expect(library.totalResources).toBe(68);
+    expect(library.totalFiles).toBe(56);
     expect(library.totalImportant).toBe(12);
-    expect(ALL_RESOURCES).toHaveLength(66);
+    expect(ALL_RESOURCES).toHaveLength(68);
 
-    expect(new Set(ALL_RESOURCES.map((resource) => resource.path)).size).toBe(66);
-    expect(new Set(ALL_RESOURCES.map((resource) => resource.id)).size).toBe(66);
+    expect(new Set(ALL_RESOURCES.map((resource) => resource.path)).size).toBe(68);
+    expect(new Set(ALL_RESOURCES.map((resource) => resource.id)).size).toBe(68);
   });
 
   it('keeps the nine existing subjects', () => {
@@ -55,12 +55,12 @@ describe('library index', () => {
 
     expect(UNIT_SUMMARIES.map((summary) => [summary.unit, summary.resourceCount])).toEqual([
       ['Unit 1', 30],
-      ['Unit 2', 11],
+      ['Unit 2', 13],
       ['Unit 3', 9],
       ['Lab Manuals', 5],
     ]);
 
-    expect(UNIT_SUMMARIES.map((summary) => summary.subjectCount)).toEqual([8, 4, 3, 1]);
+    expect(UNIT_SUMMARIES.map((summary) => summary.subjectCount)).toEqual([8, 5, 3, 1]);
   });
 
   it('links unit resources back to their subject', () => {

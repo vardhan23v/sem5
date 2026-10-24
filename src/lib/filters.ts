@@ -1,5 +1,14 @@
 import type { Resource, ResourceFilters } from '../types';
-import { KIND_LABELS } from './library';
+import { KIND_LABELS, isUnit } from './library';
+
+/** Type-filter options shared by the Search and Recently Added views. */
+export const KIND_OPTIONS: Array<{ value: ResourceFilters['kind']; label: string }> = [
+  { value: 'all', label: 'All types' },
+  ...(Object.keys(KIND_LABELS) as Array<keyof typeof KIND_LABELS>).map((kind) => ({
+    value: kind,
+    label: KIND_LABELS[kind],
+  })),
+];
 
 /** Case/whitespace-insensitive normalisation used by search. */
 export function normalizeText(value: string | undefined | null): string {
@@ -53,4 +62,27 @@ export function hasActiveFilters(filters: ResourceFilters): boolean {
     filters.unit !== '' ||
     filters.subject !== ''
   );
+}
+
+/** Parse the shared `?q&kind&unit&subject` params, ignoring unknown values. */
+export function readFilters(params: URLSearchParams): ResourceFilters {
+  const kindParam = params.get('kind');
+  const unit = params.get('unit') ?? '';
+  const subject = params.get('subject') ?? '';
+  return {
+    query: params.get('q') ?? '',
+    kind: KIND_OPTIONS.find((option) => option.value === kindParam)?.value ?? 'all',
+    unit: isUnit(unit) ? unit : '',
+    subject,
+  };
+}
+
+/** Serialise filters back into URL params (empty values are dropped). */
+export function filtersToParams(filters: ResourceFilters): URLSearchParams {
+  const search = new URLSearchParams();
+  if (filters.query) search.set('q', filters.query);
+  if (filters.kind !== 'all') search.set('kind', filters.kind);
+  if (filters.unit) search.set('unit', filters.unit);
+  if (filters.subject) search.set('subject', filters.subject);
+  return search;
 }

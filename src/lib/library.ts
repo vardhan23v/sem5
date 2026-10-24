@@ -1,4 +1,5 @@
 import { RAW_SUBJECTS } from '../data/subjects';
+import addedDates from '../data/added-dates.json';
 import { UNITS } from '../data/units';
 import {
   GENERAL_UNIT,
@@ -57,6 +58,7 @@ function toResource(
     subjectFull: subject.fullName,
     color: subject.color,
     important,
+    addedAt: (addedDates as Record<string, string>)[raw.path] ?? '',
   };
 }
 

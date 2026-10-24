@@ -44,39 +44,8 @@
 
 /* --------------------------------- filters --------------------------------- */
 
-.filters {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
-}
-
-.filterRow {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-}
-
-.filterLabel {
-  flex-shrink: 0;
-  width: 52px;
-  padding-top: 6px;
-  color: var(--text-muted);
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  min-width: 0;
-}
+/* The filter chip groups moved to ResourceFilterPanel (shared with Recently
+   Added); only the status bar needs local styles here. */
 
 /* --------------------------------- status ---------------------------------- */
 
@@ -117,16 +86,6 @@
     align-items: flex-start;
   }
 
-  .filterRow {
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .filterLabel {
-    width: auto;
-    padding-top: 0;
-  }
-
   .hint {
     display: none;
   }
@@ -135,10 +94,6 @@
 @media (max-width: 600px) {
   .title {
     font-size: var(--text-2xl);
-  }
-
-  .filters {
-    padding: var(--space-3);
   }
 
   .grid {

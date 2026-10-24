@@ -52,6 +52,13 @@ export interface Resource {
   color: string;
   /** True for the "important topic" photo scans. */
   important: boolean;
+  /**
+   * When the resource joined the library — ISO timestamp, newest-first key for
+   * Recently Added. Generated from Git history by `scripts/index-added.mjs`;
+   * empty only when the resource has never been committed and the file has no
+   * readable creation time.
+   */
+  addedAt: string;
 }
 
 export interface Subject {

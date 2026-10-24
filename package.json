@@ -15,11 +15,15 @@
   },
   "scripts": {
     "dev": "vite",
+    "predev": "node scripts/index-added.mjs",
+    "pretest": "node scripts/index-added.mjs",
+    "prebuild": "node scripts/index-added.mjs",
     "check": "tsc --noEmit",
     "build": "tsc --noEmit && vite build && node scripts/copy-resources.mjs",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "index:added": "node scripts/index-added.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.61.0",
