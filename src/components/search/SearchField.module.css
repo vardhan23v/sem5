@@ -4,9 +4,13 @@
   gap: var(--space-3);
   height: 48px;
   padding: 0 var(--space-3) 0 var(--space-4);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  /* Subtle glass: the field floats over the page, distinct from the stronger
+     glass of the filter toolbar next to it. */
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   transition:
     border-color var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
@@ -85,5 +89,21 @@
 
   .kbd {
     display: none;
+  }
+}
+
+/* No frosted glass: settle on the solid surface so the value stays readable
+   (mirrors ui.css .nv-glass fallback). */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .field {
+    background: var(--bg-surface);
+  }
+}
+
+/* Touch target: the clear button grows to 40px inside the 44px phone field. */
+@media (max-width: 430px) {
+  .clear {
+    width: 40px;
+    height: 40px;
   }
 }

@@ -19,6 +19,7 @@ export const Topbar: React.FC = () => {
           className={styles.iconBtn}
           onClick={() => setSidebarOpen(true)}
           aria-label="Open navigation"
+          id="sidebar-toggle"
         >
           <Menu size={19} />
         </button>

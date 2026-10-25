@@ -1,3 +1,5 @@
+/* Glass-minimal: breadcrumbs stay quiet they sit under every page header;
+   no surface, just tokens and a clear focus ring. */
 .nav {
   display: flex;
   align-items: center;
@@ -9,6 +11,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1);
+  color: var(--text-muted);
 }
 
 .item {
@@ -19,17 +22,36 @@
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-1);
+  margin: -2px calc(var(--space-1) * -1);
+  border-radius: var(--radius-xs);
   color: var(--text-muted);
   transition: color var(--duration-fast) var(--ease-out);
 }
 
 .link:hover {
-  color: var(--accent);
+  color: var(--accent-text);
+}
+
+.link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .current {
+  padding: 2px var(--space-1);
+  margin: -2px calc(var(--space-1) * -1);
   color: var(--text-secondary);
   font-weight: var(--weight-medium);
+}
+
+/* Touch targets on phones: crumb links reach a 40px box. */
+@media (max-width: 430px) {
+  .link {
+    min-height: 40px;
+  }
 }
 
 .separator {

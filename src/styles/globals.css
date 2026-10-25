@@ -2,7 +2,7 @@
 @import './base.css';
 @import './ui.css';
 
-/* App-level background: a single, very quiet accent wash. */
+/* App-level background: a single, very quiet accent wash (Midnight Glass). */
 body::before {
   content: '';
   position: fixed;
@@ -10,14 +10,15 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(60% 42% at 78% -8%, rgba(139, 92, 246, 0.1), transparent 70%),
-    radial-gradient(48% 38% at 8% 4%, rgba(167, 139, 250, 0.055), transparent 72%);
+    radial-gradient(60% 42% at 78% -8%, rgba(123, 140, 247, 0.1), transparent 70%),
+    radial-gradient(48% 38% at 8% 4%, rgba(145, 160, 255, 0.055), transparent 72%);
 }
 
+/* Frosted Daylight: same composition, indigo tint lifted for a white canvas. */
 [data-theme='light'] body::before {
   background:
-    radial-gradient(60% 42% at 78% -8%, rgba(124, 58, 237, 0.08), transparent 70%),
-    radial-gradient(48% 38% at 8% 4%, rgba(124, 58, 237, 0.05), transparent 72%);
+    radial-gradient(60% 42% at 78% -8%, rgba(100, 120, 245, 0.08), transparent 70%),
+    radial-gradient(48% 38% at 8% 4%, rgba(100, 120, 245, 0.05), transparent 72%);
 }
 
 body.reader-open {

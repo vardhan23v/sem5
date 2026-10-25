@@ -37,10 +37,9 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
   border-radius: var(--radius-sm);
-  background: var(--bg-inset);
-  color: var(--text-secondary);
+  background: color-mix(in srgb, currentColor 12%, transparent);
   transition:
     color var(--duration-base) var(--ease-out),
     background-color var(--duration-base) var(--ease-out),
@@ -48,39 +47,13 @@
     transform var(--duration-fast) var(--ease-out);
 }
 
+/* Colour: the shared `.nv-kind--*` palette (styles/ui.css) tints the glyph via
+   currentColor, so the icon boxes and the kind chips never drift apart — and
+   the dark theme's retuned notes violet applies here for free. The tinted
+   bubble is derived from that same currentColor with color-mix. */
+
 .row:hover .icon {
   transform: translateY(-1px);
-}
-
-/* Kind palettes mirror ui.css `.nv-kind--*` and tint via currentColor. */
-.iconPdf {
-  color: #f87171;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  border-color: color-mix(in srgb, currentColor 26%, transparent);
-}
-
-.iconPpt {
-  color: #fb923c;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  border-color: color-mix(in srgb, currentColor 26%, transparent);
-}
-
-.iconNotes {
-  color: #a78bfa;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  border-color: color-mix(in srgb, currentColor 26%, transparent);
-}
-
-.iconQuestionPaper {
-  color: #38bdf8;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  border-color: color-mix(in srgb, currentColor 26%, transparent);
-}
-
-.iconLabManual {
-  color: #34d399;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  border-color: color-mix(in srgb, currentColor 26%, transparent);
 }
 
 /* ---------------------------------- body ----------------------------------- */

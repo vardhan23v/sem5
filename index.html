@@ -2,11 +2,9 @@
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <meta name="theme-color" content="#0F0E13" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F5FA" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#101521" />
     <meta name="color-scheme" content="dark light" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -36,11 +34,37 @@
       rel="stylesheet"
     />
     <script>
-      // Apply the saved theme before first paint to avoid a flash.
-      try {
-        var saved = localStorage.getItem('notevault_theme');
-        document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
-      } catch (e) {}
+      // Apply the saved theme before first paint to avoid a flash. Stored
+      // preference is 'light' | 'dark' | 'system'; a missing (or unrecognised)
+      // value resolves against the OS colour scheme, seating 'system' as the
+      // default. Dark is used only as the last resort if matchMedia is broken.
+      (function () {
+        var KEY = 'notevault_theme';
+        try {
+          var stored = localStorage.getItem(KEY);
+          if (!stored) {
+            try {
+              localStorage.setItem(KEY, 'system');
+            } catch (e) {}
+            stored = 'system';
+          }
+          var dark;
+          if (stored === 'light') {
+            dark = false;
+          } else if (stored === 'dark') {
+            dark = true;
+          } else {
+            try {
+              dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            } catch (e) {
+              dark = true;
+            }
+          }
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
     </script>
   </head>
   <body>

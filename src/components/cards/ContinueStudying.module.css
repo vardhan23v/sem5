@@ -13,7 +13,7 @@
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--bg-surface);
+  background: var(--bg-card);
   transition:
     border-color var(--duration-base) var(--ease-out),
     background-color var(--duration-base) var(--ease-out),
@@ -21,11 +21,13 @@
     transform var(--duration-base) var(--ease-out);
 }
 
+/* Same lift as the unit/subject/resource cards so every interactive surface
+   speaks one hover language (transform only — height never shifts). */
 .card:hover {
   border-color: var(--border-accent);
   background: var(--bg-card-hover);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-3px);
 }
 
 .top {

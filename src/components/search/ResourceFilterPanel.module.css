@@ -1,13 +1,18 @@
 /* Filter chip groups shared by the Search and Recently Added views. */
 
+/* The toolbar is a .nv-glass surface (carried on `.panel` via the TSX class);
+   the tokens mirror ui.css so declaration order cannot matter. */
 .panel {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-glass);
 }
 
 .row {
@@ -34,6 +39,17 @@
   min-width: 0;
 }
 
+/* Pressed chips must not rely on colour alone: a small dot sits before the
+   label (currentColor follows the pressed --accent-text from .nv-chip). */
+.chips button[aria-pressed='true']::before {
+  content: '';
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
 @media (max-width: 767px) {
   .row {
     flex-direction: column;
@@ -49,5 +65,14 @@
 @media (max-width: 600px) {
   .panel {
     padding: var(--space-3);
+  }
+}
+
+/* Without backdrop-filter: solid surface, normal border (ui.css .nv-glass
+   fallback theme). */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .panel {
+    background: var(--bg-card);
+    border-color: var(--border);
   }
 }

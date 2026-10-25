@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
@@ -35,6 +35,7 @@ export const AppShell: React.FC = () => {
   }, [location.pathname]);
 
   useEffect(() => {
+    // The drawer is a transient overlay: close it on navigation and on Escape.
     if (!sidebarOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setSidebarOpen(false);
@@ -47,15 +48,37 @@ export const AppShell: React.FC = () => {
     };
   }, [sidebarOpen, setSidebarOpen]);
 
+  // When the drawer closes (Escape, overlay tap or a nav link) the aside turns
+  // inert and focus would fall back to <body> — send it to the hamburger so
+  // keyboard users stay where the drawer was opened from.
+  const wasSidebarOpen = useRef(false);
+  useEffect(() => {
+    if (wasSidebarOpen.current && !sidebarOpen) {
+      document.getElementById('sidebar-toggle')?.focus();
+    }
+    wasSidebarOpen.current = sidebarOpen;
+  }, [sidebarOpen]);
+
   return (
     <div className={styles.shell}>
-      <a className={styles.skip} href="#main-content">
+      <a
+        className={styles.skip}
+        href="#main-content"
+        onClick={(event) => {
+          // Hash router: letting the anchor's default `#main-content` jump run
+          // would rewrite the URL and unmount the current route (lands on 404).
+          event.preventDefault();
+          const main = document.getElementById('main-content');
+          main?.focus();
+          main?.scrollIntoView();
+        }}
+      >
         Skip to content
       </a>
       <Sidebar />
       <div className={styles.column}>
         <Topbar />
-        <main id="main-content" className={styles.main}>
+        <main id="main-content" tabIndex={-1} className={styles.main}>
           <div className={styles.container}>
             <div key={location.pathname} className={`${styles.route} nv-page-in`}>
               <Outlet />

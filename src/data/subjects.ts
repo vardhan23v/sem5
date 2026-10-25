@@ -635,6 +635,46 @@ export const RAW_SUBJECTS: SubjectRaw[] = [
         ],
         "kind": "notes",
         "topic": "Human values — descriptive questions and answers"
+      },
+      {
+        "name": "MCQ — Unit 2 Questions.pdf",
+        "path": "UHV/MCQ_UHV_2.pdf",
+        "size": "32 KB",
+        "units": [
+          "Unit 2"
+        ],
+        "kind": "question-paper",
+        "topic": "Value education — MCQs"
+      },
+      {
+        "name": "Unit 2 — Descriptive Q&A.pdf",
+        "path": "UHV/UHV_Unit II - Descriptive Question and Answer.pdf",
+        "size": "464 KB",
+        "units": [
+          "Unit 2"
+        ],
+        "kind": "notes",
+        "topic": "Human values — descriptive questions and answers"
+      },
+      {
+        "name": "MCQ — Unit 3 Questions.pdf",
+        "path": "UHV/MCQ_UHV_3.pdf",
+        "size": "48 KB",
+        "units": [
+          "Unit 3"
+        ],
+        "kind": "question-paper",
+        "topic": "Value education — MCQs"
+      },
+      {
+        "name": "Unit 3 — Descriptive Q&A.pdf",
+        "path": "UHV/UHV_Unit III - Descritpive Question and Answer.pdf",
+        "size": "330 KB",
+        "units": [
+          "Unit 3"
+        ],
+        "kind": "notes",
+        "topic": "Human values — descriptive questions and answers"
       }
     ]
   },

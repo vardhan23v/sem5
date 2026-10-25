@@ -17,21 +17,13 @@ interface RecentResourceRowProps {
   resource: Resource;
 }
 
-/** Per-kind glyph, one row of the kind colour palette below. */
+/** Per-kind glyph; colour comes from the shared `.nv-kind--*` palette (ui.css). */
 const KIND_ICONS: Record<Resource['kind'], React.ReactNode> = {
   pdf: <FileText size={16} strokeWidth={1.9} />,
   ppt: <Presentation size={16} strokeWidth={1.9} />,
   notes: <NotebookPen size={16} strokeWidth={1.9} />,
   'question-paper': <FileQuestion size={16} strokeWidth={1.9} />,
   'lab-manual': <FlaskConical size={16} strokeWidth={1.9} />,
-};
-
-const KIND_ICON_CLASS: Record<Resource['kind'], string> = {
-  pdf: styles.iconPdf,
-  ppt: styles.iconPpt,
-  notes: styles.iconNotes,
-  'question-paper': styles.iconQuestionPaper,
-  'lab-manual': styles.iconLabManual,
 };
 
 /**
@@ -49,7 +41,10 @@ export const RecentResourceRow: React.FC<RecentResourceRowProps> = ({ resource }
         className={styles.row}
         aria-label={`Open ${resource.name}`}
       >
-        <span className={`${styles.icon} ${KIND_ICON_CLASS[resource.kind]}`} aria-hidden="true">
+        <span
+          className={`${styles.icon} nv-kind--${resource.kind}`}
+          aria-hidden="true"
+        >
           {KIND_ICONS[resource.kind]}
         </span>
 

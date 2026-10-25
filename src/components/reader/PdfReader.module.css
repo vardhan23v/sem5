@@ -8,6 +8,10 @@
 
 /* ---------------------------------- toolbar --------------------------------- */
 
+/* Toolbar surface: `.nv-glass--strong` (styles/ui.css) frosts the chrome so it
+   stays legible against the white PDF page without needing a heavy opaque bar.
+   This class only owns layout — background, blur, border tint and the
+   no-backdrop-filter fallback all live in the shared primitive. */
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -16,8 +20,7 @@
   gap: var(--space-2);
   min-height: 48px;
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-surface);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .group {
@@ -190,6 +193,23 @@
   color: var(--warning);
 }
 
+/* The corrupt-document recovery card: an opaque rounded panel (cards never go
+   glass) so the message and the way out ("Download instead") stay readable
+   over the busy stage in both themes. */
+.recoveryCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: min(480px, 100%);
+  padding: var(--space-6) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
 .errorTitle {
   color: var(--text-primary);
   font-size: var(--text-sm);
@@ -229,9 +249,8 @@
   gap: var(--space-1);
   max-width: calc(100% - var(--space-6));
   padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
-  background: var(--bg-surface);
   box-shadow: var(--shadow-md);
 }
 
@@ -366,5 +385,16 @@
 
   .canvasWrap {
     justify-content: flex-start;
+  }
+}
+
+/* Touch targets on phones: the page field and find input grow to 40px. */
+@media (max-width: 430px) {
+  .pageInput {
+    height: 40px;
+  }
+
+  .findInput {
+    height: 40px;
   }
 }

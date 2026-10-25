@@ -15,11 +15,14 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-left: 3px solid var(--accent);
   border-radius: var(--radius-sm);
-  background: var(--bg-card);
-  box-shadow: var(--shadow-md);
+  /* Notifications must stay legible over anything on screen (strong glass). */
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-glass);
   color: var(--text-primary);
   font-size: var(--text-sm);
   animation: slide-in var(--duration-base) var(--ease-out);
@@ -93,5 +96,23 @@
     left: var(--space-3);
     bottom: var(--space-3);
     width: auto;
+  }
+}
+
+/* Touch target: the dismiss button grows to 40px on phones. */
+@media (max-width: 430px) {
+  .close {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* Without backdrop-filter, use the solid card surface (glass-border keeps a
+   faint hairline; --shadow-glass carries the definition). */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .toast {
+    background: var(--bg-card);
+    box-shadow: var(--shadow-md);
   }
 }

@@ -16,7 +16,7 @@ export const ResourceFilterPanel: React.FC<ResourceFilterPanelProps> = ({
   subjectOptions,
   onChange,
 }) => (
-  <section className={styles.panel} aria-label="Filters">
+  <section className={`${styles.panel} nv-glass`} aria-label="Filters">
     <FilterRow
       label="Type"
       id="filter-type"

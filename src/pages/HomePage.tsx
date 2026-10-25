@@ -63,7 +63,29 @@ export const HomePage: React.FC = () => (
       </div>
     </section>
 
-    {/* C. All resources */}
+    {/* C. Browse by subject */}
+    <section aria-labelledby="subjects-heading">
+      <SectionHeader
+        title="Browse by subject"
+        description="Open a subject to see its notes, papers and presentations"
+        action={
+          <Link to="/subjects" className="nv-link">
+            <span>View all</span>
+            <ChevronRight size={14} />
+          </Link>
+        }
+      />
+      <h2 id="subjects-heading" className="srOnly">
+        Browse by subject
+      </h2>
+      <div className={styles.subjectGrid}>
+        {SUBJECTS.map((subject) => (
+          <SubjectCard key={subject.name} subject={subject} />
+        ))}
+      </div>
+    </section>
+
+    {/* D. All resources */}
     <section aria-labelledby="all-heading">
       <SectionHeader title="All resources" description="The complete indexed library" />
       <h2 id="all-heading" className="srOnly">
@@ -85,28 +107,6 @@ export const HomePage: React.FC = () => (
           <ArrowRight size={16} aria-hidden="true" />
         </span>
       </Link>
-    </section>
-
-    {/* D. Browse by subject */}
-    <section aria-labelledby="subjects-heading">
-      <SectionHeader
-        title="Browse by subject"
-        description="Open a subject to see its notes, papers and presentations"
-        action={
-          <Link to="/subjects" className="nv-link">
-            <span>View all</span>
-            <ChevronRight size={14} />
-          </Link>
-        }
-      />
-      <h2 id="subjects-heading" className="srOnly">
-        Browse by subject
-      </h2>
-      <div className={styles.subjectGrid}>
-        {SUBJECTS.map((subject) => (
-          <SubjectCard key={subject.name} subject={subject} />
-        ))}
-      </div>
     </section>
 
     {/* E. Recently added */}

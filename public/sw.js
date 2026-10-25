@@ -8,7 +8,10 @@
    - PDFs, slides and scans: never intercepted (range requests, large files).
    ========================================================================== */
 
-const CACHE_VERSION = 'notevault-v2';
+/* v3: soft-glass redesign ships a full new asset set; bumping the version
+   purges the v2 shell/assets caches on activate so returning visitors get
+   the new build immediately instead of mixing old and new hashed assets. */
+const CACHE_VERSION = 'notevault-v3';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 

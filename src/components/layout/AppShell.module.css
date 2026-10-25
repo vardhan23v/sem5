@@ -49,7 +49,16 @@
 }
 
 .footer a:hover {
-  color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* Touch target on phones: the footer's GitHub link reaches a 40px box. */
+@media (max-width: 430px) {
+  .footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
 }
 
 .skip {
@@ -60,8 +69,9 @@
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   background: var(--accent-strong);
-  color: #fff;
+  color: var(--accent-contrast);
   font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
   transform: translateY(-200%);
   transition: transform var(--duration-fast) var(--ease-out);
 }

@@ -2,33 +2,44 @@
    NoteVault design tokens
    One source of truth for colour, spacing, radii, elevation and motion.
    Every component reads these — no one-off pixel values for layout.
+
+   Themes (data-theme on <html>):
+   - dark  default  "Midnight Glass"  — focused, immersive, never pure black
+   - light          "Frosted Daylight" — airy, clean canvas with indigo accents
+
+   All accent text runs through --accent-text (the ≥4.5:1 evaluated tint of the
+   accent per theme). Accent borders run through --accent-border; use these two
+   instead of hand-writing rgba() literals.
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
   /* ---------------------------------- colour -------------------------------- */
-  --bg-app: #0f0e13;
-  --bg-surface: #14131a;
-  --bg-card: #191821;
-  --bg-card-hover: #201f2a;
-  --bg-inset: #111016;
-  --bg-overlay: rgba(8, 7, 12, 0.74);
+  /* Midnight Glass (the default theme; Frosted Daylight overrides below). */
+  --bg-app: #101521;
+  --bg-surface: #161d2c;
+  --bg-card: #1b2232;
+  --bg-card-hover: #212a3d;
+  --bg-inset: #121826;
+  --bg-overlay: rgba(6, 10, 18, 0.64);
 
-  --accent: #a78bfa;
-  --accent-strong: #8b5cf6;
-  --accent-soft: rgba(167, 139, 250, 0.12);
-  --accent-softer: rgba(167, 139, 250, 0.07);
-  --accent-contrast: #14101f;
+  --accent: #91a0ff;
+  --accent-strong: #7b8cf7;
+  --accent-text: #91a0ff;
+  --accent-border: rgba(145, 160, 255, 0.4);
+  --accent-soft: rgba(145, 160, 255, 0.14);
+  --accent-softer: rgba(145, 160, 255, 0.07);
+  --accent-contrast: #0f1524;
 
-  --text-primary: #f5f3fa;
-  --text-secondary: #a6a2b6;
-  --text-muted: #8b869e;
-  --text-inverse: #14121b;
+  --text-primary: #f0f3fc;
+  --text-secondary: #a8b2c8;
+  --text-muted: #8592ac;
+  --text-inverse: #0f1524;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --border-accent: rgba(167, 139, 250, 0.38);
+  --border: #343d51;
+  --border-strong: #475269;
+  --border-accent: var(--accent-border);
 
   --success: #4ade80;
   --success-soft: rgba(74, 222, 128, 0.12);
@@ -36,6 +47,13 @@
   --warning-soft: rgba(251, 191, 36, 0.12);
   --danger: #f87171;
   --danger-soft: rgba(248, 113, 113, 0.12);
+
+  /* ---------------------------------- glass --------------------------------- */
+  --glass-bg: rgba(27, 34, 50, 0.6);
+  --glass-bg-strong: rgba(23, 29, 44, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur: 14px;
+  --glass-saturate: 130%;
 
   /* ------------------------------- typography ------------------------------- */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -87,12 +105,15 @@
   --radius-full: 999px;
 
   /* -------------------------------- elevation ------------------------------- */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.28);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
-  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.44);
-  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --ring: 0 0 0 3px rgba(167, 139, 250, 0.28);
+  --shadow-xs: 0 1px 2px rgba(4, 8, 16, 0.28);
+  --shadow-sm: 0 2px 8px rgba(4, 8, 16, 0.24);
+  --shadow-md: 0 8px 24px rgba(4, 8, 16, 0.32);
+  --shadow-lg: 0 18px 48px rgba(4, 8, 16, 0.44);
+  --shadow-card: 0 10px 30px rgba(4, 8, 16, 0.3);
+  --shadow-glass: 0 1px 2px rgba(4, 8, 16, 0.44), 0 16px 40px -16px rgba(4, 8, 16, 0.55);
+
+  --focus-ring: 0 0 0 3px rgba(145, 160, 255, 0.3);
+  --ring: var(--focus-ring);
 
   /* --------------------------------- layout --------------------------------- */
   --sidebar-width: 240px;
@@ -122,39 +143,49 @@
 [data-theme='light'] {
   color-scheme: light;
 
-  --bg-app: #f6f4fb;
+  /* Frosted Daylight */
+  --bg-app: #f2f5fa;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #f5f2fc;
-  --bg-inset: #f1eef9;
-  --bg-overlay: rgba(28, 24, 43, 0.42);
+  --bg-card-hover: #f3f5fb;
+  --bg-inset: #eaeef6;
+  --bg-overlay: rgba(23, 30, 46, 0.44);
 
-  --accent: #7c3aed;
-  --accent-strong: #6d28d9;
-  --accent-soft: rgba(124, 58, 237, 0.1);
-  --accent-softer: rgba(124, 58, 237, 0.05);
+  --accent: #6478f5;
+  --accent-strong: #4152e8;
+  --accent-text: #4152e8;
+  --accent-border: rgba(100, 120, 245, 0.4);
+  --accent-soft: rgba(100, 120, 245, 0.14);
+  --accent-softer: rgba(100, 120, 245, 0.07);
   --accent-contrast: #ffffff;
 
-  --text-primary: #1a1727;
-  --text-secondary: #56516b;
-  --text-muted: #6f6a83;
+  --text-primary: #20283a;
+  --text-secondary: #46536e;
+  --text-muted: #5c6b86;
   --text-inverse: #ffffff;
 
-  --border: rgba(26, 23, 39, 0.1);
-  --border-strong: rgba(26, 23, 39, 0.16);
-  --border-accent: rgba(124, 58, 237, 0.36);
+  --border: #dce3ef;
+  --border-strong: rgba(32, 40, 58, 0.36);
+  --border-accent: var(--accent-border);
 
-  --success: #15803d;
-  --success-soft: rgba(21, 128, 61, 0.1);
-  --warning: #b45309;
-  --warning-soft: rgba(180, 83, 9, 0.1);
+  --success: #146c35;
+  --success-soft: rgba(20, 108, 53, 0.1);
+  --warning: #a34b06;
+  --warning-soft: rgba(163, 75, 6, 0.1);
   --danger: #b91c1c;
   --danger-soft: rgba(185, 28, 28, 0.1);
 
-  --shadow-xs: 0 1px 2px rgba(26, 23, 39, 0.06);
-  --shadow-sm: 0 2px 8px rgba(26, 23, 39, 0.07);
-  --shadow-md: 0 8px 24px rgba(26, 23, 39, 0.09);
-  --shadow-lg: 0 18px 48px rgba(26, 23, 39, 0.14);
-  --shadow-card: 0 10px 30px rgba(26, 23, 39, 0.1);
-  --ring: 0 0 0 3px rgba(124, 58, 237, 0.24);
+  --glass-bg: rgba(255, 255, 255, 0.62);
+  --glass-bg-strong: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-saturate: 140%;
+
+  --shadow-xs: 0 1px 2px rgba(23, 30, 46, 0.06);
+  --shadow-sm: 0 2px 8px rgba(23, 30, 46, 0.07);
+  --shadow-md: 0 8px 24px rgba(23, 30, 46, 0.09);
+  --shadow-lg: 0 18px 48px rgba(23, 30, 46, 0.14);
+  --shadow-card: 0 10px 30px rgba(23, 30, 46, 0.1);
+  --shadow-glass: 0 1px 2px rgba(23, 30, 46, 0.05), 0 12px 32px -12px rgba(23, 30, 46, 0.18);
+
+  --focus-ring: 0 0 0 3px rgba(65, 82, 232, 0.3);
 }

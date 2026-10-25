@@ -14,13 +14,12 @@ import {
   getFavorites,
   getHistory,
   getProgressMap,
-  getTheme,
   recordHistory,
   saveDone,
   saveFavorites,
   saveProgress as saveStoredProgress,
-  saveTheme,
 } from '../lib/storage';
+import { useTheme, type ThemePreference } from './useTheme';
 
 export type ToastTone = 'info' | 'success' | 'warning' | 'danger';
 
@@ -31,7 +30,11 @@ export interface Toast {
 }
 
 interface AppContextValue {
+  /** The resolved theme actually on screen ('light' | 'dark' — never 'system'). */
   theme: Theme;
+  /** The stored preference ('light' | 'dark' | 'system'). */
+  themePreference: ThemePreference;
+  setTheme: (preference: ThemePreference) => void;
   toggleTheme: () => void;
 
   favorites: string[];
@@ -60,7 +63,10 @@ interface AppContextValue {
 const AppContext = createContext<AppContextValue | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => getTheme());
+  // Theme application (data-theme, metas, OS tracking, persistence) lives in
+  // useTheme so the DOM stays in sync even below/outside this provider.
+  const { theme: themePreference, resolvedTheme, setTheme: setThemePreference } = useTheme();
+  const theme = resolvedTheme;
   const [favorites, setFavorites] = useState<string[]>(() => getFavorites());
   const [done, setDone] = useState<string[]>(() => getDone());
   const [history, setHistory] = useState<ReadingHistoryItem[]>(() => getHistory());
@@ -71,14 +77,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextToastId = useRef(1);
   const timers = useRef<number[]>([]);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) {
-      meta.setAttribute('content', theme === 'dark' ? '#0f0e13' : '#f6f4fb');
-    }
-  }, [theme]);
 
   useEffect(() => {
     const pending = timers.current;
@@ -100,13 +98,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
 
+  /**
+   * A toggle deliberately LEAVES system mode: it switches to the opposite of
+   * the currently *resolved* theme ('light' ⇄ 'dark'). Returning to live
+   * OS-following is an explicit choice made in the ThemeMenu ('System').
+   */
   const toggleTheme = useCallback(() => {
-    setTheme((current) => {
-      const next: Theme = current === 'dark' ? 'light' : 'dark';
-      saveTheme(next);
-      return next;
-    });
-  }, []);
+    setThemePreference(resolvedTheme === 'dark' ? 'light' : 'dark');
+  }, [resolvedTheme, setThemePreference]);
+
+  const setTheme = useCallback(
+    (preference: ThemePreference) => {
+      setThemePreference(preference);
+    },
+    [setThemePreference],
+  );
 
   const toggleFavorite = useCallback(
     (path: string) => {
@@ -167,6 +173,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const value = useMemo<AppContextValue>(
     () => ({
       theme,
+      themePreference,
+      setTheme,
       toggleTheme,
       favorites,
       isFavorite,
@@ -187,6 +195,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }),
     [
       theme,
+      themePreference,
+      setTheme,
       toggleTheme,
       favorites,
       isFavorite,

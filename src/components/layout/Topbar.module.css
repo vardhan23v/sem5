@@ -8,9 +8,12 @@
   gap: var(--space-4);
   height: var(--topbar-height);
   padding: 0 var(--content-pad-lg);
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg-app) 88%, transparent);
-  backdrop-filter: blur(12px);
+  /* Strong glass: content scrolls right underneath the bar, so it must stay
+     legible over anything ("--strong" layer). */
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
 }
 
 .left {
@@ -22,9 +25,10 @@
 
 .brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .brandName {
@@ -73,6 +77,12 @@
   transform: scale(0.94);
 }
 
+.iconBtn:focus-visible,
+.searchBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 /* The hamburger only exists below the sidebar breakpoint. */
 .left > .iconBtn {
   display: none;
@@ -91,7 +101,7 @@
   padding: 0 3px;
   border-radius: var(--radius-full);
   background: var(--accent-strong);
-  color: #fff;
+  color: var(--accent-contrast);
   font-size: 9px;
   font-weight: var(--weight-bold);
   line-height: 14px;
@@ -130,7 +140,7 @@
 .searchBtnActive {
   border-color: var(--border-accent);
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .kbd {
@@ -177,5 +187,31 @@
     width: 34px;
     padding: 0;
     justify-content: center;
+  }
+}
+
+/* Without backdrop-filter the translucent bar would smear over scrolled
+   content — fall back to the solid surface (mirrors ui.css .nv-glass--strong). */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .topbar {
+    background: var(--bg-surface);
+    border-bottom-color: var(--border);
+  }
+}
+
+/* Touch targets on phones (the hamburger + icon buttons are the only chrome). */
+@media (max-width: 430px) {
+  .iconBtn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .searchBtn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand {
+    align-self: stretch;
   }
 }

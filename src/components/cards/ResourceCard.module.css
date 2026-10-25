@@ -122,6 +122,10 @@
 
 .titleDone {
   color: var(--text-secondary);
+  text-decoration: line-through;
+  /* The strike stays legible while the colour fades, matching the muted felt. */
+  text-decoration-color: color-mix(in srgb, var(--text-muted) 60%, transparent);
+  text-decoration-thickness: 1px;
 }
 
 .topic {
@@ -170,4 +174,13 @@
 
 .progress {
   color: var(--accent);
+}
+
+/* Touch targets on phones: the two per-card actions grow to 40px; the chip
+   row keeps its baseline (kind tag) alignment because .top is flex. */
+@media (max-width: 430px) {
+  .action {
+    width: 40px;
+    height: 40px;
+  }
 }

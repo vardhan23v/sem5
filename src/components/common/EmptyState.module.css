@@ -29,24 +29,26 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   margin-bottom: var(--space-1);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--accent-softer);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-accent);
+  background: var(--accent-soft);
   color: var(--accent);
 }
 
 .title {
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
+  letter-spacing: -0.012em;
 }
 
 .description {
-  max-width: 46ch;
+  max-width: 44ch;
   color: var(--text-muted);
   font-size: var(--text-sm);
+  line-height: var(--leading-normal);
 }
 
 .action {

@@ -30,6 +30,12 @@
   border-color: var(--border-strong);
 }
 
+/* Buttons hold their size inside tight flex rows (a squeezed toolbar button
+   would lose both its label space and its touch hit area). */
+.nv-btn {
+  flex-shrink: 0;
+}
+
 .nv-btn:active {
   transform: translateY(1px);
 }
@@ -42,11 +48,21 @@
 .nv-btn--primary {
   border-color: transparent;
   background: var(--accent-strong);
-  color: #fff;
+  color: var(--accent-contrast);
 }
 
 .nv-btn--primary:hover {
   background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* On dark, hovering the primary button toward --accent is a brightening step
+   and keeps contrast. On light, --accent is too light a step for the white
+   --accent-contrast to stay ≥ 4.5:1, so the hover darkens the strong accent
+   instead (the plain fallback stays for browsers without color-mix). */
+[data-theme='light'] .nv-btn--primary:hover {
+  background: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent-strong) 86%, var(--bg-app));
   color: var(--accent-contrast);
 }
 
@@ -90,6 +106,7 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
   white-space: nowrap;
+  flex-shrink: 0;
   transition:
     background-color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out),
@@ -105,7 +122,19 @@
 .nv-chip[aria-pressed='true'] {
   border-color: var(--border-accent);
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* Pressed state must not rely on colour alone: a small dot before the label
+   (currentColor follows the pressed tint). Dot sits in the chip's reserved
+   flex slot, so text never shifts. */
+.nv-chip[aria-pressed='true']::before {
+  content: '';
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: currentColor;
 }
 
 .nv-badge {
@@ -127,7 +156,7 @@
 .nv-badge--accent {
   border-color: var(--border-accent);
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* File-kind tags: one neutral style, with a small coloured dot per kind. */
@@ -169,12 +198,41 @@
   color: #a78bfa;
 }
 
+/* Midnight Glass: pull the notes violet away from the periwinkle accent so the
+   two don't read as the same colour (kept Frosted Daylight's original). */
+[data-theme='dark'] .nv-kind--notes {
+  color: #c9a4ff;
+}
+
 .nv-kind--question-paper {
   color: #38bdf8;
 }
 
 .nv-kind--lab-manual {
   color: #34d399;
+}
+
+/* Frosted Daylight: the bright kind hues above sit on pale inset/glass surfaces
+   (white PDF pages behind strong glass included), so each gets the ≥4.5:1 dark
+   step of the same hue. Keep hues identical to the dark handoff. */
+[data-theme='light'] .nv-kind--pdf {
+  color: #b91c1c;
+}
+
+[data-theme='light'] .nv-kind--ppt {
+  color: #a34b06;
+}
+
+[data-theme='light'] .nv-kind--notes {
+  color: #7c3aed;
+}
+
+[data-theme='light'] .nv-kind--question-paper {
+  color: #0369a1;
+}
+
+[data-theme='light'] .nv-kind--lab-manual {
+  color: #047857;
 }
 
 .nv-link {
@@ -188,13 +246,49 @@
 }
 
 .nv-link:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .nv-card {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg-card);
+}
+
+/* --------------------------------- glass drink ------------------------------
+   Frosted-panel utility. Layer it under component classes; it only sets the
+   glass surface (background, blur, border tint) so widths, radii & shadows stay
+   with the component. `--strong` raises the opacity for menus/toasts/popovers —
+   anything that must stay legible over busy content (e.g. the reader toolbar
+   over a white PDF page) should use --strong too.
+   -------------------------------------------------------------------------- */
+
+.nv-glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-color: var(--glass-border);
+}
+
+.nv-glass--strong {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-color: var(--glass-border);
+}
+
+/* No frosted glass without backdrop-filter: bump to the solid surface so the
+   panel remains readable instead of turning into a translucent smudge. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nv-glass {
+    background: var(--bg-card);
+    border-color: var(--border);
+  }
+
+  .nv-glass--strong {
+    background: var(--bg-card);
+    border-color: var(--border);
+  }
 }
 
 /* ------------------------------- motion primitives -------------------------
@@ -255,6 +349,32 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ------------------------------ touch targets ------------------------------
+   Phone widths (< 431px): every interactive primitive reaches a 40px hit
+   target (Apple HIG/WCAG 2.2 guidance). Height grows; tracking, radii and
+   fonts do not change. Component-specific paddings live in their modules.
+   -------------------------------------------------------------------------- */
+@media (max-width: 430px) {
+  .nv-btn,
+  .nv-btn--sm {
+    height: 40px;
+  }
+
+  .nv-btn--icon,
+  .nv-btn--icon.nv-btn--sm {
+    width: 40px;
+  }
+
+  .nv-chip {
+    height: 40px;
+  }
+
+  .nv-link {
+    min-height: 40px;
+    align-items: center;
   }
 }
 

@@ -160,7 +160,7 @@ export const ReaderPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <header className={styles.topbar}>
+      <header className={`${styles.topbar} nv-glass`}>
         <div className={styles.topLeft}>
           <button
             type="button"
@@ -199,6 +199,7 @@ export const ReaderPage: React.FC = () => {
             className={`nv-btn nv-btn--sm ${done ? styles.btnDone : ''}`}
             onClick={() => toggleDone(filePath)}
             aria-pressed={done}
+            aria-label={done ? 'Done' : 'Mark done'}
           >
             <CircleCheckBig size={15} />
             <span className={styles.actionLabel}>{done ? 'Done' : 'Mark done'}</span>
@@ -208,6 +209,7 @@ export const ReaderPage: React.FC = () => {
             className={`nv-btn nv-btn--sm ${favorite ? styles.btnFavorite : ''}`}
             onClick={() => toggleFavorite(filePath)}
             aria-pressed={favorite}
+            aria-label={favorite ? 'Saved' : 'Save'}
           >
             <Bookmark size={15} fill={favorite ? 'currentColor' : 'none'} />
             <span className={styles.actionLabel}>{favorite ? 'Saved' : 'Save'}</span>
@@ -244,7 +246,7 @@ export const ReaderPage: React.FC = () => {
       </header>
 
       {showResume ? (
-        <div className={styles.resumeChip} role="status">
+        <div className={`${styles.resumeChip} nv-glass--strong`} role="status">
           <Info size={13} />
           <span>Resumed at page {resumePage}</span>
           <button

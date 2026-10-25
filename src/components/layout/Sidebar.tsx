@@ -1,21 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import {
-  Bookmark,
-  Clock3,
-  Files,
-  House,
-  Layers,
-  LibraryBig,
-  Moon,
-  Search,
-  Sun,
-  X,
-} from 'lucide-react';
+import { Bookmark, Clock3, Files, House, Layers, LibraryBig, Search, X } from 'lucide-react';
 import { SUBJECTS } from '../../lib/library';
 import { useApp } from '../../hooks/useApp';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { SubjectIcon } from '../common/SubjectIcon';
+import ThemeMenu from '../common/ThemeMenu';
 import styles from './Sidebar.module.css';
 
 const NAV = [
@@ -28,7 +18,7 @@ const NAV = [
 ];
 
 export const Sidebar: React.FC = () => {
-  const { sidebarOpen, setSidebarOpen, favorites, theme, toggleTheme } = useApp();
+  const { sidebarOpen, setSidebarOpen, favorites } = useApp();
   const closeRef = useRef<HTMLButtonElement>(null);
   const isMobile = useMediaQuery('(max-width: 1023px)');
 
@@ -47,7 +37,7 @@ export const Sidebar: React.FC = () => {
       />
 
       <aside
-        className={`${styles.sidebar} ${sidebarOpen ? styles.open : ''}`}
+        className={`${styles.sidebar} nv-glass ${sidebarOpen ? styles.open : ''}`}
         aria-label="Main navigation"
         inert={isMobile && !sidebarOpen}
       >
@@ -124,10 +114,7 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <div className={styles.footer}>
-          <button type="button" className={styles.themeBtn} onClick={toggleTheme}>
-            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-            <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
-          </button>
+          <ThemeMenu />
           <a
             className={styles.github}
             href="https://github.com/vardhan23v/sem5"

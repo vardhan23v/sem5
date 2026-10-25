@@ -102,6 +102,22 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
     textCache.current.clear();
   }, [url]);
 
+  /* A failed load leaves the ghost of the previous document on the canvas;
+     clear it so the recovery card is the only thing on the stage. */
+  useEffect(() => {
+    if (!error) return;
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext('2d');
+    if (canvas && context) {
+      // pdf.js owns this context (alpha: false), so clearRect reads as black.
+      // Paint the plain paper colour instead — it matches the surrounding page
+      // surface in both themes and wipes whatever the previous document drew.
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.fillStyle = '#fff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }, [error]);
+
   /* --------------------------------- clamping -------------------------------- */
 
   const goToPage = useCallback(
@@ -365,7 +381,7 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
 
   return (
     <div ref={viewerRef} className={styles.viewer}>
-      <div className={styles.toolbar}>
+      <div className={`${styles.toolbar} nv-glass--strong`}>
         <div className={styles.group}>
           <button
             type="button"
@@ -418,6 +434,15 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
             <ZoomOut size={16} />
           </button>
           <span className={styles.zoomLabel}>{Math.round(zoom * 100)}%</span>
+          <button
+            type="button"
+            className="nv-btn nv-btn--ghost nv-btn--sm"
+            onClick={() => setZoom(1)}
+            aria-label="Fit page to width"
+            title="Fit to width (0)"
+          >
+            Fit
+          </button>
           <button
             type="button"
             className="nv-btn nv-btn--ghost nv-btn--icon nv-btn--sm"
@@ -508,12 +533,14 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
 
           {error ? (
             <div className={styles.overlay}>
-              <TriangleAlert size={22} className={styles.errorIcon} />
-              <p className={styles.errorTitle}>This PDF could not be opened</p>
-              <p className={styles.errorText}>{error}</p>
-              <a className="nv-btn nv-btn--sm" href={url} download>
-                Download instead
-              </a>
+              <div className={styles.recoveryCard}>
+                <TriangleAlert size={22} className={styles.errorIcon} />
+                <p className={styles.errorTitle}>This PDF could not be opened</p>
+                <p className={styles.errorText}>{error}</p>
+                <a className="nv-btn nv-btn--sm" href={url} download>
+                  Download instead
+                </a>
+              </div>
             </div>
           ) : null}
 
@@ -524,7 +551,7 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
           ) : null}
 
           {findOpen ? (
-            <div className={styles.findBar}>
+            <div className={`${styles.findBar} nv-glass--strong`}>
               <Search size={14} className={styles.findIcon} />
               <input
                 ref={findInputRef}

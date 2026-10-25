@@ -16,7 +16,7 @@ Study materials for my 5th semester, organised by subject and readable right in 
 
 ## What's inside
 
-66 indexed resources across 9 subjects: 54 PDF, slide and HTML files plus 12 important-topic scans.
+72 indexed resources across 9 subjects: 60 PDF, slide and HTML files plus 12 important-topic scans.
 
 | Subject | Contents |
 |---------|----------|
@@ -34,13 +34,13 @@ Resources are grouped by the real units — **Unit 1, Unit 2, Unit 3 and Lab Man
 
 ## Features
 
-- **Dashboard** with unit cards, a complete resource archive, every subject and a *Continue studying* row built from your history
+- **Dashboard** with unit cards, the newest additions (fresh files get a date highlight), a complete resource archive, every subject and a *Continue studying* row built from your history
 - **Built-in PDF reader** with page navigation, jump-to-page, zoom, thumbnails, find in document, two-page spread, fullscreen and keyboard shortcuts
 - **Reading progress** remembers the page you reached in every PDF and offers to resume, with deep links such as `#/reader?file=…&page=12`
 - **Favourites and mark-as-done** on every card, with per-subject completion bars
 - **Search** across names, topics, subjects and units, combining keyword, file type, unit and subject filters
 - **HTML notes and images** open in the same reader; PPT/PPTX files open in the Office viewer
-- **Light and dark themes** (dark by default), responsive layout from 320px up, and an installable PWA shell
+- **Light, dark or system themes** in a *Soft Glass* design — frosted fixed chrome (glass sidebar, topbar, PDF toolbar, resume chip, toasts) over opaque reading surfaces, first launch following your OS. Pick via the sidebar theme menu or the topbar toggle; the choice sticks in `notevault_theme`. Responsive layout from 320px up and an installable PWA shell
 - **Old links keep working** — `#file=`, `#unit=`, `#subject=`, `#all` and `#search` fragments are translated to the new routes
 
 Favourites, done marks, progress, history and theme are stored in `localStorage` (`notevault_favorites`, `notevault_done`, `notevault_progress`, `notevault_history`, `notevault_theme`) and never leave the device. Existing data from the previous version is read as-is and migrated in place.
@@ -57,7 +57,8 @@ src/
   lib/legacyLinks.ts      pre-migration hash translation
   components/             layout, cards, search, reader
   pages/                  home, search, subjects, units, all, favourites, reader
-  hooks/                  app state and PDF loading
+  hooks/                  app state, theme and PDF loading
+  styles/                 design tokens + glass utilities (.nv-glass)
 scripts/copy-resources.mjs copies indexed files into dist/ after a build
 public/                   service worker, 404 fallback, manifest, icons
 ```
@@ -84,7 +85,7 @@ Other commands:
 ```bash
 npm run check     # TypeScript, no emit
 npm test          # Vitest unit tests
-npm run build     # type-check, build to dist/, copy all 66 resources
+npm run build     # type-check, build to dist/, copy all 72 resources
 npm run preview   # serve the production build at http://localhost:4173/sem5/
 ```
 
@@ -102,7 +103,7 @@ The production build is served from `/sem5/`; development and preview use the se
 
 Vitest covers the parts most likely to break silently:
 
-- resource indexing, unique IDs, subject and unit counts (66 / 54 / 12, units 30 / 11 / 9 / 5)
+- resource indexing, unique IDs, subject and unit counts (72 / 60 / 12, units 30 / 15 / 11 / 5)
 - every indexed file existing on disk
 - search normalisation and AND-combined filters
 - storage migration from the legacy progress/history shapes, including corrupt JSON
