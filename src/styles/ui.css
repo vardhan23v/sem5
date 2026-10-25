@@ -246,3 +246,15 @@
   }
 }
 
+/* Row entrance shared by the homepage Recently Added preview and /recent. */
+@keyframes nv-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+

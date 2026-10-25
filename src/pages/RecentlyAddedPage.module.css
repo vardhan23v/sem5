@@ -29,6 +29,33 @@
   font-size: var(--text-2xs);
 }
 
+/* Same capped entrance stagger as the homepage preview; releases rows through
+   shared nv-row-in keyframes (styles/ui.css). The global reduced-motion guard
+   in base.css collapses this to a single frame. */
+.enter > * {
+  animation: nv-row-in var(--duration-enter) var(--ease-out) backwards;
+}
+
+.enter > *:nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.enter > *:nth-child(3) {
+  animation-delay: 60ms;
+}
+
+.enter > *:nth-child(4) {
+  animation-delay: 90ms;
+}
+
+.enter > *:nth-child(5) {
+  animation-delay: 120ms;
+}
+
+.enter > *:nth-child(n + 6) {
+  animation-delay: 150ms;
+}
+
 /* --------------------------------- results --------------------------------- */
 
 .list {

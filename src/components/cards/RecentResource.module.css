@@ -152,6 +152,24 @@
   color: var(--text-muted);
 }
 
+/* Inside the fresh window: date text and glyph carry the accent plus a static
+   dot. Pure colour change in an already-reserved flex slot — rows never shift.
+   They are the Git-derived added dates, so this marks genuinely new material. */
+.dateFresh,
+.dateFresh svg {
+  color: var(--accent);
+}
+
+.dateFresh::before {
+  content: '';
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
 /* --------------------------------- arrow ----------------------------------- */
 
 .arrow {

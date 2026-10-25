@@ -8,9 +8,11 @@
 }
 
 /* A short, capped entrance stagger. `backwards` fill keeps rows hidden during
-   their delay, then releases the transform so the row hover stays clean. */
+   their delay, then releases the transform so the row hover stays clean. The
+   shared nv-row-in keyframes live in styles/ui.css, so the /recent page and
+   this preview share one motion vocabulary. */
 .enter > * {
-  animation: recentRowIn var(--duration-enter) var(--ease-out) backwards;
+  animation: nv-row-in var(--duration-enter) var(--ease-out) backwards;
 }
 
 .enter > *:nth-child(2) {
@@ -33,13 +35,3 @@
   animation-delay: 150ms;
 }
 
-@keyframes recentRowIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}

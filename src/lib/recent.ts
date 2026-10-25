@@ -59,3 +59,21 @@ export function formatAddedDate(addedAt: string): string {
 export function addedDateAttr(addedAt: string): string {
   return addedAt ? addedAt.slice(0, 10) : '';
 }
+
+/** Resources added this recently are highlighted as new on rows and pages. */
+export const FRESH_WINDOW_DAYS = 7;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * True when the resource joined the library inside the fresh window. The
+ * comparison is against the Git-derived added date, never reading history.
+ * `now` is injectable so tests stay deterministic.
+ */
+export function isFreshAdded(
+  resource: Pick<Resource, 'addedAt'>,
+  now: number = Date.now(),
+): boolean {
+  const timestamp = addedTimestamp(resource);
+  return timestamp > 0 && now - timestamp < FRESH_WINDOW_DAYS * DAY_MS;
+}

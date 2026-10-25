@@ -4,7 +4,9 @@ import {
   addedDateAttr,
   addedTimestamp,
   compareAddedDesc,
+  FRESH_WINDOW_DAYS,
   formatAddedDate,
+  isFreshAdded,
   recentlyAdded,
   RECENT_PREVIEW_COUNT,
   RECENT_RESOURCES,
@@ -81,6 +83,26 @@ describe('recently added', () => {
     const resource = ALL_RESOURCES.find((entry) => entry.path === 'TOC/TOC UNIT 2 NOTES.pdf');
     expect(resource?.addedAt).toMatch(/^2026-10-2\dT/);
     expect(resource?.units).toEqual(['Unit 2']);
+  });
+});
+
+describe('fresh highlight', () => {
+  const now = new Date('2026-10-25T00:00:00.000Z').getTime();
+
+  it('highlights only resources inside the fresh window', () => {
+    const fresh = { addedAt: new Date(now - 6 * 86400000).toISOString() };
+    const stale = { addedAt: new Date(now - 8 * 86400000).toISOString() };
+    expect(isFreshAdded(fresh, now)).toBe(true);
+    expect(isFreshAdded(stale, now)).toBe(false);
+  });
+
+  it('never treats undated or unparseable entries as fresh', () => {
+    expect(isFreshAdded({ addedAt: '' }, now)).toBe(false);
+    expect(isFreshAdded({ addedAt: 'not a date' }, now)).toBe(false);
+  });
+
+  it('pins the window so the highlight is a documented product choice', () => {
+    expect(FRESH_WINDOW_DAYS).toBe(7);
   });
 });
 

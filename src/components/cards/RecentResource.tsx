@@ -10,7 +10,7 @@ import {
   Presentation,
 } from 'lucide-react';
 import type { Resource } from '../../types';
-import { addedDateAttr, formatAddedDate } from '../../lib/recent';
+import { addedDateAttr, formatAddedDate, isFreshAdded } from '../../lib/recent';
 import styles from './RecentResource.module.css';
 
 interface RecentResourceRowProps {
@@ -40,6 +40,7 @@ const KIND_ICON_CLASS: Record<Resource['kind'], string> = {
  */
 export const RecentResourceRow: React.FC<RecentResourceRowProps> = ({ resource }) => {
   const date = formatAddedDate(resource.addedAt);
+  const fresh = isFreshAdded(resource);
 
   return (
     <li>
@@ -64,9 +65,9 @@ export const RecentResourceRow: React.FC<RecentResourceRowProps> = ({ resource }
         </span>
 
         <time
-          className={styles.date}
+          className={`${styles.date} ${fresh ? styles.dateFresh : ''}`}
           dateTime={addedDateAttr(resource.addedAt)}
-          title={date || 'Date unavailable'}
+          title={fresh ? `Added ${date || 'date unavailable'}` : date || 'Date unavailable'}
         >
           <CalendarDays size={13} aria-hidden="true" />
           {date || 'Date unavailable'}

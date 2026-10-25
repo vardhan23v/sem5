@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { ListFilter, SearchX, X } from 'lucide-react';
-import { RECENT_RESOURCES } from '../lib/recent';
+import { RECENT_RESOURCES, formatAddedDate } from '../lib/recent';
 import { filterResources, hasActiveFilters } from '../lib/filters';
 import { useResourceFilters } from '../hooks/useResourceFilters';
 import { RecentResourceRow } from '../components/cards/RecentResource';
@@ -19,6 +19,11 @@ export const RecentlyAddedPage: React.FC = () => {
   const results = useMemo(() => filterResources(RECENT_RESOURCES, filters), [filters]);
   const active = hasActiveFilters(filters);
 
+  // Header badge anchors the feed to a real, Git-derived date instead of
+  // repeating the resource count that the status bar below already shows.
+  const newest = RECENT_RESOURCES[0];
+  const newestDate = newest ? formatAddedDate(newest.addedAt) : '';
+
   const subjectOptions = useMemo(
     () => Array.from(new Set(RECENT_RESOURCES.map((resource) => resource.subject))),
     [],
@@ -32,7 +37,11 @@ export const RecentlyAddedPage: React.FC = () => {
         eyebrow="Library"
         title="Recently added"
         description="The newest study materials in the library, newest first. Added dates come from each resource's history in the Git repository."
-        meta={<span className="nv-badge">{RECENT_RESOURCES.length} resources</span>}
+        meta={
+          <span className="nv-badge">
+            {newestDate ? `Newest · ${newestDate}` : `${RECENT_RESOURCES.length} resources`}
+          </span>
+        }
       />
 
       <SearchField
@@ -63,7 +72,7 @@ export const RecentlyAddedPage: React.FC = () => {
       </div>
 
       {results.length > 0 ? (
-        <ul className={styles.list}>
+        <ul className={`${styles.list} ${styles.enter}`}>
           {results.map((resource) => (
             <RecentResourceRow key={resource.id} resource={resource} />
           ))}
