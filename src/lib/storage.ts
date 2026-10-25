@@ -16,6 +16,7 @@ export const KEYS = {
   progress: 'notevault_progress',
   history: 'notevault_history',
   theme: 'notevault_theme',
+  spread: 'notevault_reader_spread',
 } as const;
 
 export const HISTORY_LIMIT = 8;
@@ -201,6 +202,25 @@ export function recordHistory(
 export function clearHistory(): void {
   try {
     localStorage.removeItem(KEYS.history);
+  } catch {
+    // ignore
+  }
+}
+
+/* ------------------------------- reader view ------------------------------- */
+
+/** Two-page (book) view preference for the PDF reader; "1" = spread on. */
+export function getSpreadDefault(): boolean {
+  try {
+    return localStorage.getItem(KEYS.spread) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function saveSpread(on: boolean): void {
+  try {
+    localStorage.setItem(KEYS.spread, on ? '1' : '0');
   } catch {
     // ignore
   }

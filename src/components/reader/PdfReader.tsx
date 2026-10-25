@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  BookOpen,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { usePdfDocument } from '../../hooks/usePdfDocument';
+import { getSpreadDefault, saveSpread } from '../../lib/storage';
 import { ThumbnailRail } from './ThumbnailRail';
 import styles from './PdfReader.module.css';
 
@@ -38,6 +40,7 @@ const SHORTCUTS = [
   ['0', 'Reset zoom to fit'],
   ['Ctrl / ⌘ + F', 'Find in document'],
   ['t', 'Toggle thumbnails'],
+  ['b', 'Toggle two-page view'],
   ['f', 'Toggle fullscreen'],
   ['d', 'Mark as done'],
   ['?', 'Show shortcuts'],
@@ -65,6 +68,8 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
   const [page, setPage] = useState(1);
   const [pageInput, setPageInput] = useState('1');
   const [zoom, setZoom] = useState(1);
+  // Two-page (book) view: rendered side-by-side like a physical notebook.
+  const [spread, setSpread] = useState(() => getSpreadDefault());
   const [thumbsOpen, setThumbsOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
@@ -81,6 +86,7 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
   const viewerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rightCanvasRef = useRef<HTMLCanvasElement>(null);
   const renderTask = useRef<{ cancel: () => void } | null>(null);
   const textCache = useRef<Map<number, string>>(new Map());
   const searchToken = useRef(0);
@@ -102,19 +108,20 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
     textCache.current.clear();
   }, [url]);
 
-  /* A failed load leaves the ghost of the previous document on the canvas;
-     clear it so the recovery card is the only thing on the stage. */
+  /* A failed load leaves the ghost of the previous document on the canvases;
+     clear them so the recovery card is the only thing on the stage. */
   useEffect(() => {
     if (!error) return;
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
-    if (canvas && context) {
-      // pdf.js owns this context (alpha: false), so clearRect reads as black.
-      // Paint the plain paper colour instead — it matches the surrounding page
-      // surface in both themes and wipes whatever the previous document drew.
-      context.setTransform(1, 0, 0, 1, 0, 0);
-      context.fillStyle = '#fff';
-      context.fillRect(0, 0, canvas.width, canvas.height);
+    for (const canvas of [canvasRef.current, rightCanvasRef.current]) {
+      const context = canvas?.getContext('2d');
+      if (canvas && context) {
+        // pdf.js owns this context (alpha: false), so clearRect reads as black.
+        // Paint the plain paper colour instead — it matches the surrounding page
+        // surface in both themes and wipes whatever the previous document drew.
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.fillStyle = '#fff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
     }
   }, [error]);
 
@@ -138,6 +145,16 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
     if (totalPages) onPageChange(page, totalPages);
   }, [page, totalPages, onPageChange]);
 
+  /* ------------------------------- two-page view ------------------------------ */
+
+  const toggleSpread = useCallback(() => {
+    setSpread((value) => {
+      const next = !value;
+      saveSpread(next);
+      return next;
+    });
+  }, []);
+
   /* ---------------------------------- render --------------------------------- */
 
   useEffect(() => {
@@ -154,36 +171,57 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
 
   useEffect(() => {
     if (!doc) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const leftCanvas = canvasRef.current;
+    if (!leftCanvas) return;
 
     let cancelled = false;
-    const task: { cancel: () => void } = { cancel: () => {} };
+    const tasks: { cancel: () => void }[] = [];
+    const task: { cancel: () => void } = { cancel: () => tasks.forEach((entry) => entry.cancel()) };
 
     const draw = async () => {
       setRendering(true);
       try {
-        const pdfPage = await doc.getPage(page);
+        const leftPage = await doc.getPage(page);
         if (cancelled) return;
 
-        const base = pdfPage.getViewport({ scale: 1 });
-        const available = Math.max(stageWidth - 48, 240);
-        const fit = Math.min(available / base.width, 1.6);
-        const viewport = pdfPage.getViewport({ scale: fit * zoom });
+        // In two-page view the right page renders on its own canvas; both
+        // share one uniform scale, like an open book.
+        const rightPage =
+          spread && leftCanvas && rightCanvasRef.current && page < (totalPages ?? 0)
+            ? await doc.getPage(page + 1)
+            : null;
+        if (cancelled) return;
+
+        const margin = 48; // breathing room already used in single-page mode
+        const gap = 24; // gap between the two canvases (matches .canvasWrap)
+        const perPage = Math.max((stageWidth - margin - gap) / (rightPage ? 2 : 1), 240);
+        const baseLeft = leftPage.getViewport({ scale: 1 });
+        let fit = Math.min(perPage / baseLeft.width, 1.6);
+        if (rightPage) {
+          const baseRight = rightPage.getViewport({ scale: 1 });
+          fit = Math.min(fit, Math.min(perPage / baseRight.width, 1.6));
+        }
+        const scale = fit * zoom;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-        canvas.width = Math.floor(viewport.width * dpr);
-        canvas.height = Math.floor(viewport.height * dpr);
-        canvas.style.width = `${Math.floor(viewport.width)}px`;
-        canvas.style.height = `${Math.floor(viewport.height)}px`;
+        const paint = async (pdfPage: typeof leftPage, canvas: HTMLCanvasElement) => {
+          const viewport = pdfPage.getViewport({ scale });
+          canvas.width = Math.floor(viewport.width * dpr);
+          canvas.height = Math.floor(viewport.height * dpr);
+          canvas.style.width = `${Math.floor(viewport.width)}px`;
+          canvas.style.height = `${Math.floor(viewport.height)}px`;
 
-        const render = pdfPage.render({
-          canvas,
-          viewport,
-          transform: dpr === 1 ? undefined : [dpr, 0, 0, dpr, 0, 0],
-        });
-        task.cancel = () => render.cancel();
-        await render.promise;
+          const render = pdfPage.render({
+            canvas,
+            viewport,
+            transform: dpr === 1 ? undefined : [dpr, 0, 0, dpr, 0, 0],
+          });
+          tasks.push({ cancel: () => render.cancel() });
+          await render.promise;
+        };
+
+        await paint(leftPage, leftCanvas);
+        if (!cancelled && rightPage) await paint(rightPage, rightCanvasRef.current!);
       } catch (renderError) {
         const name = (renderError as { name?: string })?.name;
         if (name !== 'RenderingCancelledException' && !cancelled) {
@@ -201,7 +239,9 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
       cancelled = true;
       task.cancel();
     };
-  }, [doc, page, zoom, stageWidth]);
+    // rightCanvas presence is implied by `spread` page state — refs don't go in deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc, page, zoom, stageWidth, spread, totalPages]);
 
   /* ------------------------------ find in document --------------------------- */
 
@@ -320,13 +360,13 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
         case 'ArrowDown':
         case 'PageDown':
           event.preventDefault();
-          goToPage(page + 1);
+          goToPage(page + (rightShown ? 2 : 1));
           break;
         case 'ArrowLeft':
         case 'ArrowUp':
         case 'PageUp':
           event.preventDefault();
-          goToPage(page - 1);
+          goToPage(page - (spread && page > 2 ? 2 : 1));
           break;
         case 'Home':
           event.preventDefault();
@@ -350,6 +390,9 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
         case 't':
           setThumbsOpen((value) => !value);
           break;
+        case 'b':
+          toggleSpread();
+          break;
         case 'f':
           toggleFullscreen();
           break;
@@ -364,11 +407,16 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
       }
     };
 
+    // Book model: while a right-hand page is shown, paging moves a whole spread;
+    // the very last page stands alone (odd document), so it moves one page.
+    const rightShown = spread && Boolean(totalPages) && page < (totalPages ?? 0);
+
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [
     page,
     totalPages,
+    spread,
     goToPage,
     toggleFullscreen,
     onToggleDone,
@@ -379,6 +427,10 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
 
   /* --------------------------------- render UI -------------------------------- */
 
+  const rightShown = spread && Boolean(totalPages) && page < (totalPages ?? 0);
+  const prevDisabled = page <= 1;
+  const nextDisabled = !totalPages || page + (rightShown ? 1 : 0) >= totalPages;
+
   return (
     <div ref={viewerRef} className={styles.viewer}>
       <div className={`${styles.toolbar} nv-glass--strong`}>
@@ -386,8 +438,8 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
           <button
             type="button"
             className="nv-btn nv-btn--ghost nv-btn--icon nv-btn--sm"
-            onClick={() => goToPage(page - 1)}
-            disabled={page <= 1}
+            onClick={() => goToPage(page - (spread && page > 2 ? 2 : 1))}
+            disabled={prevDisabled}
             aria-label="Previous page"
             title="Previous page"
           >
@@ -414,8 +466,8 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
           <button
             type="button"
             className="nv-btn nv-btn--ghost nv-btn--icon nv-btn--sm"
-            onClick={() => goToPage(page + 1)}
-            disabled={!totalPages || page >= totalPages}
+            onClick={() => goToPage(page + (rightShown ? 2 : 1))}
+            disabled={nextDisabled}
             aria-label="Next page"
             title="Next page"
           >
@@ -455,6 +507,16 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
         </div>
 
         <div className={styles.group}>
+          <button
+            type="button"
+            className={`nv-btn nv-btn--ghost nv-btn--icon nv-btn--sm ${spread ? styles.toolActive : ''}`}
+            onClick={toggleSpread}
+            aria-label="Two-page view"
+            aria-pressed={spread}
+            title="Two-page view (b)"
+          >
+            <BookOpen size={16} />
+          </button>
           <button
             type="button"
             className={`nv-btn nv-btn--ghost nv-btn--icon nv-btn--sm ${findOpen ? styles.toolActive : ''}`}
@@ -522,6 +584,13 @@ export const PdfReader: React.FC<PdfReaderProps> = ({
         <div className={styles.stage} ref={stageRef}>
           <div className={styles.canvasWrap}>
             <canvas ref={canvasRef} className={styles.canvas} aria-label={`Page ${page}`} />
+            {rightShown ? (
+              <canvas
+                ref={rightCanvasRef}
+                className={styles.canvas}
+                aria-label={`Page ${page + 1}`}
+              />
+            ) : null}
           </div>
 
           {loading ? (

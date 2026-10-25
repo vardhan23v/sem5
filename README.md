@@ -43,7 +43,7 @@ Resources are grouped by the real units — **Unit 1, Unit 2, Unit 3 and Lab Man
 - **Light, dark or system themes** in a *Soft Glass* design — frosted fixed chrome (glass sidebar, topbar, PDF toolbar, resume chip, toasts) over opaque reading surfaces, first launch following your OS. Pick via the sidebar theme menu or the topbar toggle; the choice sticks in `notevault_theme`. Responsive layout from 320px up and an installable PWA shell
 - **Old links keep working** — `#file=`, `#unit=`, `#subject=`, `#all` and `#search` fragments are translated to the new routes
 
-Favourites, done marks, progress, history and theme are stored in `localStorage` (`notevault_favorites`, `notevault_done`, `notevault_progress`, `notevault_history`, `notevault_theme`) and never leave the device. Existing data from the previous version is read as-is and migrated in place.
+Favourites, done marks, progress, history, theme and the reader's two-page preference are stored in `localStorage` (`notevault_favorites`, `notevault_done`, `notevault_progress`, `notevault_history`, `notevault_theme`, `notevault_reader_spread`) and never leave the device. Existing data from the previous version is read as-is and migrated in place.
 
 ## Project structure
 
