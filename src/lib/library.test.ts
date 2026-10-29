@@ -15,13 +15,13 @@ import { UNITS } from '../data/units';
 
 describe('library index', () => {
   it('indexes every resource exactly once', () => {
-    expect(library.totalResources).toBe(72);
-    expect(library.totalFiles).toBe(60);
+    expect(library.totalResources).toBe(73);
+    expect(library.totalFiles).toBe(61);
     expect(library.totalImportant).toBe(12);
-    expect(ALL_RESOURCES).toHaveLength(72);
+    expect(ALL_RESOURCES).toHaveLength(73);
 
-    expect(new Set(ALL_RESOURCES.map((resource) => resource.path)).size).toBe(72);
-    expect(new Set(ALL_RESOURCES.map((resource) => resource.id)).size).toBe(72);
+    expect(new Set(ALL_RESOURCES.map((resource) => resource.path)).size).toBe(73);
+    expect(new Set(ALL_RESOURCES.map((resource) => resource.id)).size).toBe(73);
   });
 
   it('keeps the nine existing subjects', () => {
@@ -55,7 +55,7 @@ describe('library index', () => {
 
     expect(UNIT_SUMMARIES.map((summary) => [summary.unit, summary.resourceCount])).toEqual([
       ['Unit 1', 30],
-      ['Unit 2', 15],
+      ['Unit 2', 16],
       ['Unit 3', 11],
       ['Lab Manuals', 5],
     ]);

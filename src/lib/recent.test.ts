@@ -45,7 +45,9 @@ describe('recently added', () => {
     expect(preview).toHaveLength(RECENT_PREVIEW_COUNT);
     expect(preview).toEqual(RECENT_RESOURCES.slice(0, RECENT_PREVIEW_COUNT));
 
-    const newestDays = preview.slice(0, 2).map((resource) => resource.addedAt.slice(0, 10));
+    // Only the first row is guaranteed to share the library's newest day: a
+    // single file added on a fresh day is the normal case, not a regression.
+    const newestDays = preview.slice(0, 1).map((resource) => resource.addedAt.slice(0, 10));
     const maxDay = RECENT_RESOURCES
       .map((resource) => resource.addedAt.slice(0, 10))
       .sort()

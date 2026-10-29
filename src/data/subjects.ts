@@ -477,6 +477,16 @@ export const RAW_SUBJECTS: SubjectRaw[] = [
         "topic": "Equivalence & minimization of DFA · distinguishable states"
       },
       {
+        "name": "TOC Unit 2 — Class Notes (Scanned).pdf",
+        "path": "TOC/TOC UNIT2.pdf",
+        "size": "9.2 MB",
+        "units": [
+          "Unit 2"
+        ],
+        "kind": "notes",
+        "topic": "Scanned Unit 2 class notes · 21 pages"
+      },
+      {
         "name": "TOC — MCQs with Answers.pdf",
         "path": "TOC/TOC_MCQs_with_Answers-1.pdf",
         "size": "185 KB",
