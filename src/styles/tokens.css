@@ -17,43 +17,48 @@
 
   /* ---------------------------------- colour -------------------------------- */
   /* Midnight Glass (the default theme; Frosted Daylight overrides below). */
-  --bg-app: #101521;
-  --bg-surface: #161d2c;
-  --bg-card: #1b2232;
-  --bg-card-hover: #212a3d;
-  --bg-inset: #121826;
-  --bg-overlay: rgba(6, 10, 18, 0.64);
+  /* Deep indigo canvas with a violet cast: darker and more saturated than a
+     plain navy, so the glass and glows have something rich to sit on. */
+  --bg-app: #100a0e;
+  --bg-surface: #180f15;
+  --bg-card: #1e1319;
+  --bg-card-hover: #261821;
+  --bg-inset: #140b10;
+  --bg-overlay: rgba(10, 4, 8, 0.72);
 
-  --accent: #91a0ff;
-  --accent-strong: #7b8cf7;
-  --accent-text: #91a0ff;
-  --accent-border: rgba(145, 160, 255, 0.4);
-  --accent-soft: rgba(145, 160, 255, 0.14);
-  --accent-softer: rgba(145, 160, 255, 0.07);
-  --accent-contrast: #0f1524;
+  /* Electric indigo accent, with a magenta and teal pair for ambient colour. */
+  --accent: #fb7185;
+  --accent-strong: #f43f5e;
+  --accent-text: #fda4af;
+  --accent-border: rgba(251, 113, 133, 0.45);
+  --accent-soft: rgba(251, 113, 133, 0.16);
+  --accent-softer: rgba(251, 113, 133, 0.08);
+  --accent-contrast: #1a0509;
+  --accent-2: #fbbf24;
+  --accent-3: #a855f7;
 
-  --text-primary: #f0f3fc;
-  --text-secondary: #a8b2c8;
-  --text-muted: #8592ac;
-  --text-inverse: #0f1524;
+  --text-primary: #fff4f6;
+  --text-secondary: #d4bfc7;
+  --text-muted: #a68f99;
+  --text-inverse: #100a0e;
 
-  --border: #343d51;
-  --border-strong: #475269;
+  --border: #3a2530;
+  --border-strong: #553745;
   --border-accent: var(--accent-border);
 
   --success: #4ade80;
   --success-soft: rgba(74, 222, 128, 0.12);
   --warning: #fbbf24;
   --warning-soft: rgba(251, 191, 36, 0.12);
-  --danger: #f87171;
-  --danger-soft: rgba(248, 113, 113, 0.12);
+  --danger: #ef4444;
+  --danger-soft: rgba(239, 68, 68, 0.12);
 
   /* ---------------------------------- glass --------------------------------- */
-  --glass-bg: rgba(27, 34, 50, 0.6);
-  --glass-bg-strong: rgba(23, 29, 44, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-blur: 14px;
-  --glass-saturate: 130%;
+  --glass-bg: rgba(30, 19, 25, 0.64);
+  --glass-bg-strong: rgba(24, 15, 21, 0.9);
+  --glass-border: rgba(255, 190, 205, 0.13);
+  --glass-blur: 16px;
+  --glass-saturate: 150%;
 
   /* ------------------------------- typography ------------------------------- */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -105,22 +110,22 @@
   --radius-full: 999px;
 
   /* -------------------------------- elevation ------------------------------- */
-  --shadow-xs: 0 1px 2px rgba(4, 8, 16, 0.28);
-  --shadow-sm: 0 2px 8px rgba(4, 8, 16, 0.24);
-  --shadow-md: 0 8px 24px rgba(4, 8, 16, 0.32);
-  --shadow-lg: 0 18px 48px rgba(4, 8, 16, 0.44);
-  --shadow-card: 0 10px 30px rgba(4, 8, 16, 0.3);
-  --shadow-glass: 0 1px 2px rgba(4, 8, 16, 0.44), 0 16px 40px -16px rgba(4, 8, 16, 0.55);
+  --shadow-xs: 0 1px 2px rgba(8, 2, 5, 0.4);
+  --shadow-sm: 0 2px 8px rgba(8, 2, 5, 0.35);
+  --shadow-md: 0 8px 24px rgba(8, 2, 5, 0.45);
+  --shadow-lg: 0 18px 48px rgba(8, 2, 5, 0.55);
+  --shadow-card: 0 10px 30px rgba(8, 2, 5, 0.45), 0 0 0 1px rgba(251, 113, 133, 0.08);
+  --shadow-glass: 0 1px 2px rgba(8, 2, 5, 0.55), 0 16px 40px -16px rgba(8, 2, 5, 0.65);
 
-  --focus-ring: 0 0 0 3px rgba(145, 160, 255, 0.3);
+  --focus-ring: 0 0 0 3px rgba(251, 113, 133, 0.35);
   --ring: var(--focus-ring);
 
   /* Surface polish: a hairline top highlight that gives flat cards a lit edge,
      the resting shadow every card carries, and the accent glow behind
      primary controls and the active nav item. */
-  --card-highlight: rgba(255, 255, 255, 0.045);
-  --shadow-card-rest: 0 1px 2px rgba(4, 8, 16, 0.3), 0 2px 10px -4px rgba(4, 8, 16, 0.4);
-  --accent-glow: 0 6px 18px -6px rgba(123, 140, 247, 0.6);
+  --card-highlight: rgba(255, 200, 212, 0.07);
+  --shadow-card-rest: 0 1px 2px rgba(8, 2, 5, 0.4), 0 2px 10px -4px rgba(8, 2, 5, 0.55);
+  --accent-glow: 0 6px 20px -6px rgba(244, 63, 94, 0.65);
 
   /* --------------------------------- layout --------------------------------- */
   --sidebar-width: 240px;
@@ -151,52 +156,55 @@
   color-scheme: light;
 
   /* Frosted Daylight */
-  --bg-app: #f2f5fa;
+  /* Lavender-tinted canvas with a saturated indigo accent. */
+  --bg-app: #fbeff1;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #f3f5fb;
-  --bg-inset: #eaeef6;
-  --bg-overlay: rgba(23, 30, 46, 0.44);
+  --bg-card-hover: #fff5f7;
+  --bg-inset: #f5e4e8;
+  --bg-overlay: rgba(46, 15, 24, 0.46);
 
-  --accent: #6478f5;
-  --accent-strong: #4152e8;
-  --accent-text: #4152e8;
-  --accent-border: rgba(100, 120, 245, 0.4);
-  --accent-soft: rgba(100, 120, 245, 0.14);
-  --accent-softer: rgba(100, 120, 245, 0.07);
+  --accent: #e11d48;
+  --accent-strong: #be123c;
+  --accent-text: #9f1239;
+  --accent-border: rgba(225, 29, 72, 0.4);
+  --accent-soft: rgba(225, 29, 72, 0.12);
+  --accent-softer: rgba(225, 29, 72, 0.06);
   --accent-contrast: #ffffff;
+  --accent-2: #b45309;
+  --accent-3: #7e22ce;
 
-  --text-primary: #20283a;
-  --text-secondary: #46536e;
-  --text-muted: #5c6b86;
+  --text-primary: #2e0f18;
+  --text-secondary: #5c3a46;
+  --text-muted: #7a5a66;
   --text-inverse: #ffffff;
 
-  --border: #dce3ef;
-  --border-strong: rgba(32, 40, 58, 0.36);
+  --border: #f0d6dc;
+  --border-strong: rgba(46, 15, 24, 0.36);
   --border-accent: var(--accent-border);
 
   --success: #146c35;
   --success-soft: rgba(20, 108, 53, 0.1);
   --warning: #a34b06;
   --warning-soft: rgba(163, 75, 6, 0.1);
-  --danger: #b91c1c;
-  --danger-soft: rgba(185, 28, 28, 0.1);
+  --danger: #991b1b;
+  --danger-soft: rgba(153, 27, 27, 0.1);
 
-  --glass-bg: rgba(255, 255, 255, 0.62);
-  --glass-bg-strong: rgba(255, 255, 255, 0.86);
-  --glass-border: rgba(255, 255, 255, 0.65);
-  --glass-saturate: 140%;
+  --glass-bg: rgba(255, 255, 255, 0.64);
+  --glass-bg-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-saturate: 160%;
 
-  --shadow-xs: 0 1px 2px rgba(23, 30, 46, 0.06);
-  --shadow-sm: 0 2px 8px rgba(23, 30, 46, 0.07);
-  --shadow-md: 0 8px 24px rgba(23, 30, 46, 0.09);
-  --shadow-lg: 0 18px 48px rgba(23, 30, 46, 0.14);
-  --shadow-card: 0 10px 30px rgba(23, 30, 46, 0.1);
-  --shadow-glass: 0 1px 2px rgba(23, 30, 46, 0.05), 0 12px 32px -12px rgba(23, 30, 46, 0.18);
+  --shadow-xs: 0 1px 2px rgba(46, 15, 24, 0.06);
+  --shadow-sm: 0 2px 8px rgba(46, 15, 24, 0.07);
+  --shadow-md: 0 8px 24px rgba(46, 15, 24, 0.09);
+  --shadow-lg: 0 18px 48px rgba(46, 15, 24, 0.14);
+  --shadow-card: 0 10px 30px rgba(46, 15, 24, 0.1);
+  --shadow-glass: 0 1px 2px rgba(46, 15, 24, 0.05), 0 12px 32px -12px rgba(46, 15, 24, 0.18);
 
-  --focus-ring: 0 0 0 3px rgba(65, 82, 232, 0.3);
+  --focus-ring: 0 0 0 3px rgba(190, 18, 60, 0.3);
 
   --card-highlight: rgba(255, 255, 255, 0.9);
-  --shadow-card-rest: 0 1px 2px rgba(23, 30, 46, 0.05), 0 2px 10px -4px rgba(23, 30, 46, 0.08);
-  --accent-glow: 0 6px 18px -6px rgba(65, 82, 232, 0.45);
+  --shadow-card-rest: 0 1px 2px rgba(46, 15, 24, 0.06), 0 2px 10px -4px rgba(46, 15, 24, 0.1);
+  --accent-glow: 0 6px 18px -6px rgba(190, 18, 60, 0.45);
 }

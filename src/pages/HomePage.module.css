@@ -368,8 +368,9 @@
   color: transparent;
 }
 
+
 .title {
-  background: linear-gradient(135deg, var(--text-primary) 55%, var(--accent));
+  background: linear-gradient(120deg, var(--text-primary) 45%, var(--accent) 80%, var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

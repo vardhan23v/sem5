@@ -21,8 +21,8 @@ export type ThemePreference = Theme | 'system';
 
 const STORAGE_KEY = 'notevault_theme';
 const DARK_QUERY = '(prefers-color-scheme: dark)';
-const LIGHT_CANVAS = '#F2F5FA';
-const DARK_CANVAS = '#101521';
+const LIGHT_CANVAS = '#FBEFF1';
+const DARK_CANVAS = '#100A0E';
 
 /**
  * OS-level dark preference. `matches` is treated as dark only when matchMedia

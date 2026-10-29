@@ -187,7 +187,7 @@
 }
 
 .nv-kind--pdf {
-  color: #f87171;
+  color: #fbbf24;
 }
 
 .nv-kind--ppt {
@@ -216,11 +216,11 @@
    (white PDF pages behind strong glass included), so each gets the ≥4.5:1 dark
    step of the same hue. Keep hues identical to the dark handoff. */
 [data-theme='light'] .nv-kind--pdf {
-  color: #b91c1c;
+  color: #a16207;
 }
 
 [data-theme='light'] .nv-kind--ppt {
-  color: #a34b06;
+  color: #c2410c;
 }
 
 [data-theme='light'] .nv-kind--notes {
