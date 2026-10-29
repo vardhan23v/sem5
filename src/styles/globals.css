@@ -10,15 +10,35 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(60% 42% at 78% -8%, rgba(123, 140, 247, 0.1), transparent 70%),
-    radial-gradient(48% 38% at 8% 4%, rgba(145, 160, 255, 0.055), transparent 72%);
+    radial-gradient(60% 42% at 78% -8%, rgba(123, 140, 247, 0.14), transparent 70%),
+    radial-gradient(48% 38% at 8% 4%, rgba(145, 160, 255, 0.07), transparent 72%),
+    radial-gradient(50% 40% at 92% 92%, rgba(201, 164, 255, 0.05), transparent 70%);
+}
+
+/* A faint dot grid fades in from the top so the glass surfaces have texture
+   to frost over. Masked out towards the bottom so long pages stay calm. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 60%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 60%);
 }
 
 /* Frosted Daylight: same composition, indigo tint lifted for a white canvas. */
 [data-theme='light'] body::before {
   background:
     radial-gradient(60% 42% at 78% -8%, rgba(100, 120, 245, 0.08), transparent 70%),
-    radial-gradient(48% 38% at 8% 4%, rgba(100, 120, 245, 0.05), transparent 72%);
+    radial-gradient(48% 38% at 8% 4%, rgba(100, 120, 245, 0.05), transparent 72%),
+    radial-gradient(50% 40% at 92% 92%, rgba(124, 58, 237, 0.04), transparent 70%);
+}
+
+[data-theme='light'] body::after {
+  background-image: radial-gradient(rgba(32, 40, 58, 0.09) 1px, transparent 1.2px);
 }
 
 body.reader-open {

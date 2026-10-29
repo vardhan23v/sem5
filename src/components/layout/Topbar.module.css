@@ -215,3 +215,13 @@
     align-self: stretch;
   }
 }
+
+
+/* Polish: a hairline shadow lifts the bar off scrolled content. */
+.topbar {
+  box-shadow: 0 1px 0 var(--glass-border), 0 8px 24px -16px rgba(4, 8, 16, 0.6);
+}
+
+[data-theme='light'] .topbar {
+  box-shadow: 0 1px 0 var(--glass-border), 0 8px 24px -16px rgba(23, 30, 46, 0.18);
+}

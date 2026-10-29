@@ -176,3 +176,25 @@
     justify-self: start;
   }
 }
+
+
+/* Polish: a lit top edge and a soft resting shadow so the card reads as a
+   raised panel rather than an outlined box; hover adds an accent sheen. */
+.row {
+  background:
+    linear-gradient(180deg, var(--card-highlight), transparent 38%),
+    var(--bg-card);
+  box-shadow:
+    inset 0 1px 0 var(--card-highlight),
+    var(--shadow-card-rest);
+}
+
+.row:hover {
+  background:
+    linear-gradient(180deg, var(--card-highlight), transparent 38%),
+    linear-gradient(135deg, var(--accent-softer), transparent 60%),
+    var(--bg-card-hover);
+  box-shadow:
+    inset 0 1px 0 var(--card-highlight),
+    var(--shadow-card);
+}
