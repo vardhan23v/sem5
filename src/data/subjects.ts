@@ -117,6 +117,16 @@ export const RAW_SUBJECTS: SubjectRaw[] = [
         ],
         "kind": "question-paper",
         "topic": "Unit 1 MCQs — network basics, topologies, models"
+      },
+      {
+        "name": "Unit 2 — MCQ Question Bank.pdf",
+        "path": "CNC/mcqs/CNC_Unit2_MCQ_Question_Bank.pdf",
+        "size": "246 KB",
+        "units": [
+          "Unit 2"
+        ],
+        "kind": "question-paper",
+        "topic": "Unit 2 MCQs — Ethernet, network layer, IPv4, routing"
       }
     ]
   },
