@@ -715,13 +715,13 @@ export const RAW_SUBJECTS: SubjectRaw[] = [
       },
       {
         "name": "CNC Lab Manual.pdf",
-        "path": "Lab Manuals/CSE_CNC_LAB_MANUAL-20CS502_2023.pdf",
-        "size": "767 KB",
+        "path": "Lab Manuals/CN_LAB_MANUAL_PartA_PartB.pdf",
+        "size": "170 KB",
         "units": [
           "Lab Manuals"
         ],
         "kind": "lab-manual",
-        "topic": "21CS502 Computer Network and Communication lab"
+        "topic": "Computer Network lab — Part A & Part B experiments"
       },
       {
         "name": "OS Lab Manual.pdf",
